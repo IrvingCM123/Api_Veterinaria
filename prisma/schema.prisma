@@ -18,20 +18,26 @@ model Productos {
   tipo        String
 }
 
-model Historial_Venta {
-  id       String  @id @unique
+model User {
+  email    String @id @unique
+  password String
   nombre   String
-  precio   String
-  cantidad String
-  total    String
-  fecha    String
+  apellido String
+  telefono String
+  direccion String
+  ciudad String
+  estado String
+  codigoPostal String
+  role     String
 }
 
-model Guardar_Venta {
-  id       String  @id @unique
-  nombre   String
-  precio   String
-  cantidad String
-  total    String
-  fecha    String
+model Sucursal {
+  id          String @id @unique
+  nombre      String
+  direccion   String
+  ciudad      String
+  estado      String
+  codigoPostal String
+  telefono    String
+  encargado   String
 }
