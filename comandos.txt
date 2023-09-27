@@ -1,0 +1,4 @@
+correr api:  npx ts-node app.ts
+
+
+corregir postgres: \pset pager off
