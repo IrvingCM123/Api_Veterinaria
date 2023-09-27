@@ -56,7 +56,6 @@ export const registrarVenta = async (
     
     const nombreDocumento = `${fechaVenta}`;
 
-    // Agrega el documento con el nombre generado
     historial_ventaCollection
       .doc(nombreDocumento)
       .set(ventaDetectada)
