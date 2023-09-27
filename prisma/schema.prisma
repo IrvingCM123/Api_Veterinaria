@@ -18,3 +18,26 @@ model Productos {
   tipo        String
 }
 
+model User {
+  email    String @id @unique
+  password String
+  nombre   String
+  apellido String
+  telefono String
+  direccion String
+  ciudad String
+  estado String
+  codigoPostal String
+  role     String
+}
+
+model Sucursal {
+  id          String @id @unique
+  nombre      String
+  direccion   String
+  ciudad      String
+  estado      String
+  codigoPostal String
+  telefono    String
+  encargado   String
+}
