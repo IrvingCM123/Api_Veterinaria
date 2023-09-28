@@ -5,7 +5,6 @@ import * as historialController from '../controllers/historialVentasControllers'
 import { validarVenta } from '../Validators/Venta_Validator';
 import { errorHandler } from '../middleware/errorHandler';
 
-
 const router = Router();
 
 router.get('/', (req, res) => { 

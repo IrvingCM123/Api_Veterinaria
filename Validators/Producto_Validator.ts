@@ -42,3 +42,5 @@ export const ModificarProducto = [
         .isString()
         .withMessage('El tipo del producto debe ser una cadena de texto'),
 ];
+
+module.exports = { productoValidator, EliminarProducto, ModificarProducto };
