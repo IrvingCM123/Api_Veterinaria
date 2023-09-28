@@ -2,3 +2,5 @@ correr api:  npx ts-node app.ts
 
 
 corregir postgres: \pset pager off
+
+hacer migraciones: npx prisma migrate dev --name nombreMigracion
