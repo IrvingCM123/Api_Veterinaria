@@ -7,7 +7,12 @@ import * as historialController from '../controllers/historialVentasControllers'
 
 import { validarVenta } from '../Validators/Venta_Validator';
 import { validarUsuario, InicioSesion, usuarioValidator } from '../Validators/Usuario_Validator';
-import { EliminarProducto, ModificarProducto, productoValidator, BuscarProductoValidador } from '../Validators/Producto_Validator';
+import {
+  productoValidator,
+  EliminarProducto,
+  ModificarProducto,
+  BuscarProductoValidador,
+} from '../Validators/Producto_Validator';
 
 import { errorHandler } from '../middleware/errorHandler';
 
@@ -22,23 +27,21 @@ router.get('/', (req, res) => {
  * Ruta para obtener todos los productos.
  * @route GET /productos
  */
-router.get('/productos', productoController.obtenerProductos);
+router.get('/productos',  productoController.obtenerProductos);
 
 /**
  * Ruta para buscar un producto por su ID.
  * @route GET /productos/:id
  * @param {string} :id - ID del producto a buscar.
  */
-router.get('/productos/:id' ,
-BuscarProductoValidador,
-(req: Request, res: Response) => {
+router.get('/productosid/:id', BuscarProductoValidador, (req: Request, res: Response) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
+    console.log('Error al buscar producto');
   }
-  productoController.buscarProducto;
-}
-);
+    console.log('Buscando producto');
+});
+
 /**
  * Ruta para registrar una venta.
  * @route POST /ventas

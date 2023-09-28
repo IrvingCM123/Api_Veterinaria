@@ -16,7 +16,7 @@ export const obtenerProductos = async (req: Request, res: Response) => {
 export const buscarProducto = async (req: Request, res: Response) => {
   const { id } = req.params;
   try {
-    const producto = await prisma.productos.findUnique({
+    const producto: any = await prisma.productos.findUnique({
       where: { id },
     });
     res.json(producto);

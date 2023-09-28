@@ -1,4 +1,4 @@
-const { check, validationResult } = require('express-validator');
+import { check } from 'express-validator';
 
 export const productoValidator = [
     check('nombre').notEmpty().withMessage('El nombre del producto es requerido'),
@@ -44,7 +44,9 @@ export const ModificarProducto = [
 ];
 
 export const BuscarProductoValidador = [
-    check('id').notEmpty().withMessage('El id del producto es requerido'),
+    check('id')
+        .notEmpty()
+        .withMessage('El id del producto es requerido')
+        .isNumeric()
+        .withMessage('El id del producto debe ser un número válido'),
 ];
-
-module.exports = { productoValidator, EliminarProducto, ModificarProducto };
