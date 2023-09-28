@@ -1,4 +1,6 @@
+
 export const json = {
+
   type: process.env.type,
   project_id: process.env.project_id,
   private_key_id: process.env.private_key_id,
@@ -9,5 +11,6 @@ export const json = {
   token_uri: process.env.token_uri,
   auth_provider_x509_cert_url: process.env.auth_provider_x509_cert_url,
   client_x509_cert_url: process.env.client_x509_cert_url,
-  universe_domain: process.env.universe_domain
-}
+  universe_domain: process.env.universe_domain,
+  
+};
