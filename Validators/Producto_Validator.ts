@@ -43,4 +43,8 @@ export const ModificarProducto = [
         .withMessage('El tipo del producto debe ser una cadena de texto'),
 ];
 
+export const BuscarProducto = [
+    check('id').notEmpty().withMessage('El id del producto es requerido'),
+];
+
 module.exports = { productoValidator, EliminarProducto, ModificarProducto };
