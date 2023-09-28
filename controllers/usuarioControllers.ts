@@ -36,7 +36,7 @@ export const obtenerUsuario = async (req: Request, res: Response) => {
   const { email } : any = req.params;
   try {
     const usuario: any = await prisma.user.findUnique({
-      where: { email: (email) }, // Convierte id a número usando parseInt
+      where: { email: (email) },
     });
     if (!usuario) {
       return res.status(404).json({ error: "Usuario no encontrado" });
