@@ -1,6 +1,8 @@
 import { Request, Response, NextFunction, RequestHandler , Router } from 'express';
 import { check, validationResult } from 'express-validator';
 import * as productoController from '../controllers/productosControllers';
+import * as historialController from '../controllers/historialVentasControllers'
+import { validarVenta } from '../Validators/Venta_Validator';
 import { errorHandler } from '../middleware/errorHandler';
 
 
@@ -33,13 +35,13 @@ router.get('/productos/:id', productoController.buscarProducto);
 
 router.post(
   '/ventas',
-  productoController.validarVenta, 
+  validarVenta, 
   (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    productoController.registrarVenta(req, res, next);
+    historialController.registrarVenta(req, res, next);
   }
 );
 
