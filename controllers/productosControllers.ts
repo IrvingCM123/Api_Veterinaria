@@ -1,20 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { PrismaClient } from "@prisma/client";
-import { check, validationResult } from "express-validator";
-
-import { firebaseAdmin } from "../database/firebase/firebaseConfig";
 
 const prisma = new PrismaClient();
-
-const db = firebaseAdmin.firestore();
-const historial_ventaCollection = db.collection("historial_venta");
-
-export const validarVenta = [
-  check("nombre").notEmpty().withMessage("El nombre es requerido"),
-  check("precio")
-    .isNumeric()
-    .withMessage("El precio debe ser un número válido"),
-];
 
 export const obtenerProductos = async (req: Request, res: Response) => {
   try {
@@ -39,36 +26,30 @@ export const buscarProducto = async (req: Request, res: Response) => {
   }
 };
 
-export const registrarVenta = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-
+export const eliminarProducto = async (req: Request, res: Response) => {
+  const { id } = req.params;
   try {
-    const ventaDetectada = req.body;
-
-    const fechaVenta = ventaDetectada.fecha; 
-    
-    const nombreDocumento = `${fechaVenta}`;
-
-    historial_ventaCollection
-      .doc(nombreDocumento)
-      .set(ventaDetectada)
-      .then(() => {
-        console.log("Documento agregado con nombre:", nombreDocumento);
-      })
-      .catch((error) => {
-        console.error("Error al agregar el documento:", error);
-      });
-
-    res.json({ message: "Venta registrada" });
+    await prisma.productos.delete({
+      where: { id },
+    });
+    res.json({ message: "Producto eliminado" });
   } catch (error) {
-    console.error("Error al registrar la venta:", error);
-    res.status(500).json({ error: "Error al registrar la venta" });
+    console.error("Error al eliminar el producto:", error);
+    res.status(500).json({ error: "Error al eliminar el producto" });
   }
 };
+
+export const modificarProducto = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const productoDetectado = req.body;
+  try {
+    await prisma.productos.update({
+      where: { id },
+      data: productoDetectado,
+    });
+    res.json({ message: "Producto modificado" });
+  } catch (error) {
+    console.error("Error al modificar el producto:", error);
+    res.status(500).json({ error: "Error al modificar el producto" });
+  }
+}
