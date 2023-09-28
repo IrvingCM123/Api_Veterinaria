@@ -37,9 +37,9 @@ router.get('/productos',  productoController.obtenerProductos);
 router.get('/productosid/:id', BuscarProductoValidador, (req: Request, res: Response) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    console.log('Error al buscar producto');
+    return res.status(400).json({ errors: errors.array() });
   }
-    console.log('Buscando producto');
+  productoController.buscarProducto(req, res);
 });
 
 /**
