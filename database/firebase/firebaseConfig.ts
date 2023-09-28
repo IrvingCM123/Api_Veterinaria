@@ -1,8 +1,7 @@
-// firebase/firebaseConfig.ts
-import admin from 'firebase-admin';
+import admin from "firebase-admin";
 
-const serviceAccount = require('./serviceAccountKey.ts'); // Asegúrate de tener este archivo
-console.log(serviceAccount.json);
+const serviceAccount = require("./serviceAccountKey.ts");
+
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount.json),
 });
