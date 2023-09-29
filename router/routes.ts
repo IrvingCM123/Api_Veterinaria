@@ -1,40 +1,125 @@
-import { Request, Response, NextFunction, RequestHandler , Router } from 'express';
-import { check, validationResult } from 'express-validator';
-import * as productoController from '../controllers/productosControllers';
-import * as historialController from '../controllers/historialVentasControllers'
-import { validarVenta } from '../Validators/Venta_Validator';
-import { errorHandler } from '../middleware/errorHandler';
+import {
+  Request,
+  Response,
+  NextFunction,
+  RequestHandler,
+  Router,
+} from "express";
+
+import { check, validationResult } from "express-validator";
+
+import * as productoController from "../controllers/productosControllers";
+import * as historialController from "../controllers/historialVentasControllers";
+import * as usuarioController from "../controllers/usuarioControllers";
+
+import { validarVenta } from "../Validators/Venta_Validator";
+
+import {
+  validarUsuario,
+  InicioSesion,
+  usuarioValidator,
+} from "../Validators/Usuario_Validator";
+
+import {
+  productoValidator,
+  EliminarProducto,
+  ModificarProducto,
+  BuscarProductoValidador,
+} from "../Validators/Producto_Validator";
+
+import { errorHandler } from "../middleware/errorHandler";
 
 const router = Router();
 
-router.get('/', (req, res) => { 
-  res.send('Bienvenido a la API de la veterinaria');
+// Ruta principal de bienvenida
+router.get("/", (req, res) => {
+  res.send("Bienvenido a la API de la veterinaria");
+});
 
+// Rutas de productos
+
+/**
+ * @route GET /productos
+ * @desc Obtiene todos los productos.
+ */
+router.get("/productos", productoController.obtenerProductos);
+
+/**
+ * @route GET /productosid/:id
+ * @param {string} :id - ID del producto a buscar.
+ * @desc Busca un producto por su ID.
+ */
+router.get(
+  "/productosid/:id",
+  BuscarProductoValidador,
+  (req: Request, res: Response) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+    productoController.buscarProducto(req, res);
+  }
+);
+
+/**
+ * @route POST /productos
+ * @param {string} nombre - Nombre del producto.
+ * @param {number} precio - Precio del producto.
+ * @desc Crea un nuevo producto.
+ */
+router.post("/productos", productoValidator, (req: Request, res: Response) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+  productoController.crearProducto(req, res);
 });
 
 /**
- * Ruta para obtener todos los productos.
- * @route GET /productos
+ * @route PUT /productos/:id
+ * @param {string} :id - ID del producto a modificar.
+ * @desc Modifica un producto por su ID.
  */
-router.get('/productos', productoController.obtenerProductos);
+router.put(
+  "/productos/:id",
+  ModificarProducto,
+  (req: Request, res: Response) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+    productoController.modificarProducto(req, res);
+  }
+);
 
 /**
- * Ruta para buscar un producto por su ID.
- * @route GET /productos/:id
- * @param {string} :id - ID del producto a buscar.
+ * @route DELETE /productos/:id
+ * @param {string} :id - ID del producto a eliminar.
+ * @desc Elimina un producto por su ID.
  */
-router.get('/productos/:id', productoController.buscarProducto);
+router.delete(
+  "/productos/:id",
+  EliminarProducto,
+  (req: Request, res: Response) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+    productoController.eliminarProducto(req, res);
+  }
+);
+
+// Rutas de ventas
 
 /**
- * Ruta para registrar una venta.
  * @route POST /ventas
  * @param {string} nombre - Nombre del producto.
  * @param {number} precio - Precio del producto.
+ * @desc Registra una venta.
  */
-
 router.post(
-  '/ventas',
-  validarVenta, 
+  "/ventas",
+  validarVenta,
   (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -43,6 +128,35 @@ router.post(
     historialController.registrarVenta(req, res, next);
   }
 );
+
+// Rutas de usuarios
+
+/**
+ * @route POST /usuarios/login
+ * @param {string} email - Correo electrónico del usuario.
+ * @param {string} password - Contraseña del usuario.
+ * @desc Inicia sesión de un usuario.
+ */
+router.post("/usuarios/login", InicioSesion, (req: Request, res: Response) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+  usuarioController.iniciarSesion(req, res);
+});
+
+/**
+ * @route GET /usuarios
+ * @desc Obtiene todos los usuarios.
+ */
+router.get("/usuarios", usuarioController.obtenerUsuarios);
+
+/**
+ * @route GET /usuarios/:email
+ * @param {string} :email - Correo electrónico del usuario a buscar.
+ * @desc Obtiene un usuario por su correo electrónico.
+ */
+router.get("/usuarios/:email", usuarioController.obtenerUsuario);
 
 router.use(errorHandler);
 

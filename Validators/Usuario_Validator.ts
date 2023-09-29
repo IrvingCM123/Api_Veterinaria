@@ -35,5 +35,3 @@ export const validarUsuario = (req: any, res: any, next: any) => {
   err.errors = errores.array();
   next(err);
 };
-
-module.exports = { usuarioValidator, InicioSesion, validarUsuario };
