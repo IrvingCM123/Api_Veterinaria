@@ -53,3 +53,16 @@ export const modificarProducto = async (req: Request, res: Response) => {
     res.status(500).json({ error: "Error al modificar el producto" });
   }
 }
+
+export const crearProducto = async (req: Request, res: Response) => {
+  const productoDetectado = req.body;
+  try {
+    await prisma.productos.create({
+      data: productoDetectado,
+    });
+    res.json({ message: "Producto creado" });
+  } catch (error) {
+    console.error("Error al crear el producto:", error);
+    res.status(500).json({ error: "Error al crear el producto" });
+  }
+}

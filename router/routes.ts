@@ -1,57 +1,84 @@
-import { buscarProducto } from './../controllers/productosControllers';
-import { Request, Response, NextFunction, RequestHandler , Router } from 'express';
-import { check, validationResult } from 'express-validator';
+import {
+  Request,
+  Response,
+  NextFunction,
+  RequestHandler,
+  Router,
+} from "express";
+import { check, validationResult } from "express-validator";
 
-import * as productoController from '../controllers/productosControllers';
-import * as historialController from '../controllers/historialVentasControllers'
+import * as productoController from "../controllers/productosControllers";
+import * as historialController from "../controllers/historialVentasControllers";
+import * as usuarioController from "../controllers/usuarioControllers";
 
-import { validarVenta } from '../Validators/Venta_Validator';
-import { validarUsuario, InicioSesion, usuarioValidator } from '../Validators/Usuario_Validator';
+import { validarVenta } from "../Validators/Venta_Validator";
+import {
+  validarUsuario,
+  InicioSesion,
+  usuarioValidator,
+} from "../Validators/Usuario_Validator";
+
 import {
   productoValidator,
   EliminarProducto,
   ModificarProducto,
   BuscarProductoValidador,
-} from '../Validators/Producto_Validator';
+} from "../Validators/Producto_Validator";
 
-import { errorHandler } from '../middleware/errorHandler';
+import { errorHandler } from "../middleware/errorHandler";
 
 const router = Router();
 
-router.get('/', (req, res) => { 
-  res.send('Bienvenido a la API de la veterinaria');
-
+router.get("/", (req, res) => {
+  res.send("Bienvenido a la API de la veterinaria");
 });
 
-/**
- * Ruta para obtener todos los productos.
- * @route GET /productos
- */
-router.get('/productos',  productoController.obtenerProductos);
-
-/**
- * Ruta para buscar un producto por su ID.
- * @route GET /productos/:id
- * @param {string} :id - ID del producto a buscar.
- */
-router.get('/productosid/:id', BuscarProductoValidador, (req: Request, res: Response) => {
+// Rutas de productos
+router.get("/productos", productoController.obtenerProductos);
+router.get(
+  "/productosid/:id",
+  BuscarProductoValidador,
+  (req: Request, res: Response) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+    productoController.buscarProducto(req, res);
+  }
+);
+router.post("/productos", productoValidator, (req: Request, res: Response) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
   }
-  productoController.buscarProducto(req, res);
+  productoController.crearProducto(req, res);
 });
-
-/**
- * Ruta para registrar una venta.
- * @route POST /ventas
- * @param {string} nombre - Nombre del producto.
- * @param {number} precio - Precio del producto.
- */
+router.put(
+  "/productos/:id",
+  ModificarProducto,
+  (req: Request, res: Response) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+    productoController.modificarProducto(req, res);
+  }
+);
+router.delete(
+  "/productos/:id",
+  EliminarProducto,
+  (req: Request, res: Response) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+    productoController.eliminarProducto(req, res);
+  }
+);
 
 router.post(
-  '/ventas',
-  validarVenta, 
+  "/ventas",
+  validarVenta,
   (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -60,6 +87,17 @@ router.post(
     historialController.registrarVenta(req, res, next);
   }
 );
+
+// Rutas de usuarios
+router.post("/usuarios/login", InicioSesion, (req: Request, res: Response) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+  usuarioController.iniciarSesion(req, res);
+});
+router.get("/usuarios", usuarioController.obtenerUsuarios);
+router.get("/usuarios/:email", usuarioController.obtenerUsuario);
 
 router.use(errorHandler);
 
