@@ -5,6 +5,7 @@ import {
   RequestHandler,
   Router,
 } from "express";
+
 import { check, validationResult } from "express-validator";
 
 import * as productoController from "../controllers/productosControllers";
@@ -12,6 +13,7 @@ import * as historialController from "../controllers/historialVentasControllers"
 import * as usuarioController from "../controllers/usuarioControllers";
 
 import { validarVenta } from "../Validators/Venta_Validator";
+
 import {
   validarUsuario,
   InicioSesion,
@@ -29,12 +31,24 @@ import { errorHandler } from "../middleware/errorHandler";
 
 const router = Router();
 
+// Ruta principal de bienvenida
 router.get("/", (req, res) => {
   res.send("Bienvenido a la API de la veterinaria");
 });
 
 // Rutas de productos
+
+/**
+ * @route GET /productos
+ * @desc Obtiene todos los productos.
+ */
 router.get("/productos", productoController.obtenerProductos);
+
+/**
+ * @route GET /productosid/:id
+ * @param {string} :id - ID del producto a buscar.
+ * @desc Busca un producto por su ID.
+ */
 router.get(
   "/productosid/:id",
   BuscarProductoValidador,
@@ -46,6 +60,13 @@ router.get(
     productoController.buscarProducto(req, res);
   }
 );
+
+/**
+ * @route POST /productos
+ * @param {string} nombre - Nombre del producto.
+ * @param {number} precio - Precio del producto.
+ * @desc Crea un nuevo producto.
+ */
 router.post("/productos", productoValidator, (req: Request, res: Response) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -53,6 +74,12 @@ router.post("/productos", productoValidator, (req: Request, res: Response) => {
   }
   productoController.crearProducto(req, res);
 });
+
+/**
+ * @route PUT /productos/:id
+ * @param {string} :id - ID del producto a modificar.
+ * @desc Modifica un producto por su ID.
+ */
 router.put(
   "/productos/:id",
   ModificarProducto,
@@ -64,6 +91,12 @@ router.put(
     productoController.modificarProducto(req, res);
   }
 );
+
+/**
+ * @route DELETE /productos/:id
+ * @param {string} :id - ID del producto a eliminar.
+ * @desc Elimina un producto por su ID.
+ */
 router.delete(
   "/productos/:id",
   EliminarProducto,
@@ -76,6 +109,14 @@ router.delete(
   }
 );
 
+// Rutas de ventas
+
+/**
+ * @route POST /ventas
+ * @param {string} nombre - Nombre del producto.
+ * @param {number} precio - Precio del producto.
+ * @desc Registra una venta.
+ */
 router.post(
   "/ventas",
   validarVenta,
@@ -89,6 +130,13 @@ router.post(
 );
 
 // Rutas de usuarios
+
+/**
+ * @route POST /usuarios/login
+ * @param {string} email - Correo electrónico del usuario.
+ * @param {string} password - Contraseña del usuario.
+ * @desc Inicia sesión de un usuario.
+ */
 router.post("/usuarios/login", InicioSesion, (req: Request, res: Response) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -96,7 +144,18 @@ router.post("/usuarios/login", InicioSesion, (req: Request, res: Response) => {
   }
   usuarioController.iniciarSesion(req, res);
 });
+
+/**
+ * @route GET /usuarios
+ * @desc Obtiene todos los usuarios.
+ */
 router.get("/usuarios", usuarioController.obtenerUsuarios);
+
+/**
+ * @route GET /usuarios/:email
+ * @param {string} :email - Correo electrónico del usuario a buscar.
+ * @desc Obtiene un usuario por su correo electrónico.
+ */
 router.get("/usuarios/:email", usuarioController.obtenerUsuario);
 
 router.use(errorHandler);
