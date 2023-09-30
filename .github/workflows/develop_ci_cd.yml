@@ -20,7 +20,7 @@ jobs:
           echo "type=${{ secrets.type }}" >> .env
           echo "project_id=${{ secrets.project_id }}" >> .env
           echo "private_key_id=${{ secrets.private_key_id }}" >> .env
-          cat private_key.pem > .env
+          cat manifests/private_key.pem > .env
           echo "client_email=${{ secrets.client_email }}" >> .env
           echo "client_id=${{ secrets.client_id }}" >> .env
           echo "auth_uri=${{ secrets.auth_uri }}" >> .env
