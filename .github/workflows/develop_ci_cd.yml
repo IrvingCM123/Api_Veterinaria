@@ -13,26 +13,38 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 16.x
-      - name: Create .env file
+
+      - name: Read .env file
+        id: env
         run: |
-          echo "DATABASE_URL_LOCAL=${{ secrets.DATABASE_URL_LOCAL }}" > .env
-          echo "DATABASE_URL_NEON=${{ secrets.DATABASE_URL_NEON }}" >> .env
-          echo "type=${{ secrets.type }}" >> .env
-          echo "project_id=${{ secrets.project_id }}" >> .env
-          echo "private_key_id=${{ secrets.private_key_id }}" >> .env
-          echo "private_key=${{ secrets.private_key }}" >> .env
-          echo "client_email=${{ secrets.client_email }}" >> .env
-          echo "client_id=${{ secrets.client_id }}" >> .env
-          echo "auth_uri=${{ secrets.auth_uri }}" >> .env
-          echo "token_uri=${{ secrets.token_uri }}" >> .env
-          echo "auth_provider_x509_cert_url=${{ secrets.auth_provider_x509_cert_url }}" >> .env
-          echo "client_x509_cert_url=${{ secrets.client_x509_cert_url }}" >> .env
-          echo "universe_domain=${{ secrets.universe_domain }}" >> .env
-          echo "postgres_Titulo=${{ secrets.postgres_Titulo }}" >> .env
-          echo "postgres_Usuario=${{ secrets.postgres_Usuario }}" >> .env
-          echo "postgres_Contrasena=${{ secrets.postgres_Contrasena }}" >> .env
-          echo "postgres_Host=${{ secrets.postgres_Host }}" >> .env
-        shell: bash
+          cat .env
+          while read -r line || [[ -n "$line" ]]; do
+            # Split each line into variable name and value
+            var_name=$(echo "$line" | cut -d'=' -f1)
+            var_value=$(echo "$line" | cut -d'=' -f2-)
+            # Set the variable in the environment
+            echo "##[set-env name=$var_name;]$var_value"
+          done < .env
+
+      - name: Show env values
+        run: |
+          echo "DATABASE_URL_LOCAL=$DATABASE_URL_LOCAL"
+          echo "DATABASE_URL_NEON=$DATABASE_URL_NEON"
+          echo "type=$type"
+          echo "project_id=$project_id"
+          echo "private_key_id=$private_key_id"
+          echo "private_key=$private_key"
+          echo "client_email=$client_email"
+          echo "client_id=$client_id"
+          echo "auth_uri=$auth_uri"
+          echo "token_uri=$token_uri"
+          echo "auth_provider_x509_cert_url=$auth_provider_x509_cert_url"
+          echo "client_x509_cert_url=$client_x509_cert_url"
+          echo "universe_domain=$universe_domain"
+          echo "postgres_Titulo=$postgres_Titulo"
+          echo "postgres_Usuario=$postgres_Usuario"
+          echo "postgres_Contrasena=$postgres_Contrasena"
+          echo "postgres_Host=$postgres_Host"
       
       - name: show dir, .env file
         run: |
