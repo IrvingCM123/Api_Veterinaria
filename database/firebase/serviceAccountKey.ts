@@ -1,4 +1,3 @@
-
 export const json = {
 
   type: process.env.type,
