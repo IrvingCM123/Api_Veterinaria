@@ -1,13 +1,7 @@
-import admin from "firebase-admin";
+var admin = require("firebase-admin");
 
-const dotenv = require('dotenv');
-
-dotenv.config()
-
-const serviceAccount = require("./serviceAccountKey");
+var serviceAccount = require("./archivo.json");
 
 admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount.json),
+  credential: admin.credential.cert(serviceAccount)
 });
-
-export const firebaseAdmin = admin;
