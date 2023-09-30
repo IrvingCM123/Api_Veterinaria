@@ -8,7 +8,7 @@ const db = firebaseAdmin.firestore();
 
 // Obtiene una referencia a la colección "historial_venta" en Firestore
 const historial_ventaCollection = db.collection("historial_venta");
-
+ 
 /**
  * Controlador para registrar una venta en la base de datos.
  *
