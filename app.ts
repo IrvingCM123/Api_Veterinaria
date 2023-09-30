@@ -22,15 +22,7 @@ const corsOptions = {
 // Aplica el middleware CORS con las opciones configuradas
 app.use(cors(corsOptions));
 
-// Configura un proxy para reenviar solicitudes a la URL remota
-app.use(
-  '/api', // Ruta en la que se aplicará el proxy
-  createProxyMiddleware({
-    target: 'https://veterinaria-service-irvingcm123.cloud.okteto.net', // URL remota
-    changeOrigin: true, // Cambia el encabezado de origen en la solicitud
-    secure: false, // Deshabilita la verificación segura si el servidor remoto no tiene certificado SSL válido
-  })
-);
+app.options('*', cors());
 
 // Aplica las rutas de tu aplicación definidas en productoRoutes
 app.use('/api', productoRoutes);
