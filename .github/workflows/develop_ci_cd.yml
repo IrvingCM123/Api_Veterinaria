@@ -13,38 +13,28 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 16.x
-
-      - name: Read .env file
-        id: env
-        run: |
-          cat ../../.env
-          while read -r line || [[ -n "$line" ]]; do
-            # Split each line into variable name and value
-            var_name=$(echo "$line" | cut -d'=' -f1)
-            var_value=$(echo "$line" | cut -d'=' -f2-)
-            # Set the variable in the environment
-            echo "##[set-env name=$var_name;]$var_value"
-          done < ../../.env
-
-      - name: Show env values
-        run: |
-          echo "DATABASE_URL_LOCAL=$DATABASE_URL_LOCAL"
-          echo "DATABASE_URL_NEON=$DATABASE_URL_NEON"
-          echo "type=$type"
-          echo "project_id=$project_id"
-          echo "private_key_id=$private_key_id"
-          echo "private_key=$private_key"
-          echo "client_email=$client_email"
-          echo "client_id=$client_id"
-          echo "auth_uri=$auth_uri"
-          echo "token_uri=$token_uri"
-          echo "auth_provider_x509_cert_url=$auth_provider_x509_cert_url"
-          echo "client_x509_cert_url=$client_x509_cert_url"
-          echo "universe_domain=$universe_domain"
-          echo "postgres_Titulo=$postgres_Titulo"
-          echo "postgres_Usuario=$postgres_Usuario"
-          echo "postgres_Contrasena=$postgres_Contrasena"
-          echo "postgres_Host=$postgres_Host"
+      - name: make .env 
+        uses: SpicyPizza/create-envfile@v1.3
+        with:
+          envkey_DATABASE_URL_LOCAL: ${{ secrets.DATABASE_URL_LOCAL }}
+        envkey_DATABASE_URL_NEON: ${{ secrets.DATABASE_URL_NEON }}
+        envkey_type: ${{ secrets.type }}
+        envkey_project_id: ${{ secrets.project_id }}
+        envkey_private_key_id: ${{ secrets.private_key_id }}
+        envkey_private_key: ${{ secrets.private_key }}
+        envkey_client_email: ${{ secrets.client_email }}
+        envkey_client_id: ${{ secrets.client_id }}
+        envkey_auth_uri: ${{ secrets.auth_uri }}
+        envkey_token_uri: ${{ secrets.token_uri }}
+        envkey_auth_provider_x509_cert_url: ${{ secrets.auth_provider_x509_cert_url }}
+        envkey_client_x509_cert_url: ${{ secrets.client_x509_cert_url }}
+        envkey_universe_domain: ${{ secrets.universe_domain }}
+        envkey_postgres_Titulo: ${{ secrets.postgres_Titulo }}
+        envkey_postgres_Usuario: ${{ secrets.postgres_Usuario }}
+        envkey_postgres_Contrasena: ${{ secrets.postgres_Contrasena }}
+        envkey_postgres_Host: ${{ secrets.postgres_Host }}
+        file_name: .env
+        fail_on_empty: false
       
       - name: show dir, .env file
         run: |
