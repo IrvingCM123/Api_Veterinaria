@@ -17,14 +17,14 @@ jobs:
       - name: Read .env file
         id: env
         run: |
-          cat .env
+          cat $GITHUB_WORKSPACE/.env
           while read -r line || [[ -n "$line" ]]; do
             # Split each line into variable name and value
             var_name=$(echo "$line" | cut -d'=' -f1)
             var_value=$(echo "$line" | cut -d'=' -f2-)
             # Set the variable in the environment
             echo "##[set-env name=$var_name;]$var_value"
-          done < .env
+          done < $GITHUB_WORKSPACE/.env
 
       - name: Show env values
         run: |
