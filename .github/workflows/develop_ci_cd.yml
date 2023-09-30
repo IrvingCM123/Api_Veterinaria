@@ -1,11 +1,11 @@
-name: develop CI, CD workflow 
+name: master CI, CD workflow 
 on: 
   push:
     branches: [ "Okteto"]
   pull_request:
     branches: [ "Okteto"]
 jobs:
-  develop-ci-cd:
+  master-ci-cd:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
