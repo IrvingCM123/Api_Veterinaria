@@ -55,11 +55,17 @@ export const validarVenta: ValidationChain[] = [
     .withMessage('La fecha de la venta debe tener el formato "YYYY-MM-DD HH:mm:ss"'),
 ];
 
-
+/**
+ * Validador para la obtención de información de un documento en la colección "historial_venta".
+ * Valida el nombre del documento para asegurarse de que sea una cadena de texto no vacía.
+ * Si el nombre del documento no es válido, se generará un mensaje de error correspondiente.
+ */
 export const obtenerInfoDocumentoValidator: ValidationChain[] = [
+  // Comprueba que el campo "nombreDocumento" no esté vacío
   check("nombreDocumento")
     .notEmpty()
     .withMessage("El nombre del documento es requerido")
+    // Comprueba que el campo "nombreDocumento" sea una cadena de texto
     .isString()
     .withMessage("El nombre del documento debe ser una cadena de texto"),
 ];
