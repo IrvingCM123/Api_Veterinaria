@@ -1,17 +1,13 @@
-# Utiliza una imagen base de Node.js
-FROM node:16
+FROM debian:bullseye
 
-# Establece el directorio de trabajo dentro del contenedor
-WORKDIR /app
+RUN apt-get update
+RUN apt-get install -y curl make g++
+RUN curl -sL http://deb.nodesource.com/setup_16.x | bash -
+RUN apt-get install -y nodejs
 
-# Copia el contenido de la carpeta dist de tu proyecto local al contenedor
-COPY ./dist /app
+ADD . /
 
-# Instala las dependencias
 RUN npm install
+EXPOSE 8080
 
-# Expone el puerto en el que se ejecutará tu aplicación (si es necesario)
-# EXPOSE 8080
-
-# Comando para ejecutar tu aplicación
-CMD ["node", "app.js"]
+CMD ["node", "dist/app.js"]
