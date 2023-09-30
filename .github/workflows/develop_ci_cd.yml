@@ -1,69 +1,76 @@
-name: develop CI, CD workflow 
-on: 
+name: develop CI, CD workflow
+on:
   push:
-    branches: [ "Okteto"]
+    branches: ["Okteto"]
   pull_request:
-    branches: [ "Okteto"]
+    branches: ["Okteto"]
 jobs:
   develop-ci-cd:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+
       - name: Use Node.js 16.x
         uses: actions/setup-node@v1
         with:
           node-version: 16.x
-      - name: make .env 
+
+      - name: make .env
         uses: SpicyPizza/create-envfile@v1.3
         with:
-          envkey_DEV_DATABASE_URL : ${{ secrets.DEV_DATABASE_URL }}
+          envkey_DEV_DATABASE_URL: ${{ secrets.DEV_DATABASE_URL }}
           file_name: .env
           fail_on_empty: false
-      
-      - name: show dir, .env file
-        run: |
-          cat .env 
-          
-      - name: Build the custom Docker image
-        run: docker build -t ${{secrets.DOCKER_USER}}/${{secrets.MODEL_NAME}}:${{github.sha}} .
 
-      - name: show docker images
+      - name: Show dir and .env file
+        run: |
+          cat .env
+
+      - name: Compile TypeScript
+        run: |
+          npm install # Asegúrate de que las dependencias estén instaladas
+          npx tsc
+
+      - name: Build the custom Docker image
+        run: docker build -t ${{ secrets.DOCKER_USER }}/${{ secrets.MODEL_NAME }}:${{ github.sha }} .
+
+      - name: Show Docker images
         run: docker images
 
-      - name: docker login
+      - name: Docker login
         env:
-          DOCKER_USER: ${{secrets.DOCKER_USER}}
-          DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
+          DOCKER_USER: ${{ secrets.DOCKER_USER }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
         run: |
-          docker login -u $DOCKER_USER -p $DOCKER_PASSWORD 
-          
+          docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
+
       - name: Docker Push
-        run: docker push ${{secrets.DOCKER_USER}}/${{secrets.MODEL_NAME}}:${{github.sha}}
-      
-      - name: update docker user in k8 
-        run: sed -i 's/{docker_user}/${{secrets.DOCKER_USER}}/g' manifests/k8s.yml
+        run: docker push ${{ secrets.DOCKER_USER }}/${{ secrets.MODEL_NAME }}:${{ github.sha }}
 
-      - name: update model name in k8 
-        run: sed -i 's/{model_name}/${{secrets.MODEL_NAME}}/g' manifests/k8s.yml
+      - name: Update docker user in k8
+        run: sed -i 's/{docker_user}/${{ secrets.DOCKER_USER }}/g' manifests/k8s.yml
 
-      - name: update _ by - 
+      - name: Update model name in k8
+        run: sed -i 's/{model_name}/${{ secrets.MODEL_NAME }}/g' manifests/k8s.yml
+
+      - name: Update _ by -
         run: sed -i 's/_/-/g' manifests/k8s.yml
 
-      - name: update sha in k8
-        run: sed -i 's/{github.sha}/${{github.sha}}/g' manifests/k8s.yml
+      - name: Update sha in k8
+        run: sed -i 's/{github.sha}/${{ github.sha }}/g' manifests/k8s.yml
 
-      - name: ls -la 
+      - name: ls -la
         run: cat manifests/k8s.yml
-        
+
       - uses: okteto/context@2.7.0
         with:
-          token: ${{secrets.OKTETO_TOKEN }}
+          token: ${{ secrets.OKTETO_TOKEN }}
 
       - name: Deploy and Wait
         uses: okteto/actions/deploy@v1
         env:
           KUBECONFIG: ${{ steps.namespace.outputs.kubeconfig }}
         with:
-          namespace: ${{secrets.OKTETO_NAMESPACE }}
+          namespace: ${{ secrets.OKTETO_NAMESPACE }}
           manifest: manifests/k8s.yml
-          tag: ${{ secrets.DOCKER_USERNAME }}/${{secrets.MODEL_NAME}}:${{github.sha}}
+          tag: ${{ secrets.DOCKER_USERNAME }}/${{ secrets.MODEL_NAME }}:${{ github.sha }}
