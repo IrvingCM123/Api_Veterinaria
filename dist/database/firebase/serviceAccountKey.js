@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.json = void 0;
+const llave = require('./archivo.json');
 exports.json = {
     type: process.env.type,
     project_id: process.env.project_id,
