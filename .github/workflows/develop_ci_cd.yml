@@ -15,7 +15,7 @@ jobs:
           node-version: 16.x
       - name: Create .env file
         run: |
-          private_key=$(cat manifests/private_key.pem)
+          private_key="${{ secrets.private_key }}"
           echo "DATABASE_URL_LOCAL=${{ secrets.DATABASE_URL_LOCAL }}" > .env
           echo "DATABASE_URL_NEON=${{ secrets.DATABASE_URL_NEON }}" >> .env
           echo "type=${{ secrets.type }}" >> .env
