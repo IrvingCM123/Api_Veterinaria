@@ -1,4 +1,3 @@
-const llave = require('./archivo.json');
 export const json = {
 
   type: process.env.type,
