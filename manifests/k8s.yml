@@ -18,7 +18,7 @@ spec:
         #image: gcr.io/tensorflow-serving/resnet
         image: docker.io/{docker_user}/{model_name}:{github.sha}
         ports:
-        - containerPort: 8080
+        - containerPort: 3000
 ---
 apiVersion: v1
 kind: Service
@@ -28,8 +28,8 @@ metadata:
   name: {model_name}-service
 spec:
   ports:
-  - port: 8080
-    targetPort: 8080
+  - port: 3000
+    targetPort: 3000
   selector:
     app: {model_name}-server
   type: LoadBalancer
