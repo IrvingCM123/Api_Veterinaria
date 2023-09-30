@@ -56,6 +56,7 @@ export const modificarProducto = async (req: Request, res: Response) => {
 
 export const crearProducto = async (req: Request, res: Response) => {
   const productoDetectado = req.body;
+  console.log(productoDetectado)
   try {
     await prisma.productos.create({
       data: productoDetectado,
