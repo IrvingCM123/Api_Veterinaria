@@ -16,7 +16,23 @@ jobs:
       - name: make .env 
         uses: SpicyPizza/create-envfile@v1.3
         with:
-          envkey_DEV_DATABASE_URL : ${{ secrets.DEV_DATABASE_URL }}
+          envkey_DATABASE_URL_LOCAL: ${{ secrets.DATABASE_URL_LOCAL }}
+          envkey_DATABASE_URL_NEON: ${{ secrets.DATABASE_URL_NEON }}
+          envkey_type: ${{ secrets.type }}
+          envkey_project_id: ${{ secrets.project_id }}
+          envkey_private_key_id: ${{ secrets.private_key_id }}
+          envkey_private_key: ${{ secrets.private_key }}
+          envkey_client_email: ${{ secrets.client_email }}
+          envkey_client_id: ${{ secrets.client_id }}
+          envkey_auth_uri: ${{ secrets.auth_uri }}
+          envkey_token_uri: ${{ secrets.token_uri }}
+          envkey_auth_provider_x509_cert_url: ${{ secrets.auth_provider_x509_cert_url }}
+          envkey_client_x509_cert_url: ${{ secrets.client_x509_cert_url }}
+          envkey_universe_domain: ${{ secrets.universe_domain }}
+          envkey_postgres_Titulo: ${{ secrets.postgres_Titulo }}
+          envkey_postgres_Usuario: ${{ secrets.postgres_Usuario }}
+          envkey_postgres_Contrasena: ${{ secrets.postgres_Contrasena }}
+          envkey_postgres_Host: ${{ secrets.postgres_Host }}
           file_name: .env
           fail_on_empty: false
       
