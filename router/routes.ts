@@ -12,7 +12,7 @@ import * as productoController from "../controllers/productosControllers";
 import * as historialController from "../controllers/historialVentasControllers";
 import * as usuarioController from "../controllers/usuarioControllers";
 
-import { validarVenta } from "../Validators/Venta_Validator";
+import { validarVenta, obtenerInfoDocumentoValidator } from "../Validators/Venta_Validator";
 
 import {
   validarUsuario,
@@ -128,6 +128,30 @@ router.post(
     historialController.registrarVenta(req, res, next);
   }
 );
+
+/**
+ * @route GET /ventas
+ * @desc Obtiene todas las ventas registradas.
+ */
+router.get("/ventas", historialController.obtenerNombresDocumentos);
+
+/**
+ * @route GET /ventasid/:id
+ * @param {string} nombreDocumento - Nombre del documento.
+ * @desc obten la información de cada venta por ID.
+ */
+router.get(
+  "/ventasid/:id",
+  obtenerInfoDocumentoValidator,
+  (req: Request, res: Response, next: NextFunction) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+    historialController.obtenerInfoDocumento(req, res, next);
+  }
+);
+
 
 // Rutas de usuarios
 

@@ -54,3 +54,12 @@ export const validarVenta: ValidationChain[] = [
     .matches(/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/)
     .withMessage('La fecha de la venta debe tener el formato "YYYY-MM-DD HH:mm:ss"'),
 ];
+
+
+export const obtenerInfoDocumentoValidator: ValidationChain[] = [
+  check("nombreDocumento")
+    .notEmpty()
+    .withMessage("El nombre del documento es requerido")
+    .isString()
+    .withMessage("El nombre del documento debe ser una cadena de texto"),
+];
