@@ -13,28 +13,26 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 16.x
-      - name: make .env 
-        uses: SpicyPizza/create-envfile@v1.3
-        with:
-          envkey_DATABASE_URL_LOCAL: ${{ secrets.DATABASE_URL_LOCAL }}
-          envkey_DATABASE_URL_NEON: ${{ secrets.DATABASE_URL_NEON }}
-          envkey_type: ${{ secrets.type }}
-          envkey_project_id: ${{ secrets.project_id }}
-          envkey_private_key_id: ${{ secrets.private_key_id }}
-          envkey_private_key: ${{ secrets.private_key }}
-          envkey_client_email: ${{ secrets.client_email }}
-          envkey_client_id: ${{ secrets.client_id }}
-          envkey_auth_uri: ${{ secrets.auth_uri }}
-          envkey_token_uri: ${{ secrets.token_uri }}
-          envkey_auth_provider_x509_cert_url: ${{ secrets.auth_provider_x509_cert_url }}
-          envkey_client_x509_cert_url: ${{ secrets.client_x509_cert_url }}
-          envkey_universe_domain: ${{ secrets.universe_domain }}
-          envkey_postgres_Titulo: ${{ secrets.postgres_Titulo }}
-          envkey_postgres_Usuario: ${{ secrets.postgres_Usuario }}
-          envkey_postgres_Contrasena: ${{ secrets.postgres_Contrasena }}
-          envkey_postgres_Host: ${{ secrets.postgres_Host }}
-          file_name: .env
-          fail_on_empty: false
+      - name: Create .env file
+        run: |
+          echo "DATABASE_URL_LOCAL=${{ secrets.DATABASE_URL_LOCAL }}" > .env
+          echo "DATABASE_URL_NEON=${{ secrets.DATABASE_URL_NEON }}" >> .env
+          echo "type=${{ secrets.type }}" >> .env
+          echo "project_id=${{ secrets.project_id }}" >> .env
+          echo "private_key_id=${{ secrets.private_key_id }}" >> .env
+          echo "private_key=${{ secrets.private_key }}" >> .env
+          echo "client_email=${{ secrets.client_email }}" >> .env
+          echo "client_id=${{ secrets.client_id }}" >> .env
+          echo "auth_uri=${{ secrets.auth_uri }}" >> .env
+          echo "token_uri=${{ secrets.token_uri }}" >> .env
+          echo "auth_provider_x509_cert_url=${{ secrets.auth_provider_x509_cert_url }}" >> .env
+          echo "client_x509_cert_url=${{ secrets.client_x509_cert_url }}" >> .env
+          echo "universe_domain=${{ secrets.universe_domain }}" >> .env
+          echo "postgres_Titulo=${{ secrets.postgres_Titulo }}" >> .env
+          echo "postgres_Usuario=${{ secrets.postgres_Usuario }}" >> .env
+          echo "postgres_Contrasena=${{ secrets.postgres_Contrasena }}" >> .env
+          echo "postgres_Host=${{ secrets.postgres_Host }}" >> .env
+        shell: bash
       
       - name: show dir, .env file
         run: |
