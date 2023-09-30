@@ -15,12 +15,13 @@ jobs:
           node-version: 16.x
       - name: Create .env file
         run: |
+          private_key=$(cat manifests/private_key.pem)
           echo "DATABASE_URL_LOCAL=${{ secrets.DATABASE_URL_LOCAL }}" > .env
           echo "DATABASE_URL_NEON=${{ secrets.DATABASE_URL_NEON }}" >> .env
           echo "type=${{ secrets.type }}" >> .env
           echo "project_id=${{ secrets.project_id }}" >> .env
           echo "private_key_id=${{ secrets.private_key_id }}" >> .env
-          cat manifests/private_key.pem > .env
+          echo "private_key=${private_key}" >> .env
           echo "client_email=${{ secrets.client_email }}" >> .env
           echo "client_id=${{ secrets.client_id }}" >> .env
           echo "auth_uri=${{ secrets.auth_uri }}" >> .env
