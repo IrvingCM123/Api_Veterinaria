@@ -13,7 +13,6 @@ const port = process.env.PORT || 3000;
 // Configura middleware para analizar el cuerpo de las solicitudes en formato JSON
 app.use(express.json());
 app.use(morgan("dev"));
-app.options('*', cors())
 app.use(express.urlencoded({ extended: true })); 
 
 const corsOptions = {
@@ -24,14 +23,10 @@ const corsOptions = {
 };
 
   // Aplica el middleware CORS con las opciones configuradas
-  app.use(cors(corsOptions));
+  app.use(cors);
   
 // Aplica las rutas de tu aplicación definidas en productoRoutes
-app.use(productoRoutes);
-
-app.get('/hola', (req, res, next) => {
-	res.send('node express api <br> by adsoft');
-});
+app.use('/api', productoRoutes);
 
 // Inicia el servidor y escucha en el puerto especificado
 app.listen(port, () => {

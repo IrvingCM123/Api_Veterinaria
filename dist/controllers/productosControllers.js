@@ -69,6 +69,7 @@ const modificarProducto = (req, res) => __awaiter(void 0, void 0, void 0, functi
 exports.modificarProducto = modificarProducto;
 const crearProducto = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const productoDetectado = req.body;
+    console.log(productoDetectado);
     try {
         yield prisma.productos.create({
             data: productoDetectado,
