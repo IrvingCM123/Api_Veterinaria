@@ -23,7 +23,7 @@ const corsOptions = {
 };
 
   // Aplica el middleware CORS con las opciones configuradas
-  app.use(cors);
+  app.use(cors(corsOptions));
   
 // Aplica las rutas de tu aplicación definidas en productoRoutes
 app.use('/api', productoRoutes);

@@ -22,7 +22,7 @@ const corsOptions = {
     optionsSuccessStatus: 204,
 };
 // Aplica el middleware CORS con las opciones configuradas
-app.use(cors_1.default);
+app.use((0, cors_1.default)(corsOptions));
 // Aplica las rutas de tu aplicación definidas en productoRoutes
 app.use('/api', routes_1.default);
 // Inicia el servidor y escucha en el puerto especificado
