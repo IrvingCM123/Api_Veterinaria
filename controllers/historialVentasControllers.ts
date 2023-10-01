@@ -55,7 +55,7 @@ export const registrarVenta = async (
 
             await documento.update({
                 ProductosVendidos: nuevosProductosVendidos,
-                TotalVenta: nuevoTotalVenta, // Asegúrate de mantener 2 decimales
+                TotalVenta: nuevoTotalVenta, 
                 TotalProductosVendidos: nuevoTotalProductosVendidos,
                 FechaVenta,
             });
@@ -65,7 +65,7 @@ export const registrarVenta = async (
             // Si el documento no existe, crea uno nuevo
             await documento.set({
                 ProductosVendidos,
-                TotalVenta: TotalVenta, // Asegúrate de mantener 2 decimales
+                TotalVenta: TotalVenta,
                 TotalProductosVendidos,
                 FechaVenta,
             });
@@ -123,10 +123,10 @@ export const obtenerInfoDocumento = async (
 ) => {
     try {
         // Obtén el nombre del documento desde los parámetros de la solicitud
-        const { nombreDocumento } = req.params;
+        const { id } = req.params;
 
         // Obtiene la referencia al documento en Firestore
-        const documento = historial_ventaCollection.doc(nombreDocumento);
+        const documento = historial_ventaCollection.doc(id);
 
         // Verifica si el documento existe
         const snapshot = await documento.get();
