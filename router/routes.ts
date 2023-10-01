@@ -119,7 +119,7 @@ router.delete(
  */
 router.post(
   "/ventas",
-  validarVenta,
+  
   (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
