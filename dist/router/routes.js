@@ -31,7 +31,6 @@ const usuarioController = __importStar(require("../controllers/usuarioController
 const Venta_Validator_1 = require("../Validators/Venta_Validator");
 const Usuario_Validator_1 = require("../Validators/Usuario_Validator");
 const Producto_Validator_1 = require("../Validators/Producto_Validator");
-const errorHandler_1 = require("../middleware/errorHandler");
 const router = (0, express_1.Router)();
 // Ruta principal de bienvenida
 router.get("/", (req, res) => {
@@ -106,6 +105,23 @@ router.post("/ventas", Venta_Validator_1.validarVenta, (req, res, next) => {
     }
     historialController.registrarVenta(req, res, next);
 });
+/**
+ * @route GET /ventas
+ * @desc Obtiene todas las ventas registradas.
+ */
+router.get("/ventas", historialController.obtenerNombresDocumentos);
+/**
+ * @route GET /ventasid/:id
+ * @param {string} nombreDocumento - Nombre del documento.
+ * @desc obten la información de cada venta por ID.
+ */
+router.get("/ventasid/:id", (req, res, next) => {
+    const errors = (0, express_validator_1.validationResult)(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+    historialController.obtenerInfoDocumento(req, res, next);
+});
 // Rutas de usuarios
 /**
  * @route POST /usuarios/login
@@ -131,5 +147,4 @@ router.get("/usuarios", usuarioController.obtenerUsuarios);
  * @desc Obtiene un usuario por su correo electrónico.
  */
 router.get("/usuarios/:email", usuarioController.obtenerUsuario);
-router.use(errorHandler_1.errorHandler);
 exports.default = router;

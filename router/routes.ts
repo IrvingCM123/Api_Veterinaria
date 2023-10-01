@@ -182,6 +182,4 @@ router.get("/usuarios", usuarioController.obtenerUsuarios);
  */
 router.get("/usuarios/:email", usuarioController.obtenerUsuario);
 
-router.use(errorHandler);
-
 export default router;
