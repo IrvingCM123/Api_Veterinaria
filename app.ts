@@ -29,6 +29,10 @@ const corsOptions = {
 // Aplica las rutas de tu aplicación definidas en productoRoutes
 app.use(productoRoutes);
 
+app.get('/hola', (req, res, next) => {
+	res.send('node express api <br> by adsoft');
+});
+
 // Inicia el servidor y escucha en el puerto especificado
 app.listen(port, () => {
   console.log(`Servidor en ejecución en el puerto ${port}`);
