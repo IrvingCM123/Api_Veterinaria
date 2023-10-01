@@ -24,6 +24,11 @@ app.use(cors(corsOptions));
 
 app.options('*', cors());
 
+app.use(cors({
+  origin: 'https://practicas-veterinaria-j4pmzhsb3-irvingconde.vercel.app',
+  credentials: true,
+}));   
+   
 // Aplica las rutas de tu aplicación definidas en productoRoutes
 app.use('/api', productoRoutes);
 
