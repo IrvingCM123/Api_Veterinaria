@@ -14,25 +14,11 @@ app.use(express.json());
 
 app.options('*', cors());
 
-app.use(cors({
-  origin: 'https://practicas-veterinaria-j4pmzhsb3-irvingconde.vercel.app',
-  credentials: true,
-}));   
-   
-const corsOptions = {
-  origin: 'https://practicas-veterinaria-j4pmzhsb3-irvingconde.vercel.app',
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE', // Métodos HTTP permitidos
-  credentials: true, // Habilita las credenciales, si es necesario (por ejemplo, cookies)
-  };
-  
   // Aplica el middleware CORS con las opciones configuradas
-  app.use(cors(corsOptions));
+  app.use(cors);
   
 // Aplica las rutas de tu aplicación definidas en productoRoutes
 app.use('/api', productoRoutes);
-
-// Aplica el middleware de manejo de errores
-app.use(errorHandler);
 
 // Inicia el servidor y escucha en el puerto especificado
 app.listen(port, () => {
