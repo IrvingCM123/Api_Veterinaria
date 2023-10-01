@@ -4,6 +4,7 @@ import productoRoutes from './router/routes';
 import cors from 'cors'; 
 import { errorHandler } from './middleware/errorHandler';
 import { createProxyMiddleware } from 'http-proxy-middleware';
+import morgan from "morgan";
 
 // Crea una instancia de la aplicación Express
 const app = express();
@@ -11,8 +12,9 @@ const port = process.env.PORT || 3000;
 
 // Configura middleware para analizar el cuerpo de las solicitudes en formato JSON
 app.use(express.json());
-
-app.options('*', cors());
+app.use(morgan("dev"));
+app.options('*', cors())
+app.use(express.urlencoded({ extended: true })); 
 
   // Aplica el middleware CORS con las opciones configuradas
   app.use(cors);
