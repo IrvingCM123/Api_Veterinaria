@@ -12,16 +12,6 @@ const port = process.env.PORT || 3000;
 // Configura middleware para analizar el cuerpo de las solicitudes en formato JSON
 app.use(express.json());
 
-// Configura las opciones de CORS para permitir solicitudes desde 'http://localhost:4200'
-const corsOptions = {
-  origin: 'http://localhost:4200', // Origen permitido
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE', // Métodos HTTP permitidos
-  credentials: true, // Habilita las credenciales, si es necesario (por ejemplo, cookies)
-};
-
-// Aplica el middleware CORS con las opciones configuradas
-app.use(cors(corsOptions));
-
 app.options('*', cors());
 
 app.use(cors({
@@ -29,6 +19,15 @@ app.use(cors({
   credentials: true,
 }));   
    
+const corsOptions = {
+  origin: 'https://practicas-veterinaria-j4pmzhsb3-irvingconde.vercel.app',
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE', // Métodos HTTP permitidos
+  credentials: true, // Habilita las credenciales, si es necesario (por ejemplo, cookies)
+  };
+  
+  // Aplica el middleware CORS con las opciones configuradas
+  app.use(cors(corsOptions));
+  
 // Aplica las rutas de tu aplicación definidas en productoRoutes
 app.use('/api', productoRoutes);
 
