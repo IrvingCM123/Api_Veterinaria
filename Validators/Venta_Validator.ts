@@ -78,11 +78,11 @@ export const validarVenta: ValidationChain[] = [
     .isNumeric()
     .withMessage("El total de productos vendidos debe ser un número válido"),
 
-  // Validación para asegurar que "FechaVenta" tenga el formato "YYYY-MM-DD HH:mm:ss"
+  // Validación para asegurar que "FechaVenta" tenga el formato "YYYY-MM-DD"
   check("FechaVenta")
-    .matches(/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/)
+    .matches(/^\d{4}-\d{2}-\d{2}$/)
     .withMessage(
-      'La fecha de la venta debe tener el formato "YYYY-MM-DD HH:mm:ss"'
+      'La fecha de la venta debe tener el formato "YYYY-MM-DD"'
     ),
 ];
 

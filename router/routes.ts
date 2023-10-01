@@ -142,7 +142,7 @@ router.get("/ventas", historialController.obtenerNombresDocumentos);
  */
 router.get(
   "/ventasid/:id",
-  obtenerInfoDocumentoValidator,
+  
   (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {

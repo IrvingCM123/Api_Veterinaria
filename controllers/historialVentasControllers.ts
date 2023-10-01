@@ -33,16 +33,47 @@ export const registrarVenta = async (
         // Genera el nombre del documento basado en la fecha de venta
         const nombreDocumento = `${FechaVenta}`;
 
-        // Guarda los datos de la venta en Firestore
-        await historial_ventaCollection.doc(nombreDocumento).set({
-            ProductosVendidos,
-            TotalVenta,
-            TotalProductosVendidos,
-            FechaVenta,
-        });
+        // Obtiene la referencia al documento en Firestore
+        const documento = historial_ventaCollection.doc(nombreDocumento);
 
-        console.log("Documento agregado con nombre:", nombreDocumento);
-        res.json({ message: "Venta registrada" });
+        // Verifica si el documento ya existe
+        const snapshot = await documento.get();
+
+        if (snapshot.exists) {
+            // Si el documento existe, actualiza los campos en lugar de crear uno nuevo
+            const datosDocumento: any = snapshot.data();
+
+            const nuevosProductosVendidos = [
+                ...datosDocumento.ProductosVendidos,
+                ...ProductosVendidos,
+            ];
+            const nuevoTotalVenta =
+                Number(datosDocumento.TotalVenta) + Number(TotalVenta);
+            const nuevoTotalProductosVendidos =
+                Number(datosDocumento.TotalProductosVendidos) +
+                Number(TotalProductosVendidos);
+
+            await documento.update({
+                ProductosVendidos: nuevosProductosVendidos,
+                TotalVenta: nuevoTotalVenta, 
+                TotalProductosVendidos: nuevoTotalProductosVendidos,
+                FechaVenta,
+            });
+
+            console.log("Documento actualizado con nombre:", nombreDocumento);
+        } else {
+            // Si el documento no existe, crea uno nuevo
+            await documento.set({
+                ProductosVendidos,
+                TotalVenta: TotalVenta,
+                TotalProductosVendidos,
+                FechaVenta,
+            });
+
+            console.log("Documento agregado con nombre:", nombreDocumento);
+        }
+
+        res.json({ message: "Venta registrada o actualizada" });
     } catch (error) {
         console.error("Error al registrar la venta:", error);
         res.status(500).json({ error: "Error al registrar la venta" });
@@ -77,7 +108,6 @@ export const obtenerNombresDocumentos = async (
     }
 };
 
-
 /**
  * Controlador para obtener la información de un documento en la colección "historial_venta"
  * en base al nombre del documento.
@@ -93,10 +123,10 @@ export const obtenerInfoDocumento = async (
 ) => {
     try {
         // Obtén el nombre del documento desde los parámetros de la solicitud
-        const { nombreDocumento } = req.params;
+        const { id } = req.params;
 
         // Obtiene la referencia al documento en Firestore
-        const documento = historial_ventaCollection.doc(nombreDocumento);
+        const documento = historial_ventaCollection.doc(id);
 
         // Verifica si el documento existe
         const snapshot = await documento.get();
@@ -110,6 +140,8 @@ export const obtenerInfoDocumento = async (
         res.json({ datosDocumento });
     } catch (error) {
         console.error("Error al obtener la información del documento:", error);
-        res.status(500).json({ error: "Error al obtener la información del documento" });
+        res
+            .status(500)
+            .json({ error: "Error al obtener la información del documento" });
     }
 };
