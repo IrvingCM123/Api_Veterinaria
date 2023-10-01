@@ -4,6 +4,7 @@ import productoRoutes from './router/routes';
 import cors from 'cors'; 
 import { errorHandler } from './middleware/errorHandler';
 import { createProxyMiddleware } from 'http-proxy-middleware';
+import morgan from "morgan";
 
 // Crea una instancia de la aplicación Express
 const app = express();
@@ -11,24 +12,21 @@ const port = process.env.PORT || 3000;
 
 // Configura middleware para analizar el cuerpo de las solicitudes en formato JSON
 app.use(express.json());
+app.use(morgan("dev"));
+app.use(express.urlencoded({ extended: true })); 
 
-// Configura las opciones de CORS para permitir solicitudes desde 'http://localhost:4200'
 const corsOptions = {
-  origin: 'http://localhost:4200', // Origen permitido
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE', // Métodos HTTP permitidos
-  credentials: true, // Habilita las credenciales, si es necesario (por ejemplo, cookies)
+  origin: '*', // Esto permite que cualquier origen acceda a tu API (deberías limitarlo a orígenes específicos en producción)
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  preflightContinue: false,
+  optionsSuccessStatus: 204,
 };
 
-// Aplica el middleware CORS con las opciones configuradas
-app.use(cors(corsOptions));
-
-app.options('*', cors());
-
+  // Aplica el middleware CORS con las opciones configuradas
+  app.use(cors(corsOptions));
+  
 // Aplica las rutas de tu aplicación definidas en productoRoutes
 app.use('/api', productoRoutes);
-
-// Aplica el middleware de manejo de errores
-app.use(errorHandler);
 
 // Inicia el servidor y escucha en el puerto especificado
 app.listen(port, () => {

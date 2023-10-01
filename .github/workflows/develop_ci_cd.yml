@@ -1,9 +1,9 @@
 name: master CI, CD workflow 
 on: 
   push:
-    branches: [ "develop"]
+    branches: [ "red"]
   pull_request:
-    branches: [ "develop"]
+    branches: [ "red"]
 jobs:
   master-ci-cd:
     runs-on: ubuntu-latest
