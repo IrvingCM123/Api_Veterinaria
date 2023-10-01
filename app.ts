@@ -27,7 +27,7 @@ const corsOptions = {
   app.use(cors(corsOptions));
   
 // Aplica las rutas de tu aplicación definidas en productoRoutes
-app.use('/api', productoRoutes);
+app.use(productoRoutes);
 
 // Inicia el servidor y escucha en el puerto especificado
 app.listen(port, () => {
