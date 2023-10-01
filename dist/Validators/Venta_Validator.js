@@ -1,42 +1,73 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.validarVenta = void 0;
-const { check, validationResult } = require('express-validator');
-const productoValidator = [
-    check('nombre').notEmpty().withMessage('El nombre del producto es requerido'),
-    check('precio')
-        .isNumeric()
-        .withMessage('El precio del producto debe ser un número válido'),
-    check('cantidad')
-        .isNumeric()
-        .withMessage('La cantidad del producto debe ser un número válido'),
-    check('subtotal')
-        .isNumeric()
-        .withMessage('El subtotal del producto debe ser un número válido'),
-];
+exports.obtenerInfoDocumentoValidator = exports.validarVenta = void 0;
+const express_validator_1 = require("express-validator");
+/**
+ * Validador para la estructura general de la venta. Este validador se utiliza para validar
+ * los datos enviados en una solicitud de registro de venta antes de almacenarlos en la base de datos.
+ * Se asegura de que los datos cumplan con los requisitos específicos.
+ */
 exports.validarVenta = [
-    check('fecha')
-        .isDate()
-        .withMessage('La fecha de la venta debe ser una fecha válida'),
-    check('totalVenta')
-        .isNumeric()
-        .withMessage('El total de la venta debe ser un número válido'),
-    check('productos')
+    // Validación para asegurar que "ProductosVendidos" sea un array válido y no esté vacío
+    (0, express_validator_1.check)("ProductosVendidos")
         .isArray()
-        .withMessage('Los productos deben ser un array válido'),
-    check('productos.*').custom((value, { req }) => {
-        const errores = validationResult(req).array();
-        if (errores.length === 0) {
-            return Promise.all(req.body.productos.map((producto, index) => {
-                return productoValidator.map((validator) => {
-                    return validator.run(producto, { req, location: `productos[${index}]` });
-                });
-            }));
+        .withMessage("Los productos vendidos deben ser un array válido")
+        .custom((productos) => {
+        if (!Array.isArray(productos) || productos.length === 0) {
+            throw new Error("Los productos vendidos deben ser un array válido y no estar vacíos");
         }
-        return true;
+        // Validación individual de cada producto en "ProductosVendidos"
+        productos.forEach((producto, index) => {
+            // Verifica que cada elemento en "ProductosVendidos" sea un objeto
+            if (typeof producto !== "object") {
+                throw new Error(`El producto en la posición ${index} no es un objeto válido`);
+            }
+            // Verifica que cada producto tenga una propiedad 'Nombre'
+            if (!producto.hasOwnProperty("Nombre")) {
+                throw new Error(`El producto en la posición ${index} debe tener una propiedad 'Nombre'`);
+            }
+            // Verifica que el precio de cada producto sea un número válido
+            if (!producto.hasOwnProperty("Precio") ||
+                isNaN(Number(producto.Precio))) {
+                throw new Error(`El producto en la posición ${index} debe tener un precio numérico`);
+            }
+            // Verifica que la cantidad de cada producto sea un número válido
+            if (!producto.hasOwnProperty("Cantidad") ||
+                isNaN(Number(producto.Cantidad))) {
+                throw new Error(`El producto en la posición ${index} debe tener una cantidad numérica`);
+            }
+            // Verifica que el subtotal de cada producto sea un número válido
+            if (!producto.hasOwnProperty("Subtotal") ||
+                isNaN(Number(producto.Subtotal))) {
+                throw new Error(`El producto en la posición ${index} debe tener un subtotal numérico`);
+            }
+        });
+        return true; // Indica que las validaciones han sido completadas con éxito
     }),
-    check('totalProductosVendidos')
+    // Validación para asegurar que "TotalVenta" sea un número válido
+    (0, express_validator_1.check)("TotalVenta")
         .isNumeric()
-        .withMessage('El total de productos vendidos debe ser un número válido'),
+        .withMessage("El total de la venta debe ser un número válido"),
+    // Validación para asegurar que "TotalProductosVendidos" sea un número válido
+    (0, express_validator_1.check)("TotalProductosVendidos")
+        .isNumeric()
+        .withMessage("El total de productos vendidos debe ser un número válido"),
+    // Validación para asegurar que "FechaVenta" tenga el formato "YYYY-MM-DD"
+    (0, express_validator_1.check)("FechaVenta")
+        .matches(/^\d{4}-\d{2}-\d{2}$/)
+        .withMessage('La fecha de la venta debe tener el formato "YYYY-MM-DD"'),
 ];
-module.exports = { validarVenta: exports.validarVenta };
+/**
+ * Validador para la obtención de información de un documento en la colección "historial_venta".
+ * Valida el nombre del documento para asegurarse de que sea una cadena de texto no vacía.
+ * Si el nombre del documento no es válido, se generará un mensaje de error correspondiente.
+ */
+exports.obtenerInfoDocumentoValidator = [
+    // Comprueba que el campo "nombreDocumento" no esté vacío
+    (0, express_validator_1.check)("nombreDocumento")
+        .notEmpty()
+        .withMessage("El nombre del documento es requerido")
+        // Comprueba que el campo "nombreDocumento" sea una cadena de texto
+        .isString()
+        .withMessage("El nombre del documento debe ser una cadena de texto"),
+];
