@@ -55,7 +55,7 @@ export const registrarVenta = async (
 
             await documento.update({
                 ProductosVendidos: nuevosProductosVendidos,
-                TotalVenta: nuevoTotalVenta, 
+                TotalVenta: nuevoTotalVenta,
                 TotalProductosVendidos: nuevoTotalProductosVendidos,
                 FechaVenta,
             });
@@ -162,12 +162,12 @@ export const obtenerInfoMes = async (
 ) => {
     try {
         // Obtén el nombre del documento desde los parámetros de la solicitud
-        const { id } : any = req.params;
-
+        const { id }: any = req.params;
+        const partes = id.split('-');
+        const mes = partes[1]; // Esto obtiene el mes (MM)
+        console.log(mes)
         // Utiliza el método ya establecido en el controlador para obtener la información del documento solicitado
-        const informacion_Venta = await obtenerInfoDocumento(id, res, next);
 
-        res.json({ informacion_Venta });
     } catch (error) {
         console.error("Error al obtener la información del documento:", error);
         res
@@ -176,3 +176,42 @@ export const obtenerInfoMes = async (
     }
 };
 
+
+/**
+ * Busca documentos en la colección "historial_venta" que contengan un fragmento específico en su nombre.
+ *
+ * @param {Request} req - Objeto Request de Express.
+ * @param {Response} res - Objeto Response de Express.
+ */
+export const buscarDocumentosPorMes = async (
+    req: Request,
+    res: Response
+) => {
+    try {
+        // Obtén el mes que deseas buscar desde los parámetros de la solicitud
+        const { mes } = req.params;
+
+        // Obtiene todos los documentos de la colección "historial_venta"
+        const documentos = await historial_ventaCollection.listDocuments();
+
+        // Filtra los nombres de los documentos que coincidan con el mes deseado en su ID
+        const documentosFiltrados = documentos.filter((documento) => {
+            const idDocumento = documento.id; // Obtén el ID del documento
+            const expresionRegular = new RegExp(`\\d{4}-${mes}-\\d{2}`); // Expresión regular para YYYY-MM-DD
+            return expresionRegular.test(idDocumento);
+        });
+
+        // Obtén los datos de los documentos encontrados
+        const datosDocumentos = await Promise.all(
+            documentosFiltrados.map(async (documento) => {
+                const snapshot = await documento.get();
+                return snapshot.data();
+            })
+        );
+
+        res.json({ documentosEncontrados: datosDocumentos });
+    } catch (error) {
+        console.error("Error al buscar documentos por mes:", error);
+        res.status(500).json({ error: "Error al buscar documentos por mes" });
+    }
+};
