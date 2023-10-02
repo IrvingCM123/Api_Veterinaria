@@ -162,11 +162,8 @@ export const obtenerInfoMes = async (
     try {
         // Obtén el nombre del documento desde los parámetros de la solicitud
         const { id }: any = req.params;
-        const partes = id.split("-");
-        const mes = partes[1]; // Esto obtiene el mes (MM)
         // Utiliza el método ya establecido en el controlador para obtener la información del documento solicitado
-        const informacion_Venta = await buscarDocumentosPorMes(mes, res);
-        console.log(informacion_Venta);
+        const informacion_Venta = await buscarDocumentosPorMes(id, res);
         res.json({ informacion_Venta });
     } catch (error) {
         console.error("Error al obtener la información del documento:", error);
