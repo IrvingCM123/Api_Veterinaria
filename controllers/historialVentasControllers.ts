@@ -146,7 +146,6 @@ export const obtenerInfoDocumento = async (
     }
 };
 
-
 /**
  * Controlador para obtener la información de un documento en la colección "historial_venta"
  * en base al nombre del documento, donde se busca obtener las ventas por mes.
@@ -163,11 +162,12 @@ export const obtenerInfoMes = async (
     try {
         // Obtén el nombre del documento desde los parámetros de la solicitud
         const { id }: any = req.params;
-        const partes = id.split('-');
+        const partes = id.split("-");
         const mes = partes[1]; // Esto obtiene el mes (MM)
-        console.log(mes)
         // Utiliza el método ya establecido en el controlador para obtener la información del documento solicitado
-
+        const informacion_Venta = await buscarDocumentosPorMes(mes, res);
+        console.log(informacion_Venta);
+        res.json({ informacion_Venta });
     } catch (error) {
         console.error("Error al obtener la información del documento:", error);
         res
@@ -176,20 +176,16 @@ export const obtenerInfoMes = async (
     }
 };
 
-
 /**
  * Busca documentos en la colección "historial_venta" que contengan un fragmento específico en su nombre.
  *
  * @param {Request} req - Objeto Request de Express.
  * @param {Response} res - Objeto Response de Express.
  */
-export const buscarDocumentosPorMes = async (
-    req: Request,
-    res: Response
-) => {
+export const buscarDocumentosPorMes = async (req: Request, res: Response) => {
     try {
         // Obtén el mes que deseas buscar desde los parámetros de la solicitud
-        const { mes } = req.params;
+        const mes: any = req;
 
         // Obtiene todos los documentos de la colección "historial_venta"
         const documentos = await historial_ventaCollection.listDocuments();
@@ -209,7 +205,7 @@ export const buscarDocumentosPorMes = async (
             })
         );
 
-        res.json({ documentosEncontrados: datosDocumentos });
+        return { documentosEncontrados: datosDocumentos };
     } catch (error) {
         console.error("Error al buscar documentos por mes:", error);
         res.status(500).json({ error: "Error al buscar documentos por mes" });
