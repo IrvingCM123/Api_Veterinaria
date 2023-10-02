@@ -145,3 +145,34 @@ export const obtenerInfoDocumento = async (
             .json({ error: "Error al obtener la información del documento" });
     }
 };
+
+
+/**
+ * Controlador para obtener la información de un documento en la colección "historial_venta"
+ * en base al nombre del documento, donde se busca obtener las ventas por mes.
+ *
+ * @param {Request} req - Objeto Request de Express.
+ * @param {Response} res - Objeto Response de Express.
+ * @param {NextFunction} next - Función de middleware para pasar al siguiente manejador.
+ */
+export const obtenerInfoMes = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    try {
+        // Obtén el nombre del documento desde los parámetros de la solicitud
+        const { id } : any = req.params;
+
+        // Utiliza el método ya establecido en el controlador para obtener la información del documento solicitado
+        const informacion_Venta = await obtenerInfoDocumento(id, res, next);
+
+        res.json({ informacion_Venta });
+    } catch (error) {
+        console.error("Error al obtener la información del documento:", error);
+        res
+            .status(500)
+            .json({ error: "Error al obtener la información del documento" });
+    }
+};
+
