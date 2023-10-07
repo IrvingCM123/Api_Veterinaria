@@ -141,7 +141,7 @@ router.get("/usuarios", usuarioController.obtenerUsuarios);
  */
 router.get("/usuarios/:email", usuarioController.obtenerUsuario);
 
-// Rutas de proveedores
+// Rutas de catalogo de proveedores
 
 /**
  * @route GET /proveedores
