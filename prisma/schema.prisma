@@ -4,39 +4,136 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url = env("DATABASE_URL_NEON")
+  url      = env("DATABASE_URL_NEON")
 }
 
 model Productos {
-  id          String @id @unique
-  nombre      String
-  descripcion String?
-  precio      String
-  marca       String
-  imagen      String?
-  tipo        String
+  id           Int @id  @default(autoincrement()) 
+  nombre       String
+  descripcion  String?
+  precio       String
+  id_marca     Int
+  id_proveedor Int
+  id_categoria Int
+  imagen       String?
+
+  // Relaciones con catálogos
+  marca     CatalogoMarca     @relation(fields: [id_marca], references: [id_marca])
+  proveedor CatalogoProveedor @relation(fields: [id_proveedor], references: [id_proveedor])
+  categoria CatalogoCategoria @relation(fields: [id_categoria], references: [id_categoria])
+  inventario Inventario[]
+
+}
+
+model CatalogoProveedor {
+  id_proveedor Int @id  @default(autoincrement()) 
+  nombre       String @unique
+  nomenclatura String @unique
+
+  // Relación inversa con Productos
+  productos Productos[]
+}
+
+model CatalogoMarca {
+  id_marca     Int @id  @default(autoincrement()) 
+  nombre       String @unique
+  nomenclatura String @unique
+
+  // Relación inversa con Productos
+  productos Productos[]
+}
+
+model CatalogoCategoria {
+  id_categoria Int @id  @default(autoincrement()) 
+  nombre       String @unique
+  nomenclatura String @unique
+
+  // Relación inversa con Productos
+  productos Productos[]
+}
+
+model Inventario {
+  id_inventario Int @id  @default(autoincrement()) 
+  id_producto   Int @unique  @default(autoincrement()) 
+  existencias   String
+  StockMinimo   String
+  StockMaximo   String
+
+  // Relación con Productos
+  producto Productos @relation(fields: [id_producto], references: [id])
+
+  // Relación inversa con DetalleVenta
+  detallesVenta DetalleVenta[]
+}
+
+model DetalleVenta {
+  id_detalleVenta  Int @id  @default(autoincrement()) 
+  id_venta         Int @unique  @default(autoincrement()) 
+  id_producto      Int @default(autoincrement()) 
+  cantidad_vendida String
+  precio_producto  String
+  subtotal         String
+  // Relación con Venta
+  venta Venta @relation(fields: [id_venta], references: [id_venta])
+
+  // Relación con Inventario
+  productoInventario Inventario @relation(fields: [id_producto], references: [id_producto])
+}
+
+model Venta {
+  id_venta    Int @id  @default(autoincrement()) 
+  id_vendedor Int  @default(autoincrement()) 
+  id_sucursal Int  @default(autoincrement()) 
+  fecha_venta String
+  total_venta String
+  subtotal    String
+  iva         String
+
+   // Relación con Sucursal 
+  sucursal    Sucursal @relation(fields: [id_sucursal], references: [id_sucursal])
+   // Relación con CatalogoVendedor 
+  vendedor    CatalogoVendedor @relation(fields: [id_vendedor], references: [id_vendedor])
+   // Relación inversa con DetalleVenta
+  detallesVenta DetalleVenta[]
+}
+
+
+model Sucursal {
+  id_sucursal  Int @id  @default(autoincrement()) 
+  nombre       String
+  direccion    String
+  ciudad       String
+  estado       String
+  codigoPostal String
+  telefono     String
+  encargado    String
+
+  // Relación inversa con Venta
+  ventas       Venta[]
+}
+
+model CatalogoVendedor {
+  id_vendedor  Int @id  @default(autoincrement()) 
+  id_usuario   Int  @default(autoincrement()) 
+  acronimo     String @unique
+  permisoVenta Boolean
+
+  // Relación con User
+  usuario      User @relation(fields: [id_usuario], references: [id_usuario])
+  // Relación inversa con Venta
+  ventas       Venta[]
 }
 
 model User {
-  email    String @id @unique
-  password String
-  nombre   String
-  apellido String
-  telefono String
-  direccion String
-  ciudad String
-  estado String
-  codigoPostal String
-  role     String
-}
+  id_usuario Int @id  @default(autoincrement()) 
+  email      String  @unique
+  password   String
+  nombre     String
+  apellido   String
+  telefono   String
+  direccion  String
+  imagen     String?
 
-model Sucursal {
-  id          String @id @unique
-  nombre      String
-  direccion   String
-  ciudad      String
-  estado      String
-  codigoPostal String
-  telefono    String
-  encargado   String
+  // Relación inversa con CatalogoVendedor
+  vendedor    CatalogoVendedor[]
 }
