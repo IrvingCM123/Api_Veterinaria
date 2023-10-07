@@ -27,8 +27,51 @@ export async function obtenerProductoPorId(id: number) {
     });
 }
 
-// Crear un nuevo producto
-export async function crearProducto(nombre: string, descripcion: string | null, precio: string, id_marca: number, id_proveedor: number, id_categoria: number, imagen: string | null) {
+// Obtener el ID de proveedor por su nomenclatura
+async function obtenerIdProveedorPorNomenclatura(nomenclatura: string) {
+    const proveedor = await prisma.catalogoProveedor.findUnique({
+        where: { nomenclatura },
+    });
+
+    if (!proveedor) {
+        throw new Error(`Proveedor con nomenclatura ${nomenclatura} no encontrado`);
+    }
+
+    return proveedor.id_proveedor;
+}
+
+// Obtener el ID de marca por su nomenclatura
+async function obtenerIdMarcaPorNomenclatura(nomenclatura: string) {
+    const marca = await prisma.catalogoMarca.findUnique({
+        where: { nomenclatura },
+    });
+
+    if (!marca) {
+        throw new Error(`Marca con nomenclatura ${nomenclatura} no encontrada`);
+    }
+
+    return marca.id_marca;
+}
+
+// Obtener el ID de categoría por su nomenclatura
+async function obtenerIdCategoriaPorNomenclatura(nomenclatura: string) {
+    const categoria = await prisma.catalogoCategoria.findUnique({
+        where: { nomenclatura },
+    });
+
+    if (!categoria) {
+        throw new Error(`Categoría con nomenclatura ${nomenclatura} no encontrada`);
+    }
+
+    return categoria.id_categoria;
+}
+
+// Crear un nuevo producto con las consultas a proveedor, marca y categoría
+export async function crearProducto(nombre: string, descripcion: string | null, precio: string, nomenclaturaProveedor: string, nomenclaturaMarca: string, nomenclaturaCategoria: string, imagen: string | null) {
+    const id_proveedor = await obtenerIdProveedorPorNomenclatura(nomenclaturaProveedor);
+    const id_marca = await obtenerIdMarcaPorNomenclatura(nomenclaturaMarca);
+    const id_categoria = await obtenerIdCategoriaPorNomenclatura(nomenclaturaCategoria);
+
     return await prisma.productos.create({
         data: {
             nombre,
@@ -75,9 +118,4 @@ export async function eliminarProducto(id: number) {
     return await prisma.productos.delete({
         where: { id },
     });
-}
-
-// Cerrar la conexión de Prisma al finalizar
-export async function cerrarConexionPrisma() {
-    await prisma.$disconnect();
 }
