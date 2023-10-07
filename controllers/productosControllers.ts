@@ -1,69 +1,83 @@
-import { Request, Response, NextFunction } from "express";
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-export const obtenerProductos = async (req: Request, res: Response) => {
-  try {
-    const productos = await prisma.productos.findMany();
-    res.json(productos);
-  } catch (error) {
-    console.error("Error al obtener los productos:", error);
-    res.status(500).json({ error: "Error al obtener los productos" });
-  }
-};
-
-export const buscarProducto = async (req: Request, res: Response) => {
-  const { id } = req.params;
-  try {
-    const producto: any = await prisma.productos.findUnique({
-      where: { id },
+// Obtener todos los productos
+export async function obtenerProductos() {
+    return await prisma.productos.findMany({
+        include: {
+            marca: true,
+            proveedor: true,
+            categoria: true,
+            inventario: true,
+        },
     });
-    res.json(producto);
-  } catch (error) {
-    console.error("Error al buscar el producto:", error);
-    res.status(500).json({ error: "Error al buscar el producto" });
-  }
-};
-
-export const eliminarProducto = async (req: Request, res: Response) => {
-  const { id } = req.params;
-  try {
-    await prisma.productos.delete({
-      where: { id },
-    });
-    res.json({ message: "Producto eliminado" });
-  } catch (error) {
-    console.error("Error al eliminar el producto:", error);
-    res.status(500).json({ error: "Error al eliminar el producto" });
-  }
-};
-
-export const modificarProducto = async (req: Request, res: Response) => {
-  const { id } = req.params;
-  const productoDetectado = req.body;
-  try {
-    await prisma.productos.update({
-      where: { id },
-      data: productoDetectado,
-    });
-    res.json({ message: "Producto modificado" });
-  } catch (error) {
-    console.error("Error al modificar el producto:", error);
-    res.status(500).json({ error: "Error al modificar el producto" });
-  }
 }
 
-export const crearProducto = async (req: Request, res: Response) => {
-  const productoDetectado = req.body;
-  console.log(productoDetectado)
-  try {
-    await prisma.productos.create({
-      data: productoDetectado,
+// Obtener un producto por su ID
+export async function obtenerProductoPorId(id: number) {
+    return await prisma.productos.findUnique({
+        where: { id },
+        include: {
+            marca: true,
+            proveedor: true,
+            categoria: true,
+            inventario: true,
+        },
     });
-    res.json({ message: "Producto creado" });
-  } catch (error) {
-    console.error("Error al crear el producto:", error);
-    res.status(500).json({ error: "Error al crear el producto" });
-  }
+}
+
+// Crear un nuevo producto
+export async function crearProducto(nombre: string, descripcion: string | null, precio: string, id_marca: number, id_proveedor: number, id_categoria: number, imagen: string | null) {
+    return await prisma.productos.create({
+        data: {
+            nombre,
+            descripcion,
+            precio,
+            id_marca,
+            id_proveedor,
+            id_categoria,
+            imagen,
+        },
+        include: {
+            marca: true,
+            proveedor: true,
+            categoria: true,
+            inventario: true,
+        },
+    });
+}
+
+// Actualizar un producto por su ID
+export async function actualizarProducto(id: number, nombre: string, descripcion: string | null, precio: string, id_marca: number, id_proveedor: number, id_categoria: number, imagen: string | null) {
+    return await prisma.productos.update({
+        where: { id },
+        data: {
+            nombre,
+            descripcion,
+            precio,
+            id_marca,
+            id_proveedor,
+            id_categoria,
+            imagen,
+        },
+        include: {
+            marca: true,
+            proveedor: true,
+            categoria: true,
+            inventario: true,
+        },
+    });
+}
+
+// Eliminar un producto por su ID
+export async function eliminarProducto(id: number) {
+    return await prisma.productos.delete({
+        where: { id },
+    });
+}
+
+// Cerrar la conexión de Prisma al finalizar
+export async function cerrarConexionPrisma() {
+    await prisma.$disconnect();
 }
