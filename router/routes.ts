@@ -302,6 +302,86 @@ router.delete("/categorias/:id", async (req: Request, res: Response, next: NextF
   }
 });
 
+// Rutas de marcas
+
+/**
+ * @route GET /marcas
+ * @desc Obtiene todas las marcas.
+ */
+router.get("/marcas", async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const marcas = await marcaController.getAllMarcas();
+    res.json(marcas);
+  } catch (error: any) {
+    errorHandler(error, req, res, next);
+  }
+});
+
+/**
+ * @route GET /marcas/:id
+ * @param {number} :id - ID de la marca a buscar.
+ * @desc Obtiene una marca por su ID.
+ */
+router.get("/marcas/:id", async (req: Request, res: Response, next: NextFunction) => {
+  const id = parseInt(req.params.id, 10);
+  try {
+    const marca = await marcaController.getMarcaById(id);
+    if (!marca) {
+      return res.status(404).json({ error: "Marca no encontrada" });
+    }
+    res.json(marca);
+  } catch (error: any) {
+    errorHandler(error, req, res, next);
+  }
+});
+
+/**
+ * @route POST /marcas
+ * @param {string} nombre - Nombre de la marca.
+ * @param {string} nomenclatura - Nomenclatura de la marca.
+ * @desc Crea una nueva marca.
+ */
+router.post("/marcas", async (req: Request, res: Response, next: NextFunction) => {
+  const { nombre, nomenclatura } = req.body;
+  try {
+    const marca = await marcaController.createMarca(nombre, nomenclatura);
+    res.json(marca);
+  } catch (error: any) {
+    errorHandler(error, req, res, next);
+  }
+});
+
+/**
+ * @route PUT /marcas/:id
+ * @param {number} :id - ID de la marca a modificar.
+ * @desc Modifica una marca por su ID.
+ */
+router.put("/marcas/:id", async (req: Request, res: Response, next: NextFunction) => {
+  const id = parseInt(req.params.id, 10);
+  const { nombre, nomenclatura } = req.body;
+  try {
+    const marca = await marcaController.updateMarca(id, nombre, nomenclatura);
+    res.json(marca);
+  } catch (error: any) {
+    errorHandler(error, req, res, next);
+  }
+});
+
+/**
+ * @route DELETE /marcas/:id
+ * @param {number} :id - ID de la marca a eliminar.
+ * @desc Elimina una marca por su ID.
+ */
+router.delete("/marcas/:id", async (req: Request, res: Response, next: NextFunction) => {
+  const id = parseInt(req.params.id, 10);
+  try {
+    await marcaController.deleteMarca(id);
+    res.status(204).send();
+  } catch (error: any) {
+    errorHandler(error, req, res, next);
+  }
+});
+
 
 
 export default router;
