@@ -4,39 +4,136 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url = env("DATABASE_URL_NEON")
+  url      = env("DATABASE_URL_NEON")
 }
 
 model Productos {
-  id          String @id @unique
-  nombre      String
-  descripcion String?
-  precio      String
-  marca       String
-  imagen      String?
-  tipo        String
+  id           String  @id @unique
+  nombre       String
+  descripcion  String?
+  precio       String
+  id_marca     String
+  id_proveedor String
+  id_categoria String
+  imagen       String?
+
+  // Relaciones con catálogos
+  marca     CatalogoMarca     @relation(fields: [id_marca], references: [id_marca])
+  proveedor CatalogoProveedor @relation(fields: [id_proveedor], references: [id_proveedor])
+  categoria CatalogoCategoria @relation(fields: [id_categoria], references: [id_categoria])
+  inventario Inventario[]
+
+}
+
+model CatalogoProveedor {
+  id_proveedor String @id @unique
+  nombre       String
+  nomenclatura String
+
+  // Relación inversa con Productos
+  productos Productos[]
+}
+
+model CatalogoMarca {
+  id_marca     String @id @unique
+  nombre       String
+  nomenclatura String
+
+  // Relación inversa con Productos
+  productos Productos[]
+}
+
+model CatalogoCategoria {
+  id_categoria String @id @unique
+  nombre       String
+  nomenclatura String
+
+  // Relación inversa con Productos
+  productos Productos[]
+}
+
+model Inventario {
+  id_inventario String @id @unique
+  id_producto   String  @unique
+  existencias   String
+  StockMinimo   String
+  StockMaximo   String
+
+  // Relación con Productos
+  producto Productos @relation(fields: [id_producto], references: [id])
+
+  // Relación inversa con DetalleVenta
+  detallesVenta DetalleVenta[]
+}
+
+model DetalleVenta {
+  id_detalleVenta  String @id @unique
+  id_venta         String
+  id_producto      String
+  cantidad_vendida String
+  precio_producto  String
+  subtotal         String
+  // Relación con Venta
+  venta Venta @relation(fields: [id_venta], references: [id_venta])
+
+  // Relación con Inventario
+  productoInventario Inventario @relation(fields: [id_producto], references: [id_producto])
+}
+
+model Venta {
+  id_venta    String @id @unique
+  id_vendedor String
+  id_sucursal String
+  fecha_venta String
+  total_venta String
+  subtotal    String
+  iva         String
+
+   // Relación con Sucursal 
+  sucursal    Sucursal @relation(fields: [id_sucursal], references: [id_sucursal])
+   // Relación con CatalogoVendedor 
+  vendedor    CatalogoVendedor @relation(fields: [id_vendedor], references: [id_vendedor])
+   // Relación inversa con DetalleVenta
+  detallesVenta DetalleVenta[]
+}
+
+
+model Sucursal {
+  id_sucursal  String @id @unique
+  nombre       String
+  direccion    String
+  ciudad       String
+  estado       String
+  codigoPostal String
+  telefono     String
+  encargado    String
+
+  // Relación inversa con Venta
+  ventas       Venta[]
+}
+
+model CatalogoVendedor {
+  id_vendedor  String  @id @unique
+  id_usuario   String  
+  acronimo     String
+  permisoVenta Boolean
+
+  // Relación con User
+  usuario      User @relation(fields: [id_usuario], references: [id_usuario])
+  // Relación inversa con Venta
+  ventas       Venta[]
 }
 
 model User {
-  email    String @id @unique
-  password String
-  nombre   String
-  apellido String
-  telefono String
-  direccion String
-  ciudad String
-  estado String
-  codigoPostal String
-  role     String
-}
+  id_usuario String  @id @unique
+  email      String  @unique
+  password   String
+  nombre     String
+  apellido   String
+  telefono   String
+  direccion  String
+  imagen     String?
 
-model Sucursal {
-  id          String @id @unique
-  nombre      String
-  direccion   String
-  ciudad      String
-  estado      String
-  codigoPostal String
-  telefono    String
-  encargado   String
+  // Relación inversa con CatalogoVendedor
+  vendedor    CatalogoVendedor[]
 }
