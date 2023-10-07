@@ -27,8 +27,8 @@ model Productos {
 
 model CatalogoProveedor {
   id_proveedor Int @id  @default(autoincrement()) 
-  nombre       String
-  nomenclatura String
+  nombre       String @unique
+  nomenclatura String @unique
 
   // Relación inversa con Productos
   productos Productos[]
@@ -36,8 +36,8 @@ model CatalogoProveedor {
 
 model CatalogoMarca {
   id_marca     Int @id  @default(autoincrement()) 
-  nombre       String
-  nomenclatura String
+  nombre       String @unique
+  nomenclatura String @unique
 
   // Relación inversa con Productos
   productos Productos[]
@@ -45,8 +45,8 @@ model CatalogoMarca {
 
 model CatalogoCategoria {
   id_categoria Int @id  @default(autoincrement()) 
-  nombre       String
-  nomenclatura String
+  nombre       String @unique
+  nomenclatura String @unique
 
   // Relación inversa con Productos
   productos Productos[]
@@ -115,7 +115,7 @@ model Sucursal {
 model CatalogoVendedor {
   id_vendedor  Int @id  @default(autoincrement()) 
   id_usuario   Int  @default(autoincrement()) 
-  acronimo     String
+  acronimo     String @unique
   permisoVenta Boolean
 
   // Relación con User
