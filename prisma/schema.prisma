@@ -36,8 +36,8 @@ model CatalogoProveedor {
 
 model CatalogoMarca {
   id_marca     Int @id  @default(autoincrement()) 
-  nombre       String
-  nomenclatura String
+  nombre       String @unique
+  nomenclatura String @unique
 
   // Relación inversa con Productos
   productos Productos[]
@@ -45,8 +45,8 @@ model CatalogoMarca {
 
 model CatalogoCategoria {
   id_categoria Int @id  @default(autoincrement()) 
-  nombre       String
-  nomenclatura String
+  nombre       String @unique
+  nomenclatura String @unique
 
   // Relación inversa con Productos
   productos Productos[]
