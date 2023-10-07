@@ -11,6 +11,8 @@ import { check, validationResult } from "express-validator";
 import * as productoController from "../controllers/productosControllers";
 import * as usuarioController from "../controllers/usuarioControllers";
 import * as proveedorController from "../controllers/provedores.Controller";
+import * as categoriaController from "../controllers/categoria.Controller";
+import * as marcaController from "../controllers/marcas.Controller";
 
 import {
   validarVenta,
@@ -220,6 +222,167 @@ router.delete("/proveedores/:id", async (req: Request, res: Response, next: Next
     errorHandler(error, req, res, next);
   }
 });
+
+// Rutas de categorías
+
+/**
+ * @route GET /categorias
+ * @desc Obtiene todas las categorías.
+ */
+router.get("/categorias", async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const categorias = await categoriaController.getAllCategorias();
+    res.json(categorias);
+  } catch (error: any) {
+    errorHandler(error, req, res, next);
+  }
+});
+
+/**
+ * @route GET /categorias/:id
+ * @param {number} :id - ID de la categoría a buscar.
+ * @desc Obtiene una categoría por su ID.
+ */
+router.get("/categorias/:id", async (req: Request, res: Response, next: NextFunction) => {
+  const id = parseInt(req.params.id, 10);
+  try {
+    const categoria = await categoriaController.getCategoriaById(id);
+    if (!categoria) {
+      return res.status(404).json({ error: "Categoría no encontrada" });
+    }
+    res.json(categoria);
+  } catch (error: any) {
+    errorHandler(error, req, res, next);
+  }
+});
+
+/**
+ * @route POST /categorias
+ * @param {string} nombre - Nombre de la categoría.
+ * @param {string} nomenclatura - Nomenclatura de la categoría.
+ * @desc Crea una nueva categoría.
+ */
+router.post("/categorias", async (req: Request, res: Response, next: NextFunction) => {
+  const { nombre, nomenclatura } = req.body;
+  try {
+    const categoria = await categoriaController.createCategoria(nombre, nomenclatura);
+    res.json(categoria);
+  } catch (error: any) {
+    errorHandler(error, req, res, next);
+  }
+});
+
+/**
+ * @route PUT /categorias/:id
+ * @param {number} :id - ID de la categoría a modificar.
+ * @desc Modifica una categoría por su ID.
+ */
+router.put("/categorias/:id", async (req: Request, res: Response, next: NextFunction) => {
+  const id = parseInt(req.params.id, 10);
+  const { nombre, nomenclatura } = req.body;
+  try {
+    const categoria = await categoriaController.updateCategoria(id, nombre, nomenclatura);
+    res.json(categoria);
+  } catch (error: any) {
+    errorHandler(error, req, res, next);
+  }
+});
+
+/**
+ * @route DELETE /categorias/:id
+ * @param {number} :id - ID de la categoría a eliminar.
+ * @desc Elimina una categoría por su ID.
+ */
+router.delete("/categorias/:id", async (req: Request, res: Response, next: NextFunction) => {
+  const id = parseInt(req.params.id, 10);
+  try {
+    await categoriaController.deleteCategoria(id);
+    res.status(204).send();
+  } catch (error: any) {
+    errorHandler(error, req, res, next);
+  }
+});
+
+// Rutas de marcas
+
+/**
+ * @route GET /marcas
+ * @desc Obtiene todas las marcas.
+ */
+router.get("/marcas", async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const marcas = await marcaController.getAllMarcas();
+    res.json(marcas);
+  } catch (error: any) {
+    errorHandler(error, req, res, next);
+  }
+});
+
+/**
+ * @route GET /marcas/:id
+ * @param {number} :id - ID de la marca a buscar.
+ * @desc Obtiene una marca por su ID.
+ */
+router.get("/marcas/:id", async (req: Request, res: Response, next: NextFunction) => {
+  const id = parseInt(req.params.id, 10);
+  try {
+    const marca = await marcaController.getMarcaById(id);
+    if (!marca) {
+      return res.status(404).json({ error: "Marca no encontrada" });
+    }
+    res.json(marca);
+  } catch (error: any) {
+    errorHandler(error, req, res, next);
+  }
+});
+
+/**
+ * @route POST /marcas
+ * @param {string} nombre - Nombre de la marca.
+ * @param {string} nomenclatura - Nomenclatura de la marca.
+ * @desc Crea una nueva marca.
+ */
+router.post("/marcas", async (req: Request, res: Response, next: NextFunction) => {
+  const { nombre, nomenclatura } = req.body;
+  try {
+    const marca = await marcaController.createMarca(nombre, nomenclatura);
+    res.json(marca);
+  } catch (error: any) {
+    errorHandler(error, req, res, next);
+  }
+});
+
+/**
+ * @route PUT /marcas/:id
+ * @param {number} :id - ID de la marca a modificar.
+ * @desc Modifica una marca por su ID.
+ */
+router.put("/marcas/:id", async (req: Request, res: Response, next: NextFunction) => {
+  const id = parseInt(req.params.id, 10);
+  const { nombre, nomenclatura } = req.body;
+  try {
+    const marca = await marcaController.updateMarca(id, nombre, nomenclatura);
+    res.json(marca);
+  } catch (error: any) {
+    errorHandler(error, req, res, next);
+  }
+});
+
+/**
+ * @route DELETE /marcas/:id
+ * @param {number} :id - ID de la marca a eliminar.
+ * @desc Elimina una marca por su ID.
+ */
+router.delete("/marcas/:id", async (req: Request, res: Response, next: NextFunction) => {
+  const id = parseInt(req.params.id, 10);
+  try {
+    await marcaController.deleteMarca(id);
+    res.status(204).send();
+  } catch (error: any) {
+    errorHandler(error, req, res, next);
+  }
+});
+
 
 
 export default router;
