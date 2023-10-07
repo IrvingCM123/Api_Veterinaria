@@ -41,8 +41,3 @@ export async function deleteMarca(id: number) {
         where: { id_marca: id },
     });
 }
-
-// Cerrar la conexión de Prisma al finalizar
-export async function closePrisma() {
-    await prisma.$disconnect();
-}
