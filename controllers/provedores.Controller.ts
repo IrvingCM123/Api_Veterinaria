@@ -2,8 +2,6 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-// Controlador para el modelo CatalogoProveedor
-
 // Obtener todos los proveedores
 export async function getAllProveedores() {
     return await prisma.catalogoProveedor.findMany();
