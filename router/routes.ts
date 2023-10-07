@@ -41,78 +41,100 @@ router.get("/", (req, res) => {
   res.send("Bienvenido a la API de la veterinaria");
 });
 
+
+
 // Rutas de productos
 
 /**
  * @route GET /productos
  * @desc Obtiene todos los productos.
  */
-router.get("/productos", productoController.obtenerProductos);
+router.get("/productos", async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const productos = await productoController.obtenerProductos();
+    res.json(productos);
+  } catch (error: any) {
+    errorHandler(error, req, res, next);
+  }
+});
 
 /**
- * @route GET /productosid/:id
- * @param {string} :id - ID del producto a buscar.
- * @desc Busca un producto por su ID.
+ * @route GET /productos/:id
+ * @param {number} :id - ID del producto a buscar.
+ * @desc Obtiene un producto por su ID.
  */
-router.get(
-  "/productosid/:id",
-  BuscarProductoValidador,
-  (req: Request, res: Response) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+router.get("/productos/:id", async (req: Request, res: Response, next: NextFunction) => {
+  const id = parseInt(req.params.id, 10);
+  try {
+    const producto = await productoController.obtenerProductoPorId(id);
+    if (!producto) {
+      return res.status(404).json({ error: "Producto no encontrado" });
     }
-    productoController.buscarProducto(req, res);
+    res.json(producto);
+  } catch (error: any) {
+    errorHandler(error, req, res, next);
   }
-);
+});
 
 /**
  * @route POST /productos
  * @param {string} nombre - Nombre del producto.
- * @param {number} precio - Precio del producto.
+ * @param {string | null} descripcion - Descripción del producto.
+ * @param {string} precio - Precio del producto.
+ * @param {string} nomenclaturaProveedor - Nomenclatura del proveedor.
+ * @param {string} nomenclaturaMarca - Nomenclatura de la marca.
+ * @param {string} nomenclaturaCategoria - Nomenclatura de la categoría.
+ * @param {string | null} imagen - URL de la imagen del producto.
  * @desc Crea un nuevo producto.
  */
-router.post("/productos", productoValidator, (req: Request, res: Response) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
+router.post("/productos", async (req: Request, res: Response, next: NextFunction) => {
+  const { nombre, descripcion, precio, nomenclaturaProveedor, nomenclaturaMarca, nomenclaturaCategoria, imagen } = req.body;
+  try {
+    const producto = await productoController.crearProducto(nombre, descripcion, precio, nomenclaturaProveedor, nomenclaturaMarca, nomenclaturaCategoria, imagen);
+    res.json(producto);
+  } catch (error: any) {
+    errorHandler(error, req, res, next);
   }
-  productoController.crearProducto(req, res);
 });
 
 /**
  * @route PUT /productos/:id
- * @param {string} :id - ID del producto a modificar.
+ * @param {number} :id - ID del producto a modificar.
+ * @param {string} nombre - Nombre del producto.
+ * @param {string | null} descripcion - Descripción del producto.
+ * @param {string} precio - Precio del producto.
+ * @param {string} nomenclaturaProveedor - Nomenclatura del proveedor.
+ * @param {string} nomenclaturaMarca - Nomenclatura de la marca.
+ * @param {string} nomenclaturaCategoria - Nomenclatura de la categoría.
+ * @param {string | null} imagen - URL de la imagen del producto.
  * @desc Modifica un producto por su ID.
  */
-router.put(
-  "/productos/:id",
-  ModificarProducto,
-  (req: Request, res: Response) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
-    productoController.modificarProducto(req, res);
+router.put("/productos/:id", async (req: Request, res: Response, next: NextFunction) => {
+  const id = parseInt(req.params.id, 10);
+  const { nombre, descripcion, precio, nomenclaturaProveedor, nomenclaturaMarca, nomenclaturaCategoria, imagen } = req.body;
+  try {
+    const producto = await productoController.actualizarProducto(id, nombre, descripcion, precio, nomenclaturaProveedor, nomenclaturaMarca, nomenclaturaCategoria, imagen);
+    res.json(producto);
+  } catch (error: any) {
+    errorHandler(error, req, res, next);
   }
-);
+});
 
 /**
  * @route DELETE /productos/:id
- * @param {string} :id - ID del producto a eliminar.
+ * @param {number} :id - ID del producto a eliminar.
  * @desc Elimina un producto por su ID.
  */
-router.delete(
-  "/productos/:id",
-  EliminarProducto,
-  (req: Request, res: Response) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
-    productoController.eliminarProducto(req, res);
+router.delete("/productos/:id", async (req: Request, res: Response, next: NextFunction) => {
+  const id = parseInt(req.params.id, 10);
+  try {
+    await productoController.eliminarProducto(id);
+    res.status(204).send();
+  } catch (error: any) {
+    errorHandler(error, req, res, next);
   }
-);
+});
+
 
 // Rutas de usuarios
 
