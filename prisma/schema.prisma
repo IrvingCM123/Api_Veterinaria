@@ -27,8 +27,8 @@ model Productos {
 
 model CatalogoProveedor {
   id_proveedor Int @id  @default(autoincrement()) 
-  nombre       String
-  nomenclatura String
+  nombre       String @unique
+  nomenclatura String @unique
 
   // Relación inversa con Productos
   productos Productos[]
