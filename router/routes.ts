@@ -11,6 +11,7 @@ import { check, validationResult } from "express-validator";
 import * as productoController from "../controllers/productosControllers";
 import * as usuarioController from "../controllers/usuarioControllers";
 import * as proveedorController from "../controllers/provedores.Controller";
+import * as categoriaController from "../controllers/categoria.Controller";
 
 import {
   validarVenta,
