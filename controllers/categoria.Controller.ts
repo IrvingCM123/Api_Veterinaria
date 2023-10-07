@@ -41,8 +41,3 @@ export async function deleteCategoria(id: number) {
         where: { id_categoria: id },
     });
 }
-
-// Cerrar la conexión de Prisma al finalizar
-export async function closePrisma() {
-    await prisma.$disconnect();
-}
