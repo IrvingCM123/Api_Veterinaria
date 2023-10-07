@@ -115,7 +115,7 @@ model Sucursal {
 model CatalogoVendedor {
   id_vendedor  Int @id  @default(autoincrement()) 
   id_usuario   Int  @default(autoincrement()) 
-  acronimo     String
+  acronimo     String @unique
   permisoVenta Boolean
 
   // Relación con User
