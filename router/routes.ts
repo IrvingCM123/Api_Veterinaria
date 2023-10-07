@@ -9,8 +9,8 @@ import {
 import { check, validationResult } from "express-validator";
 
 import * as productoController from "../controllers/productosControllers";
-import * as historialController from "../controllers/historialVentasControllers";
 import * as usuarioController from "../controllers/usuarioControllers";
+import * as proveedorController from "../controllers/provedores.Controller";
 
 import {
   validarVenta,
@@ -112,66 +112,6 @@ router.delete(
   }
 );
 
-// Rutas de ventas
-
-/**
- * @route POST /ventas
- * @param {string} nombre - Nombre del producto.
- * @param {number} precio - Precio del producto.
- * @desc Registra una venta.
- */
-router.post(
-  "/ventas",
-  validarVenta,
-  (req: Request, res: Response, next: NextFunction) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
-    historialController.registrarVenta(req, res, next);
-  }
-);
-
-/**
- * @route GET /ventas
- * @desc Obtiene todas las ventas registradas.
- */
-router.get("/ventas", historialController.obtenerNombresDocumentos);
-
-/**
- * @route GET /ventasid/:id
- * @param {string} nombreDocumento - Nombre del documento.
- * @desc obten la información de cada venta por ID.
- */
-router.get(
-  "/ventasid/:id",
-
-  (req: Request, res: Response, next: NextFunction) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
-    historialController.obtenerInfoDocumento(req, res, next);
-  }
-);
-
-/**
- * @route GET /ventasmes/:id
- * @param {string} nombreDocumento - Nombre del documento.
- * @desc obten la información del historial de venta al mes.
- */
-router.get(
-  "/ventasmes/:id",
-
-  (req: Request, res: Response, next: NextFunction) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
-    historialController.obtenerInfoMes(req, res, next);
-  }
-);
-
 // Rutas de usuarios
 
 /**
@@ -200,5 +140,86 @@ router.get("/usuarios", usuarioController.obtenerUsuarios);
  * @desc Obtiene un usuario por su correo electrónico.
  */
 router.get("/usuarios/:email", usuarioController.obtenerUsuario);
+
+// Rutas de catalogo de proveedores
+
+/**
+ * @route GET /proveedores
+ * @desc Obtiene todos los proveedores.
+ */
+router.get("/proveedores", async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const proveedores = await proveedorController.getAllProveedores();
+    res.json(proveedores);
+  } catch (error: any) {
+    errorHandler(error, req, res, next);
+  }
+});
+
+/**
+ * @route GET /proveedores/:id
+ * @param {number} :id - ID del proveedor a buscar.
+ * @desc Obtiene un proveedor por su ID.
+ */
+router.get("/proveedores/:id", async (req: Request, res: Response, next: NextFunction) => {
+  const id = parseInt(req.params.id, 10);
+  try {
+    const proveedor = await proveedorController.getProveedorById(id);
+    if (!proveedor) {
+      return res.status(404).json({ error: "Proveedor no encontrado" });
+    }
+    res.json(proveedor);
+  } catch (error: any) {
+    errorHandler(error, req, res, next);
+  }
+});
+
+/**
+ * @route POST /proveedores
+ * @param {string} nombre - Nombre del proveedor.
+ * @param {string} nomenclatura - Nomenclatura del proveedor.
+ * @desc Crea un nuevo proveedor.
+ */
+router.post("/proveedores", async (req: Request, res: Response, next: NextFunction) => {
+  const { nombre, nomenclatura } = req.body;
+  try {
+    const proveedor = await proveedorController.createProveedor(nombre, nomenclatura);
+    res.json(proveedor);
+  } catch (error: any) {
+    errorHandler(error, req, res, next);
+  }
+});
+
+/**
+ * @route PUT /proveedores/:id
+ * @param {number} :id - ID del proveedor a modificar.
+ * @desc Modifica un proveedor por su ID.
+ */
+router.put("/proveedores/:id", async (req: Request, res: Response, next: NextFunction) => {
+  const id = parseInt(req.params.id, 10);
+  const { nombre, nomenclatura } = req.body;
+  try {
+    const proveedor = await proveedorController.updateProveedor(id, nombre, nomenclatura);
+    res.json(proveedor);
+  } catch (error: any) {
+    errorHandler(error, req, res, next);
+  }
+});
+
+/**
+ * @route DELETE /proveedores/:id
+ * @param {number} :id - ID del proveedor a eliminar.
+ * @desc Elimina un proveedor por su ID.
+ */
+router.delete("/proveedores/:id", async (req: Request, res: Response, next: NextFunction) => {
+  const id = parseInt(req.params.id, 10);
+  try {
+    await proveedorController.deleteProveedor(id);
+    res.status(204).send();
+  } catch (error: any) {
+    errorHandler(error, req, res, next);
+  }
+});
+
 
 export default router;

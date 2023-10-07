@@ -8,13 +8,13 @@ datasource db {
 }
 
 model Productos {
-  id           String  @id @unique
+  id           Int @id  @default(autoincrement()) 
   nombre       String
   descripcion  String?
   precio       String
-  id_marca     String
-  id_proveedor String
-  id_categoria String
+  id_marca     Int
+  id_proveedor Int
+  id_categoria Int
   imagen       String?
 
   // Relaciones con catálogos
@@ -26,7 +26,7 @@ model Productos {
 }
 
 model CatalogoProveedor {
-  id_proveedor String @id @unique
+  id_proveedor Int @id  @default(autoincrement()) 
   nombre       String
   nomenclatura String
 
@@ -35,7 +35,7 @@ model CatalogoProveedor {
 }
 
 model CatalogoMarca {
-  id_marca     String @id @unique
+  id_marca     Int @id  @default(autoincrement()) 
   nombre       String
   nomenclatura String
 
@@ -44,7 +44,7 @@ model CatalogoMarca {
 }
 
 model CatalogoCategoria {
-  id_categoria String @id @unique
+  id_categoria Int @id  @default(autoincrement()) 
   nombre       String
   nomenclatura String
 
@@ -53,8 +53,8 @@ model CatalogoCategoria {
 }
 
 model Inventario {
-  id_inventario String @id @unique
-  id_producto   String  @unique
+  id_inventario Int @id  @default(autoincrement()) 
+  id_producto   Int @unique  @default(autoincrement()) 
   existencias   String
   StockMinimo   String
   StockMaximo   String
@@ -67,9 +67,9 @@ model Inventario {
 }
 
 model DetalleVenta {
-  id_detalleVenta  String @id @unique
-  id_venta         String
-  id_producto      String
+  id_detalleVenta  Int @id  @default(autoincrement()) 
+  id_venta         Int @unique  @default(autoincrement()) 
+  id_producto      Int @default(autoincrement()) 
   cantidad_vendida String
   precio_producto  String
   subtotal         String
@@ -81,9 +81,9 @@ model DetalleVenta {
 }
 
 model Venta {
-  id_venta    String @id @unique
-  id_vendedor String
-  id_sucursal String
+  id_venta    Int @id  @default(autoincrement()) 
+  id_vendedor Int  @default(autoincrement()) 
+  id_sucursal Int  @default(autoincrement()) 
   fecha_venta String
   total_venta String
   subtotal    String
@@ -99,7 +99,7 @@ model Venta {
 
 
 model Sucursal {
-  id_sucursal  String @id @unique
+  id_sucursal  Int @id  @default(autoincrement()) 
   nombre       String
   direccion    String
   ciudad       String
@@ -113,8 +113,8 @@ model Sucursal {
 }
 
 model CatalogoVendedor {
-  id_vendedor  String  @id @unique
-  id_usuario   String  
+  id_vendedor  Int @id  @default(autoincrement()) 
+  id_usuario   Int  @default(autoincrement()) 
   acronimo     String
   permisoVenta Boolean
 
@@ -125,7 +125,7 @@ model CatalogoVendedor {
 }
 
 model User {
-  id_usuario String  @id @unique
+  id_usuario Int @id  @default(autoincrement()) 
   email      String  @unique
   password   String
   nombre     String
