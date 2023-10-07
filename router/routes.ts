@@ -12,7 +12,10 @@ import * as productoController from "../controllers/productosControllers";
 import * as historialController from "../controllers/historialVentasControllers";
 import * as usuarioController from "../controllers/usuarioControllers";
 
-import { validarVenta, obtenerInfoDocumentoValidator } from "../Validators/Venta_Validator";
+import {
+  validarVenta,
+  obtenerInfoDocumentoValidator,
+} from "../Validators/Venta_Validator";
 
 import {
   validarUsuario,
@@ -142,7 +145,7 @@ router.get("/ventas", historialController.obtenerNombresDocumentos);
  */
 router.get(
   "/ventasid/:id",
-  
+
   (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -152,6 +155,22 @@ router.get(
   }
 );
 
+/**
+ * @route GET /ventasmes/:id
+ * @param {string} nombreDocumento - Nombre del documento.
+ * @desc obten la información del historial de venta al mes.
+ */
+router.get(
+  "/ventasmes/:id",
+
+  (req: Request, res: Response, next: NextFunction) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+    historialController.obtenerInfoMes(req, res, next);
+  }
+);
 
 // Rutas de usuarios
 
