@@ -12,6 +12,7 @@ import * as productoController from "../controllers/productosControllers";
 import * as usuarioController from "../controllers/usuarioControllers";
 import * as proveedorController from "../controllers/provedores.Controller";
 import * as categoriaController from "../controllers/categoria.Controller";
+import * as marcaController from "../controllers/marcas.Controller";
 
 import {
   validarVenta,
