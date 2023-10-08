@@ -29,7 +29,7 @@ export async function obtenerProductoPorId(id: number) {
 
 // Obtener el ID de proveedor por su nomenclatura
 async function obtenerIdProveedorPorNomenclatura(nomenclatura: string) {
-  const proveedor = await prisma.catalogoProveedor.findUnique({
+  const proveedor = await prisma.catalogoProveedor.findFirst({
     where: { nomenclatura },
   });
 
@@ -42,7 +42,7 @@ async function obtenerIdProveedorPorNomenclatura(nomenclatura: string) {
 
 // Obtener el ID de marca por su nomenclatura
 async function obtenerIdMarcaPorNomenclatura(nomenclatura: string) {
-  const marca = await prisma.catalogoMarca.findUnique({
+  const marca = await prisma.catalogoMarca.findFirst({
     where: { nomenclatura },
   });
 
@@ -55,7 +55,7 @@ async function obtenerIdMarcaPorNomenclatura(nomenclatura: string) {
 
 // Obtener el ID de categoría por su nomenclatura
 async function obtenerIdCategoriaPorNomenclatura(nomenclatura: string) {
-  const categoria = await prisma.catalogoCategoria.findUnique({
+  const categoria = await prisma.catalogoCategoria.findFirst({
     where: { nomenclatura },
   });
 
