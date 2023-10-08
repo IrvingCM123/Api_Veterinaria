@@ -147,11 +147,12 @@ exports.crearVenta = crearVenta;
 // Actualizar una venta por su ID
 function updateVenta(id, id_sucursal, id_vendedor, fecha_venta, total_venta, subtotal, iva) {
     return __awaiter(this, void 0, void 0, function* () {
+        const idVendedor = yield obtenerIdVendedorPorAcronimo(id_vendedor);
         return yield prisma.venta.update({
             where: { id_venta: id },
             data: {
                 id_sucursal,
-                id_vendedor,
+                id_vendedor: idVendedor,
                 fecha_venta,
                 total_venta,
                 subtotal,
