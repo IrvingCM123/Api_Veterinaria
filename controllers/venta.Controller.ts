@@ -2,12 +2,12 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-// En algún lugar de tu código, define el tipo DetalleVentaInput
 type DetalleVentaInput = {
     id_producto: number;
     cantidad_vendida: string;
     precio_producto: string;
     subtotal: string;
+    esVentaGranel: boolean;
 };
 
 
@@ -66,6 +66,16 @@ async function crearDetalleVenta(
     });
 }
 
+async function crearDetalleVentaPorcion(id_detalleVenta: number, id_producto: number, cantidad_vendida: string) {
+    return await prisma.detalleVentaPorcion.create({
+        data: {
+            id_detalleVenta,
+            id_producto,
+            cantidad_vendida,
+        },
+    });
+}
+
 
 // Función para descontar la cantidad vendida del inventario
 async function descontarInventario(id_producto: number, cantidadVendida: string) {
@@ -119,23 +129,51 @@ export async function crearVenta(
             subtotal,
             iva,
         },
+        include: {
+            detallesVenta: true, // Incluimos detalles de venta para realizar un seguimiento adecuado
+        },
     });
 
     // Crear los detalles de venta y descontar el inventario
     for (const detalle of detallesVenta) {
-        await descontarInventario(detalle.id_producto, detalle.cantidad_vendida);
+        // Verificar si se trata de una venta a granel
+        if (detalle.esVentaGranel) {
+            const cantidadGranel = parseFloat(detalle.cantidad_vendida);
+            // Crear una entrada en DetalleVenta por la venta principal
+            const detalleVenta = await crearDetalleVenta(
+                venta.id_venta,
+                detalle.id_producto,
+                cantidadGranel.toFixed(2), // Ajustamos la cantidad a dos decimales
+                detalle.precio_producto,
+                detalle.subtotal
+            );
 
-        await crearDetalleVenta(
-            venta.id_venta,
-            detalle.id_producto,
-            detalle.cantidad_vendida,
-            detalle.precio_producto,
-            detalle.subtotal
-        );
+            // Crear una entrada en DetalleVentaPorcion para rastrear la venta a granel
+            await crearDetalleVentaPorcion(
+                detalleVenta.id_detalleVenta,
+                detalle.id_producto,
+                cantidadGranel.toFixed(2) // Ajustamos la cantidad a dos decimales
+            );
+
+            // Descontar la cantidad vendida del inventario
+            await descontarInventario(detalle.id_producto, cantidadGranel.toFixed(2));
+        } else {
+            // Si no es una venta a granel, el proceso es el mismo que antes
+            await descontarInventario(detalle.id_producto, detalle.cantidad_vendida);
+
+            await crearDetalleVenta(
+                venta.id_venta,
+                detalle.id_producto,
+                detalle.cantidad_vendida,
+                detalle.precio_producto,
+                detalle.subtotal
+            );
+        }
     }
 
     return venta;
 }
+
 
 // Actualizar una venta por su ID
 export async function updateVenta(id: number, id_sucursal: number, id_vendedor: number, fecha_venta: string, total_venta: string, subtotal: string, iva: string) {
