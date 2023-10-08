@@ -14,6 +14,8 @@ import * as proveedorController from "../controllers/provedores.Controller";
 import * as categoriaController from "../controllers/categoria.Controller";
 import * as marcaController from "../controllers/marcas.Controller";
 import * as inventarioController from '../controllers/inventario.controller';
+import * as sucursalController from '../controllers/sucursal.Controller';
+
 
 import {
   validarVenta,
@@ -55,7 +57,7 @@ router.get("/productos", async (req: Request, res: Response, next: NextFunction)
     const productos = await productoController.obtenerProductos();
     res.json(productos);
   } catch (error: any) {
-    res.json({ error: error.message})
+    res.json({ error: error.message })
   }
 });
 
@@ -73,7 +75,7 @@ router.get("/productos/:id", async (req: Request, res: Response, next: NextFunct
     }
     res.json(producto);
   } catch (error: any) {
-    res.json({ error: error.message})
+    res.json({ error: error.message })
   }
 });
 
@@ -117,7 +119,7 @@ router.put("/productos/:id", async (req: Request, res: Response, next: NextFunct
     const producto = await productoController.actualizarProducto(id, nombre, descripcion, precio, nomenclaturaProveedor, nomenclaturaMarca, nomenclaturaCategoria, imagen);
     res.json(producto);
   } catch (error: any) {
-    res.json({ error: error.message})
+    res.json({ error: error.message })
   }
 });
 
@@ -132,7 +134,7 @@ router.delete("/productos/:id", async (req: Request, res: Response, next: NextFu
     await productoController.eliminarProducto(id);
     res.status(204).send();
   } catch (error: any) {
-    res.json({ error: error.message})
+    res.json({ error: error.message })
   }
 });
 
@@ -177,7 +179,7 @@ router.get("/proveedores", async (req: Request, res: Response, next: NextFunctio
     const proveedores = await proveedorController.getAllProveedores();
     res.json(proveedores);
   } catch (error: any) {
-    res.json({ error: error.message})
+    res.json({ error: error.message })
   }
 });
 
@@ -195,7 +197,7 @@ router.get("/proveedores/:id", async (req: Request, res: Response, next: NextFun
     }
     res.json(proveedor);
   } catch (error: any) {
-    res.json({ error: error.message})
+    res.json({ error: error.message })
   }
 });
 
@@ -211,7 +213,7 @@ router.post("/proveedores", async (req: Request, res: Response, next: NextFuncti
     const proveedor = await proveedorController.createProveedor(nombre, nomenclatura, direccion, ciudad, estado, telefono, email);
     res.json(proveedor);
   } catch (error: any) {
-    res.json({ error: error.message})
+    res.json({ error: error.message })
   }
 });
 
@@ -227,7 +229,7 @@ router.put("/proveedores/:id", async (req: Request, res: Response, next: NextFun
     const proveedor = await proveedorController.updateProveedor(id, nombre, nomenclatura);
     res.json(proveedor);
   } catch (error: any) {
-    res.json({ error: error.message})
+    res.json({ error: error.message })
   }
 });
 
@@ -242,7 +244,7 @@ router.delete("/proveedores/:id", async (req: Request, res: Response, next: Next
     await proveedorController.deleteProveedor(id);
     res.status(204).send();
   } catch (error: any) {
-    res.json({ error: error.message})
+    res.json({ error: error.message })
   }
 });
 
@@ -257,7 +259,7 @@ router.get("/categorias", async (req: Request, res: Response, next: NextFunction
     const categorias = await categoriaController.getAllCategorias();
     res.json(categorias);
   } catch (error: any) {
-    res.json({ error: error.message})
+    res.json({ error: error.message })
   }
 });
 
@@ -275,7 +277,7 @@ router.get("/categorias/:id", async (req: Request, res: Response, next: NextFunc
     }
     res.json(categoria);
   } catch (error: any) {
-    res.json({ error: error.message})
+    res.json({ error: error.message })
   }
 });
 
@@ -291,7 +293,7 @@ router.post("/categorias", async (req: Request, res: Response, next: NextFunctio
     const categoria = await categoriaController.createCategoria(nombre, nomenclatura);
     res.json(categoria);
   } catch (error: any) {
-    res.json({ error: error.message})
+    res.json({ error: error.message })
   }
 });
 
@@ -307,7 +309,7 @@ router.put("/categorias/:id", async (req: Request, res: Response, next: NextFunc
     const categoria = await categoriaController.updateCategoria(id, nombre, nomenclatura);
     res.json(categoria);
   } catch (error: any) {
-    res.json({ error: error.message})
+    res.json({ error: error.message })
   }
 });
 
@@ -322,7 +324,7 @@ router.delete("/categorias/:id", async (req: Request, res: Response, next: NextF
     await categoriaController.deleteCategoria(id);
     res.status(204).send();
   } catch (error: any) {
-    res.json({ error: error.message})
+    res.json({ error: error.message })
   }
 });
 
@@ -337,7 +339,7 @@ router.get("/marcas", async (req: Request, res: Response, next: NextFunction) =>
     const marcas = await marcaController.getAllMarcas();
     res.json(marcas);
   } catch (error: any) {
-    res.json({ error: error.message})
+    res.json({ error: error.message })
   }
 });
 
@@ -355,7 +357,7 @@ router.get("/marcas/:id", async (req: Request, res: Response, next: NextFunction
     }
     res.json(marca);
   } catch (error: any) {
-    res.json({ error: error.message})
+    res.json({ error: error.message })
   }
 });
 
@@ -387,7 +389,7 @@ router.put("/marcas/:id", async (req: Request, res: Response, next: NextFunction
     const marca = await marcaController.updateMarca(id, nombre, nomenclatura);
     res.json(marca);
   } catch (error: any) {
-    res.json({ error: error.message})
+    res.json({ error: error.message })
   }
 });
 
@@ -402,7 +404,7 @@ router.delete("/marcas/:id", async (req: Request, res: Response, next: NextFunct
     await marcaController.deleteMarca(id);
     res.status(204).send();
   } catch (error: any) {
-    res.json({ error: error.message})
+    res.json({ error: error.message })
   }
 });
 
@@ -410,10 +412,10 @@ router.delete("/marcas/:id", async (req: Request, res: Response, next: NextFunct
 // Obtener todos los registros de inventario
 router.get('/inventario', async (req, res, next) => {
   try {
-      const inventario = await inventarioController.getAllInventario();
-      res.json(inventario);
-  } catch (error) {
-      next(error);
+    const inventario = await inventarioController.getAllInventario();
+    res.json(inventario);
+  } catch (error: any) {
+    res.json({error: error.message})
   }
 });
 
@@ -421,13 +423,13 @@ router.get('/inventario', async (req, res, next) => {
 router.get('/inventario/:id_producto', async (req, res, next) => {
   const id_producto = parseInt(req.params.id_producto, 10);
   try {
-      const inventario = await inventarioController.getInventarioByProductId(id_producto);
-      if (!inventario) {
-          return res.status(404).json({ error: 'Registro de inventario no encontrado' });
-      }
-      res.json(inventario);
-  } catch (error) {
-      next(error);
+    const inventario = await inventarioController.getInventarioByProductId(id_producto);
+    if (!inventario) {
+      return res.status(404).json({ error: 'Registro de inventario no encontrado' });
+    }
+    res.json(inventario);
+  } catch (error: any) {
+    res.json({error: error.message})
   }
 });
 
@@ -435,10 +437,10 @@ router.get('/inventario/:id_producto', async (req, res, next) => {
 router.post('/inventario', async (req, res, next) => {
   const { id_producto, existencias, StockMinimo, StockMaximo } = req.body;
   try {
-      const inventario = await inventarioController.createInventario(id_producto, existencias, StockMinimo, StockMaximo);
-      res.status(201).json(inventario);
-  } catch (error) {
-      next(error);
+    const inventario = await inventarioController.createInventario(id_producto, existencias, StockMinimo, StockMaximo);
+    res.status(201).json(inventario);
+  } catch (error: any) {
+    res.json({error: error.message})
   }
 });
 
@@ -447,10 +449,10 @@ router.put('/inventario/:id_producto', async (req, res, next) => {
   const id_producto = parseInt(req.params.id_producto, 10);
   const { existencias, StockMinimo, StockMaximo } = req.body;
   try {
-      const inventario = await inventarioController.updateInventario(id_producto, existencias, StockMinimo, StockMaximo);
-      res.json(inventario);
-  } catch (error) {
-      next(error);
+    const inventario = await inventarioController.updateInventario(id_producto, existencias, StockMinimo, StockMaximo);
+    res.json(inventario);
+  } catch (error: any) {
+    res.json({error: error.message})
   }
 });
 
@@ -458,11 +460,119 @@ router.put('/inventario/:id_producto', async (req, res, next) => {
 router.delete('/inventario/:id_producto', async (req, res, next) => {
   const id_producto = parseInt(req.params.id_producto, 10);
   try {
-      await inventarioController.deleteInventario(id_producto);
-      res.status(204).send();
-  } catch (error) {
-      next(error);
+    await inventarioController.deleteInventario(id_producto);
+    res.status(204).send();
+  } catch (error: any) {
+    res.json({error: error.message})
   }
 });
+
+// Rutas de sucursales
+
+/**
+ * @route GET /sucursales
+ * @desc Obtiene todas las sucursales.
+ */
+router.get('/sucursales', async (req, res, next) => {
+  try {
+    const sucursales = await sucursalController.getAllSucursales();
+    res.json(sucursales);
+  } catch (error: any) {
+    // Manejo de erroeres
+    res.json({error: error.message})
+  }
+});
+
+/**
+ * @route GET /sucursales/:id
+ * @param {number} :id - ID de la sucursal a buscar.
+ * @desc Obtiene una sucursal por su ID.
+ */
+router.get('/sucursales/:id', async (req, res, next) => {
+  const id = parseInt(req.params.id, 10);
+  try {
+    const sucursal = await sucursalController.getSucursalById(id);
+    if (!sucursal) {
+      return res.status(404).json({ error: 'Sucursal no encontrada' });
+    }
+    res.json(sucursal);
+  } catch (error: any) {
+    // Manejo de erro: anyres
+    res.json({error: error.message})
+  }
+});
+
+/**
+ * @route POST /sucursales
+ * @param {string} nombre - Nombre de la sucursal.
+ * @param {string} direccion - Dirección de la sucursal.
+ * @param {string} ciudad - Ciudad de la sucursal.
+ * @param {string} estado - Estado de la sucursal.
+ * @param {string} codigoPostal - Código postal de la sucursal.
+ * @param {string} telefono - Teléfono de la sucursal.
+ * @param {string} encargado - Encargado de la sucursal.
+ * @desc Crea una nueva sucursal.
+ */
+router.post('/sucursales', async (req, res, next) => {
+  const { nombre, direccion, ciudad, estado, codigoPostal, telefono, encargado } = req.body;
+  try {
+    const sucursal = await sucursalController.createSucursal(
+      nombre,
+      direccion,
+      ciudad,
+      estado,
+      codigoPostal,
+      telefono,
+      encargado
+    );
+    res.json(sucursal);
+  } catch (error: any) {
+    // Manejo de errores
+    res.json({error: error.message})
+  }
+});
+
+/**
+ * @route PUT /sucursales/:id
+ * @param {number} :id - ID de la sucursal a modificar.
+ * @desc Modifica una sucursal por su ID.
+ */
+router.put('/sucursales/:id', async (req, res, next) => {
+  const id = parseInt(req.params.id, 10);
+  const { nombre, direccion, ciudad, estado, codigoPostal, telefono, encargado } = req.body;
+  try {
+    const sucursal = await sucursalController.updateSucursal(
+      id,
+      nombre,
+      direccion,
+      ciudad,
+      estado,
+      codigoPostal,
+      telefono,
+      encargado
+    );
+    res.json(sucursal);
+  } catch (error: any) {
+    // Manejo de errores
+    res.json({error: error.message})
+  }
+});
+
+/**
+ * @route DELETE /sucursales/:id
+ * @param {number} :id - ID de la sucursal a eliminar.
+ * @desc Elimina una sucursal por su ID.
+ */
+router.delete('/sucursales/:id', async (req, res, next) => {
+  const id = parseInt(req.params.id, 10);
+  try {
+    await sucursalController.deleteSucursal(id);
+    res.status(204).send();
+  } catch (error: any) {
+    // Manejo de errores
+    res.json({error: error.message})
+  }
+});
+
 
 export default router;
