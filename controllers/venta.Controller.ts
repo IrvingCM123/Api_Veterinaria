@@ -25,26 +25,27 @@ export async function getVentaById(id: number) {
     });
 }
 
+// Función para obtener el ID del vendedor a partir de su acrónimo
 async function obtenerIdVendedorPorAcronimo(acronimo: string) {
     const vendedor = await prisma.catalogoVendedor.findUnique({
-      where: { acronimo },
+        where: { acronimo },
     });
-  
+
     if (!vendedor) {
-      throw new Error(`Vendedor con acrónimo ${acronimo} no encontrado`);
+        throw new Error(`Vendedor con acrónimo ${acronimo} no encontrado`);
     }
-  
+
     return vendedor.id_vendedor;
-  }
+}
 
 // Crear una nueva venta
-export async function createVenta(id_sucursal: number,  id_vendedor: string, fecha_venta: string, total_venta: string, subtotal: string, iva: string) {
-    const idVendedor = await obtenerIdVendedorPorAcronimo(id_vendedor);
+export async function createVenta(id_sucursal: number, id_vendedor: string, fecha_venta: string, total_venta: string, subtotal: string, iva: string) {
+    const idVendedor: any = await obtenerIdVendedorPorAcronimo(id_vendedor);
 
     return await prisma.venta.create({
         data: {
             id_sucursal,
-            id_vendedor,
+            idVendedor,
             fecha_venta,
             total_venta,
             subtotal,
