@@ -42,6 +42,8 @@ const marcaController = __importStar(require("../controllers/marcas.Controller")
 const inventarioController = __importStar(require("../controllers/inventario.controller"));
 const sucursalController = __importStar(require("../controllers/sucursal.Controller"));
 const catalogoVendedorController = __importStar(require("../controllers/vendedor.Controller"));
+const ventaController = __importStar(require("../controllers/venta.Controller"));
+const detalleVentaController = __importStar(require("../controllers/detalleVenta.Controller"));
 const Usuario_Validator_1 = require("../Validators/Usuario_Validator");
 const router = (0, express_1.Router)();
 // Ruta principal de bienvenida
@@ -609,6 +611,160 @@ router.delete('/vendedores/:id', (req, res, next) => __awaiter(void 0, void 0, v
     catch (error) {
         // Manejar errores aquí
         next(error);
+    }
+}));
+// Rutas de ventas
+/**
+ * @route GET /ventas
+ * @desc Obtiene todas las ventas.
+ */
+router.get("/ventas", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const ventas = yield ventaController.getAllVentas();
+        res.json(ventas);
+    }
+    catch (error) {
+        res.json({ error: error.message });
+    }
+}));
+/**
+ * @route GET /ventas/:id
+ * @param {number} :id - ID de la venta a buscar.
+ * @desc Obtiene una venta por su ID.
+ */
+router.get("/ventas/:id", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const id = parseInt(req.params.id, 10);
+    try {
+        const venta = yield ventaController.getVentaById(id);
+        if (!venta) {
+            return res.status(404).json({ error: "Venta no encontrada" });
+        }
+        res.json(venta);
+    }
+    catch (error) {
+        res.json({ error: error.message });
+    }
+}));
+/**
+ * @route POST /ventas
+ * @desc Crea una nueva venta.
+ */
+router.post("/ventas", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id_vendedor, id_sucursal, fecha_venta, total_venta, subtotal, iva, detallesVenta } = req.body;
+    try {
+        const venta = yield ventaController.crearVenta(id_vendedor, id_sucursal, fecha_venta, total_venta, subtotal, iva, detallesVenta);
+        res.json(venta);
+    }
+    catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+}));
+/**
+ * @route PUT /ventas/:id
+ * @param {number} :id - ID de la venta a modificar.
+ * @desc Actualiza una venta por su ID.
+ */
+router.put("/ventas/:id", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const id = parseInt(req.params.id, 10);
+    const { id_sucursal, id_vendedor, fecha_venta, total_venta, subtotal, iva } = req.body;
+    try {
+        const venta = yield ventaController.updateVenta(id, id_sucursal, id_vendedor, fecha_venta, total_venta, subtotal, iva);
+        res.json(venta);
+    }
+    catch (error) {
+        res.json({ error: error.message });
+    }
+}));
+/**
+ * @route DELETE /ventas/:id
+ * @param {number} :id - ID de la venta a eliminar.
+ * @desc Elimina una venta por su ID.
+ */
+router.delete("/ventas/:id", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const id = parseInt(req.params.id, 10);
+    try {
+        yield ventaController.deleteVenta(id);
+        res.status(204).send();
+    }
+    catch (error) {
+        res.json({ error: error.message });
+    }
+}));
+// Rutas de detalles de venta
+/**
+ * @route GET /detalles-venta
+ * @desc Obtiene todos los detalles de venta.
+ */
+router.get("/detalles-venta", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const detallesVenta = yield detalleVentaController.getAllDetallesVenta();
+        res.json(detallesVenta);
+    }
+    catch (error) {
+        res.json({ error: error.message });
+    }
+}));
+/**
+ * @route GET /detalles-venta/:id
+ * @param {number} :id - ID del detalle de venta a buscar.
+ * @desc Obtiene un detalle de venta por su ID.
+ */
+router.get("/detalles-venta/:id", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const id = parseInt(req.params.id, 10);
+    try {
+        const detalleVenta = yield detalleVentaController.getDetalleVentaById(id);
+        if (!detalleVenta) {
+            return res.status(404).json({ error: "Detalle de venta no encontrado" });
+        }
+        res.json(detalleVenta);
+    }
+    catch (error) {
+        res.json({ error: error.message });
+    }
+}));
+/**
+ * @route POST /detalles-venta
+ * @desc Crea un nuevo detalle de venta.
+ */
+router.post("/detalles-venta", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id_venta, id_producto, cantidad_vendida, precio_producto, subtotal } = req.body;
+    try {
+        const detalleVenta = yield detalleVentaController.createDetalleVenta(id_venta, id_producto, cantidad_vendida, precio_producto, subtotal);
+        res.json(detalleVenta);
+    }
+    catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+}));
+/**
+ * @route PUT /detalles-venta/:id
+ * @param {number} :id - ID del detalle de venta a modificar.
+ * @desc Actualiza un detalle de venta por su ID.
+ */
+router.put("/detalles-venta/:id", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const id = parseInt(req.params.id, 10);
+    const { id_venta, id_producto, cantidad_vendida, precio_producto, subtotal } = req.body;
+    try {
+        const detalleVenta = yield detalleVentaController.updateDetalleVenta(id, id_venta, id_producto, cantidad_vendida, precio_producto, subtotal);
+        res.json(detalleVenta);
+    }
+    catch (error) {
+        res.json({ error: error.message });
+    }
+}));
+/**
+ * @route DELETE /detalles-venta/:id
+ * @param {number} :id - ID del detalle de venta a eliminar.
+ * @desc Elimina un detalle de venta por su ID.
+ */
+router.delete("/detalles-venta/:id", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const id = parseInt(req.params.id, 10);
+    try {
+        yield detalleVentaController.deleteDetalleVenta(id);
+        res.status(204).send();
+    }
+    catch (error) {
+        res.json({ error: error.message });
     }
 }));
 exports.default = router;
