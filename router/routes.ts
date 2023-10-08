@@ -54,7 +54,7 @@ router.get("/productos", async (req: Request, res: Response, next: NextFunction)
     const productos = await productoController.obtenerProductos();
     res.json(productos);
   } catch (error: any) {
-    errorHandler(error, req, res, next);
+    res.json({ error: error.message})
   }
 });
 
@@ -72,7 +72,7 @@ router.get("/productos/:id", async (req: Request, res: Response, next: NextFunct
     }
     res.json(producto);
   } catch (error: any) {
-    errorHandler(error, req, res, next);
+    res.json({ error: error.message})
   }
 });
 
@@ -116,7 +116,7 @@ router.put("/productos/:id", async (req: Request, res: Response, next: NextFunct
     const producto = await productoController.actualizarProducto(id, nombre, descripcion, precio, nomenclaturaProveedor, nomenclaturaMarca, nomenclaturaCategoria, imagen);
     res.json(producto);
   } catch (error: any) {
-    errorHandler(error, req, res, next);
+    res.json({ error: error.message})
   }
 });
 
@@ -131,7 +131,7 @@ router.delete("/productos/:id", async (req: Request, res: Response, next: NextFu
     await productoController.eliminarProducto(id);
     res.status(204).send();
   } catch (error: any) {
-    errorHandler(error, req, res, next);
+    res.json({ error: error.message})
   }
 });
 
@@ -176,7 +176,7 @@ router.get("/proveedores", async (req: Request, res: Response, next: NextFunctio
     const proveedores = await proveedorController.getAllProveedores();
     res.json(proveedores);
   } catch (error: any) {
-    errorHandler(error, req, res, next);
+    res.json({ error: error.message})
   }
 });
 
@@ -194,7 +194,7 @@ router.get("/proveedores/:id", async (req: Request, res: Response, next: NextFun
     }
     res.json(proveedor);
   } catch (error: any) {
-    errorHandler(error, req, res, next);
+    res.json({ error: error.message})
   }
 });
 
@@ -210,7 +210,7 @@ router.post("/proveedores", async (req: Request, res: Response, next: NextFuncti
     const proveedor = await proveedorController.createProveedor(nombre, nomenclatura);
     res.json(proveedor);
   } catch (error: any) {
-    errorHandler(error, req, res, next);
+    res.json({ error: error.message})
   }
 });
 
@@ -226,7 +226,7 @@ router.put("/proveedores/:id", async (req: Request, res: Response, next: NextFun
     const proveedor = await proveedorController.updateProveedor(id, nombre, nomenclatura);
     res.json(proveedor);
   } catch (error: any) {
-    errorHandler(error, req, res, next);
+    res.json({ error: error.message})
   }
 });
 
@@ -241,7 +241,7 @@ router.delete("/proveedores/:id", async (req: Request, res: Response, next: Next
     await proveedorController.deleteProveedor(id);
     res.status(204).send();
   } catch (error: any) {
-    errorHandler(error, req, res, next);
+    res.json({ error: error.message})
   }
 });
 
@@ -256,7 +256,7 @@ router.get("/categorias", async (req: Request, res: Response, next: NextFunction
     const categorias = await categoriaController.getAllCategorias();
     res.json(categorias);
   } catch (error: any) {
-    errorHandler(error, req, res, next);
+    res.json({ error: error.message})
   }
 });
 
@@ -274,7 +274,7 @@ router.get("/categorias/:id", async (req: Request, res: Response, next: NextFunc
     }
     res.json(categoria);
   } catch (error: any) {
-    errorHandler(error, req, res, next);
+    res.json({ error: error.message})
   }
 });
 
@@ -290,7 +290,7 @@ router.post("/categorias", async (req: Request, res: Response, next: NextFunctio
     const categoria = await categoriaController.createCategoria(nombre, nomenclatura);
     res.json(categoria);
   } catch (error: any) {
-    errorHandler(error, req, res, next);
+    res.json({ error: error.message})
   }
 });
 
@@ -306,7 +306,7 @@ router.put("/categorias/:id", async (req: Request, res: Response, next: NextFunc
     const categoria = await categoriaController.updateCategoria(id, nombre, nomenclatura);
     res.json(categoria);
   } catch (error: any) {
-    errorHandler(error, req, res, next);
+    res.json({ error: error.message})
   }
 });
 
@@ -321,7 +321,7 @@ router.delete("/categorias/:id", async (req: Request, res: Response, next: NextF
     await categoriaController.deleteCategoria(id);
     res.status(204).send();
   } catch (error: any) {
-    errorHandler(error, req, res, next);
+    res.json({ error: error.message})
   }
 });
 
@@ -336,7 +336,7 @@ router.get("/marcas", async (req: Request, res: Response, next: NextFunction) =>
     const marcas = await marcaController.getAllMarcas();
     res.json(marcas);
   } catch (error: any) {
-    errorHandler(error, req, res, next);
+    res.json({ error: error.message})
   }
 });
 
@@ -354,7 +354,7 @@ router.get("/marcas/:id", async (req: Request, res: Response, next: NextFunction
     }
     res.json(marca);
   } catch (error: any) {
-    errorHandler(error, req, res, next);
+    res.json({ error: error.message})
   }
 });
 
@@ -386,7 +386,7 @@ router.put("/marcas/:id", async (req: Request, res: Response, next: NextFunction
     const marca = await marcaController.updateMarca(id, nombre, nomenclatura);
     res.json(marca);
   } catch (error: any) {
-    errorHandler(error, req, res, next);
+    res.json({ error: error.message})
   }
 });
 
@@ -401,7 +401,7 @@ router.delete("/marcas/:id", async (req: Request, res: Response, next: NextFunct
     await marcaController.deleteMarca(id);
     res.status(204).send();
   } catch (error: any) {
-    errorHandler(error, req, res, next);
+    res.json({ error: error.message})
   }
 });
 
