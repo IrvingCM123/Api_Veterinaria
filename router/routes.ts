@@ -13,6 +13,7 @@ import * as usuarioController from "../controllers/usuarioControllers";
 import * as proveedorController from "../controllers/provedores.Controller";
 import * as categoriaController from "../controllers/categoria.Controller";
 import * as marcaController from "../controllers/marcas.Controller";
+import * as inventarioController from '../controllers/inventario.controller';
 
 import {
   validarVenta,
@@ -406,5 +407,62 @@ router.delete("/marcas/:id", async (req: Request, res: Response, next: NextFunct
 });
 
 
+// Obtener todos los registros de inventario
+router.get('/inventario', async (req, res, next) => {
+  try {
+      const inventario = await inventarioController.getAllInventario();
+      res.json(inventario);
+  } catch (error) {
+      next(error);
+  }
+});
+
+// Obtener un registro de inventario por su ID de producto
+router.get('/inventario/:id_producto', async (req, res, next) => {
+  const id_producto = parseInt(req.params.id_producto, 10);
+  try {
+      const inventario = await inventarioController.getInventarioByProductId(id_producto);
+      if (!inventario) {
+          return res.status(404).json({ error: 'Registro de inventario no encontrado' });
+      }
+      res.json(inventario);
+  } catch (error) {
+      next(error);
+  }
+});
+
+// Crear un nuevo registro de inventario
+router.post('/inventario', async (req, res, next) => {
+  const { id_producto, existencias, StockMinimo, StockMaximo } = req.body;
+  try {
+      const inventario = await inventarioController.createInventario(id_producto, existencias, StockMinimo, StockMaximo);
+      res.status(201).json(inventario);
+  } catch (error) {
+      next(error);
+  }
+});
+
+// Actualizar un registro de inventario por su ID de producto
+router.put('/inventario/:id_producto', async (req, res, next) => {
+  const id_producto = parseInt(req.params.id_producto, 10);
+  const { existencias, StockMinimo, StockMaximo } = req.body;
+  try {
+      const inventario = await inventarioController.updateInventario(id_producto, existencias, StockMinimo, StockMaximo);
+      res.json(inventario);
+  } catch (error) {
+      next(error);
+  }
+});
+
+// Eliminar un registro de inventario por su ID de producto
+router.delete('/inventario/:id_producto', async (req, res, next) => {
+  const id_producto = parseInt(req.params.id_producto, 10);
+  try {
+      await inventarioController.deleteInventario(id_producto);
+      res.status(204).send();
+  } catch (error) {
+      next(error);
+  }
+});
 
 export default router;
