@@ -16,6 +16,8 @@ import * as marcaController from "../controllers/marcas.Controller";
 import * as inventarioController from '../controllers/inventario.controller';
 import * as sucursalController from '../controllers/sucursal.Controller';
 import * as catalogoVendedorController from '../controllers/vendedor.Controller';
+import * as ventaController from "../controllers/venta.Controller";
+import * as detalleVentaController from "../controllers/detalleVenta.Controller"
 
 import {
   validarVenta,
@@ -415,7 +417,7 @@ router.get('/inventario', async (req, res, next) => {
     const inventario = await inventarioController.getAllInventario();
     res.json(inventario);
   } catch (error: any) {
-    res.json({error: error.message})
+    res.json({ error: error.message })
   }
 });
 
@@ -429,7 +431,7 @@ router.get('/inventario/:id_producto', async (req, res, next) => {
     }
     res.json(inventario);
   } catch (error: any) {
-    res.json({error: error.message})
+    res.json({ error: error.message })
   }
 });
 
@@ -440,7 +442,7 @@ router.post('/inventario', async (req, res, next) => {
     const inventario = await inventarioController.createInventario(id_producto, existencias, StockMinimo, StockMaximo);
     res.status(201).json(inventario);
   } catch (error: any) {
-    res.json({error: error.message})
+    res.json({ error: error.message })
   }
 });
 
@@ -452,7 +454,7 @@ router.put('/inventario/:id_producto', async (req, res, next) => {
     const inventario = await inventarioController.updateInventario(id_producto, existencias, StockMinimo, StockMaximo);
     res.json(inventario);
   } catch (error: any) {
-    res.json({error: error.message})
+    res.json({ error: error.message })
   }
 });
 
@@ -463,7 +465,7 @@ router.delete('/inventario/:id_producto', async (req, res, next) => {
     await inventarioController.deleteInventario(id_producto);
     res.status(204).send();
   } catch (error: any) {
-    res.json({error: error.message})
+    res.json({ error: error.message })
   }
 });
 
@@ -479,7 +481,7 @@ router.get('/sucursales', async (req, res, next) => {
     res.json(sucursales);
   } catch (error: any) {
     // Manejo de erroeres
-    res.json({error: error.message})
+    res.json({ error: error.message })
   }
 });
 
@@ -498,7 +500,7 @@ router.get('/sucursales/:id', async (req, res, next) => {
     res.json(sucursal);
   } catch (error: any) {
     // Manejo de erro: anyres
-    res.json({error: error.message})
+    res.json({ error: error.message })
   }
 });
 
@@ -528,7 +530,7 @@ router.post('/sucursales', async (req, res, next) => {
     res.json(sucursal);
   } catch (error: any) {
     // Manejo de errores
-    res.json({error: error.message})
+    res.json({ error: error.message })
   }
 });
 
@@ -554,7 +556,7 @@ router.put('/sucursales/:id', async (req, res, next) => {
     res.json(sucursal);
   } catch (error: any) {
     // Manejo de errores
-    res.json({error: error.message})
+    res.json({ error: error.message })
   }
 });
 
@@ -570,7 +572,7 @@ router.delete('/sucursales/:id', async (req, res, next) => {
     res.status(204).send();
   } catch (error: any) {
     // Manejo de errores
-    res.json({error: error.message})
+    res.json({ error: error.message })
   }
 });
 
@@ -638,5 +640,173 @@ router.delete('/vendedores/:id', async (req: Request, res: Response, next: NextF
   }
 });
 
+// Rutas de ventas
+
+/**
+ * @route GET /ventas
+ * @desc Obtiene todas las ventas.
+ */
+router.get("/ventas", async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const ventas = await ventaController.getAllVentas();
+    res.json(ventas);
+  } catch (error: any) {
+    res.json({ error: error.message })
+  }
+});
+
+/**
+ * @route GET /ventas/:id
+ * @param {number} :id - ID de la venta a buscar.
+ * @desc Obtiene una venta por su ID.
+ */
+router.get("/ventas/:id", async (req: Request, res: Response, next: NextFunction) => {
+  const id = parseInt(req.params.id, 10);
+  try {
+    const venta = await ventaController.getVentaById(id);
+    if (!venta) {
+      return res.status(404).json({ error: "Venta no encontrada" });
+    }
+    res.json(venta);
+  } catch (error: any) {
+    res.json({ error: error.message })
+  }
+});
+
+/**
+ * @route POST /ventas
+ * @desc Crea una nueva venta.
+ */
+router.post("/ventas", async (req: Request, res: Response, next: NextFunction) => {
+  const { id_vendedor, id_sucursal, fecha_venta, total_venta, subtotal, iva, detallesVenta } = req.body;
+  try {
+    const venta = await ventaController.crearVenta(id_vendedor, id_sucursal, fecha_venta, total_venta, subtotal, iva, detallesVenta);
+    res.json(venta);
+  } catch (error: any) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
+/**
+ * @route PUT /ventas/:id
+ * @param {number} :id - ID de la venta a modificar.
+ * @desc Actualiza una venta por su ID.
+ */
+router.put("/ventas/:id", async (req: Request, res: Response, next: NextFunction) => {
+  const id = parseInt(req.params.id, 10);
+  const { id_sucursal, id_vendedor, fecha_venta, total_venta, subtotal, iva } = req.body;
+  try {
+    const venta = await ventaController.updateVenta(id, id_sucursal, id_vendedor, fecha_venta, total_venta, subtotal, iva);
+    res.json(venta);
+  } catch (error: any) {
+    res.json({ error: error.message })
+  }
+});
+
+/**
+ * @route DELETE /ventas/:id
+ * @param {number} :id - ID de la venta a eliminar.
+ * @desc Elimina una venta por su ID.
+ */
+router.delete("/ventas/:id", async (req: Request, res: Response, next: NextFunction) => {
+  const id = parseInt(req.params.id, 10);
+  try {
+    await ventaController.deleteVenta(id);
+    res.status(204).send();
+  } catch (error: any) {
+    res.json({ error: error.message })
+  }
+});
+
+// Rutas de detalles de venta
+
+/**
+ * @route GET /detalles-venta
+ * @desc Obtiene todos los detalles de venta.
+ */
+router.get("/detalles-venta", async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const detallesVenta = await detalleVentaController.getAllDetallesVenta();
+    res.json(detallesVenta);
+  } catch (error: any) {
+    res.json({ error: error.message });
+  }
+});
+
+/**
+ * @route GET /detalles-venta/:id
+ * @param {number} :id - ID del detalle de venta a buscar.
+ * @desc Obtiene un detalle de venta por su ID.
+ */
+router.get("/detalles-venta/:id", async (req: Request, res: Response, next: NextFunction) => {
+  const id = parseInt(req.params.id, 10);
+  try {
+    const detalleVenta = await detalleVentaController.getDetalleVentaById(id);
+    if (!detalleVenta) {
+      return res.status(404).json({ error: "Detalle de venta no encontrado" });
+    }
+    res.json(detalleVenta);
+  } catch (error: any) {
+    res.json({ error: error.message });
+  }
+});
+
+/**
+ * @route POST /detalles-venta
+ * @desc Crea un nuevo detalle de venta.
+ */
+router.post("/detalles-venta", async (req: Request, res: Response, next: NextFunction) => {
+  const { id_venta, id_producto, cantidad_vendida, precio_producto, subtotal } = req.body;
+  try {
+    const detalleVenta = await detalleVentaController.createDetalleVenta(
+      id_venta,
+      id_producto,
+      cantidad_vendida,
+      precio_producto,
+      subtotal
+    );
+    res.json(detalleVenta);
+  } catch (error: any) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
+/**
+ * @route PUT /detalles-venta/:id
+ * @param {number} :id - ID del detalle de venta a modificar.
+ * @desc Actualiza un detalle de venta por su ID.
+ */
+router.put("/detalles-venta/:id", async (req: Request, res: Response, next: NextFunction) => {
+  const id = parseInt(req.params.id, 10);
+  const { id_venta, id_producto, cantidad_vendida, precio_producto, subtotal } = req.body;
+  try {
+    const detalleVenta = await detalleVentaController.updateDetalleVenta(
+      id,
+      id_venta,
+      id_producto,
+      cantidad_vendida,
+      precio_producto,
+      subtotal
+    );
+    res.json(detalleVenta);
+  } catch (error: any) {
+    res.json({ error: error.message });
+  }
+});
+
+/**
+ * @route DELETE /detalles-venta/:id
+ * @param {number} :id - ID del detalle de venta a eliminar.
+ * @desc Elimina un detalle de venta por su ID.
+ */
+router.delete("/detalles-venta/:id", async (req: Request, res: Response, next: NextFunction) => {
+  const id = parseInt(req.params.id, 10);
+  try {
+    await detalleVentaController.deleteDetalleVenta(id);
+    res.status(204).send();
+  } catch (error: any) {
+    res.json({ error: error.message });
+  }
+});
 
 export default router;
