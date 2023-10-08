@@ -44,7 +44,7 @@ exports.obtenerProductoPorId = obtenerProductoPorId;
 // Obtener el ID de proveedor por su nomenclatura
 function obtenerIdProveedorPorNomenclatura(nomenclatura) {
     return __awaiter(this, void 0, void 0, function* () {
-        const proveedor = yield prisma.catalogoProveedor.findUnique({
+        const proveedor = yield prisma.catalogoProveedor.findFirst({
             where: { nomenclatura },
         });
         if (!proveedor) {
@@ -56,7 +56,7 @@ function obtenerIdProveedorPorNomenclatura(nomenclatura) {
 // Obtener el ID de marca por su nomenclatura
 function obtenerIdMarcaPorNomenclatura(nomenclatura) {
     return __awaiter(this, void 0, void 0, function* () {
-        const marca = yield prisma.catalogoMarca.findUnique({
+        const marca = yield prisma.catalogoMarca.findFirst({
             where: { nomenclatura },
         });
         if (!marca) {
@@ -68,7 +68,7 @@ function obtenerIdMarcaPorNomenclatura(nomenclatura) {
 // Obtener el ID de categoría por su nomenclatura
 function obtenerIdCategoriaPorNomenclatura(nomenclatura) {
     return __awaiter(this, void 0, void 0, function* () {
-        const categoria = yield prisma.catalogoCategoria.findUnique({
+        const categoria = yield prisma.catalogoCategoria.findFirst({
             where: { nomenclatura },
         });
         if (!categoria) {

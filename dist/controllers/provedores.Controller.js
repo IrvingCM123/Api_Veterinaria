@@ -29,12 +29,17 @@ function getProveedorById(id) {
 }
 exports.getProveedorById = getProveedorById;
 // Crear un nuevo proveedor
-function createProveedor(nombre, nomenclatura) {
+function createProveedor(nombre, nomenclatura, direccion, ciudad, estado, telefono, email) {
     return __awaiter(this, void 0, void 0, function* () {
         return yield prisma.catalogoProveedor.create({
             data: {
                 nombre,
                 nomenclatura,
+                direccion,
+                ciudad,
+                estado,
+                telefono,
+                email
             },
         });
     });

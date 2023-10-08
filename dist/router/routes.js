@@ -39,6 +39,9 @@ const usuarioController = __importStar(require("../controllers/usuarioController
 const proveedorController = __importStar(require("../controllers/provedores.Controller"));
 const categoriaController = __importStar(require("../controllers/categoria.Controller"));
 const marcaController = __importStar(require("../controllers/marcas.Controller"));
+const inventarioController = __importStar(require("../controllers/inventario.controller"));
+const sucursalController = __importStar(require("../controllers/sucursal.Controller"));
+const catalogoVendedorController = __importStar(require("../controllers/vendedor.Controller"));
 const Usuario_Validator_1 = require("../Validators/Usuario_Validator");
 const router = (0, express_1.Router)();
 // Ruta principal de bienvenida
@@ -200,9 +203,9 @@ router.get("/proveedores/:id", (req, res, next) => __awaiter(void 0, void 0, voi
  * @desc Crea un nuevo proveedor.
  */
 router.post("/proveedores", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const { nombre, nomenclatura } = req.body;
+    const { nombre, nomenclatura, direccion, ciudad, estado, telefono, email } = req.body;
     try {
-        const proveedor = yield proveedorController.createProveedor(nombre, nomenclatura);
+        const proveedor = yield proveedorController.createProveedor(nombre, nomenclatura, direccion, ciudad, estado, telefono, email);
         res.json(proveedor);
     }
     catch (error) {
@@ -396,6 +399,216 @@ router.delete("/marcas/:id", (req, res, next) => __awaiter(void 0, void 0, void 
     }
     catch (error) {
         res.json({ error: error.message });
+    }
+}));
+// Obtener todos los registros de inventario
+router.get('/inventario', (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const inventario = yield inventarioController.getAllInventario();
+        res.json(inventario);
+    }
+    catch (error) {
+        res.json({ error: error.message });
+    }
+}));
+// Obtener un registro de inventario por su ID de producto
+router.get('/inventario/:id_producto', (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const id_producto = parseInt(req.params.id_producto, 10);
+    try {
+        const inventario = yield inventarioController.getInventarioByProductId(id_producto);
+        if (!inventario) {
+            return res.status(404).json({ error: 'Registro de inventario no encontrado' });
+        }
+        res.json(inventario);
+    }
+    catch (error) {
+        res.json({ error: error.message });
+    }
+}));
+// Crear un nuevo registro de inventario
+router.post('/inventario', (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id_producto, existencias, StockMinimo, StockMaximo } = req.body;
+    try {
+        const inventario = yield inventarioController.createInventario(id_producto, existencias, StockMinimo, StockMaximo);
+        res.status(201).json(inventario);
+    }
+    catch (error) {
+        res.json({ error: error.message });
+    }
+}));
+// Actualizar un registro de inventario por su ID de producto
+router.put('/inventario/:id_producto', (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const id_producto = parseInt(req.params.id_producto, 10);
+    const { existencias, StockMinimo, StockMaximo } = req.body;
+    try {
+        const inventario = yield inventarioController.updateInventario(id_producto, existencias, StockMinimo, StockMaximo);
+        res.json(inventario);
+    }
+    catch (error) {
+        res.json({ error: error.message });
+    }
+}));
+// Eliminar un registro de inventario por su ID de producto
+router.delete('/inventario/:id_producto', (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const id_producto = parseInt(req.params.id_producto, 10);
+    try {
+        yield inventarioController.deleteInventario(id_producto);
+        res.status(204).send();
+    }
+    catch (error) {
+        res.json({ error: error.message });
+    }
+}));
+// Rutas de sucursales
+/**
+ * @route GET /sucursales
+ * @desc Obtiene todas las sucursales.
+ */
+router.get('/sucursales', (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const sucursales = yield sucursalController.getAllSucursales();
+        res.json(sucursales);
+    }
+    catch (error) {
+        // Manejo de erroeres
+        res.json({ error: error.message });
+    }
+}));
+/**
+ * @route GET /sucursales/:id
+ * @param {number} :id - ID de la sucursal a buscar.
+ * @desc Obtiene una sucursal por su ID.
+ */
+router.get('/sucursales/:id', (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const id = parseInt(req.params.id, 10);
+    try {
+        const sucursal = yield sucursalController.getSucursalById(id);
+        if (!sucursal) {
+            return res.status(404).json({ error: 'Sucursal no encontrada' });
+        }
+        res.json(sucursal);
+    }
+    catch (error) {
+        // Manejo de erro: anyres
+        res.json({ error: error.message });
+    }
+}));
+/**
+ * @route POST /sucursales
+ * @param {string} nombre - Nombre de la sucursal.
+ * @param {string} direccion - Dirección de la sucursal.
+ * @param {string} ciudad - Ciudad de la sucursal.
+ * @param {string} estado - Estado de la sucursal.
+ * @param {string} codigoPostal - Código postal de la sucursal.
+ * @param {string} telefono - Teléfono de la sucursal.
+ * @param {string} encargado - Encargado de la sucursal.
+ * @desc Crea una nueva sucursal.
+ */
+router.post('/sucursales', (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const { nombre, direccion, ciudad, estado, codigoPostal, telefono, encargado } = req.body;
+    try {
+        const sucursal = yield sucursalController.createSucursal(nombre, direccion, ciudad, estado, codigoPostal, telefono, encargado);
+        res.json(sucursal);
+    }
+    catch (error) {
+        // Manejo de errores
+        res.json({ error: error.message });
+    }
+}));
+/**
+ * @route PUT /sucursales/:id
+ * @param {number} :id - ID de la sucursal a modificar.
+ * @desc Modifica una sucursal por su ID.
+ */
+router.put('/sucursales/:id', (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const id = parseInt(req.params.id, 10);
+    const { nombre, direccion, ciudad, estado, codigoPostal, telefono, encargado } = req.body;
+    try {
+        const sucursal = yield sucursalController.updateSucursal(id, nombre, direccion, ciudad, estado, codigoPostal, telefono, encargado);
+        res.json(sucursal);
+    }
+    catch (error) {
+        // Manejo de errores
+        res.json({ error: error.message });
+    }
+}));
+/**
+ * @route DELETE /sucursales/:id
+ * @param {number} :id - ID de la sucursal a eliminar.
+ * @desc Elimina una sucursal por su ID.
+ */
+router.delete('/sucursales/:id', (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const id = parseInt(req.params.id, 10);
+    try {
+        yield sucursalController.deleteSucursal(id);
+        res.status(204).send();
+    }
+    catch (error) {
+        // Manejo de errores
+        res.json({ error: error.message });
+    }
+}));
+// Ruta para obtener todos los vendedores
+router.get('/vendedores', (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const vendedores = yield catalogoVendedorController.getAllVendedores();
+        res.json(vendedores);
+    }
+    catch (error) {
+        // Manejar errores aquí
+        next(error);
+    }
+}));
+// Ruta para obtener un vendedor por su ID
+router.get('/vendedores/:id', (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const id = parseInt(req.params.id, 10);
+    try {
+        const vendedor = yield catalogoVendedorController.getVendedorById(id);
+        if (!vendedor) {
+            return res.status(404).json({ error: 'Vendedor no encontrado' });
+        }
+        res.json(vendedor);
+    }
+    catch (error) {
+        // Manejar errores aquí
+        next(error);
+    }
+}));
+// Ruta para crear un nuevo vendedor
+router.post('/vendedores', (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const { acronimo, permisoVenta, userId } = req.body;
+    try {
+        const vendedor = yield catalogoVendedorController.createVendedor(acronimo, permisoVenta, userId);
+        res.json(vendedor);
+    }
+    catch (error) {
+        // Manejar errores aquí
+        next(error);
+    }
+}));
+// Ruta para actualizar un vendedor por su ID
+router.put('/vendedores/:id', (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const id = parseInt(req.params.id, 10);
+    const { acronimo, permisoVenta, userId } = req.body;
+    try {
+        const vendedor = yield catalogoVendedorController.updateVendedor(id, acronimo, permisoVenta, userId);
+        res.json(vendedor);
+    }
+    catch (error) {
+        // Manejar errores aquí
+        next(error);
+    }
+}));
+// Ruta para eliminar un vendedor por su ID
+router.delete('/vendedores/:id', (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const id = parseInt(req.params.id, 10);
+    try {
+        yield catalogoVendedorController.deleteVendedor(id);
+        res.status(204).send();
+    }
+    catch (error) {
+        // Manejar errores aquí
+        next(error);
     }
 }));
 exports.default = router;
