@@ -9,7 +9,7 @@ import {
 import { check, validationResult } from "express-validator";
 
 import * as productoController from "../controllers/productosControllers";
-import * as usuarioController from "../controllers/usuarioControllers";
+import * as userController from '../controllers/usuarioControllers';
 import * as proveedorController from "../controllers/provedores.Controller";
 import * as categoriaController from "../controllers/categoria.Controller";
 import * as marcaController from "../controllers/marcas.Controller";
@@ -154,21 +154,55 @@ router.post("/usuarios/login", InicioSesion, (req: Request, res: Response) => {
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
   }
-  usuarioController.iniciarSesion(req, res);
+  userController.iniciarSesion(req, res);
 });
 
 /**
  * @route GET /usuarios
  * @desc Obtiene todos los usuarios.
  */
-router.get("/usuarios", usuarioController.obtenerUsuarios);
+router.get("/usuarios", userController.obtenerUsuarios);
 
 /**
  * @route GET /usuarios/:email
  * @param {string} :email - Correo electrónico del usuario a buscar.
  * @desc Obtiene un usuario por su correo electrónico.
  */
-router.get("/usuarios/:email", usuarioController.obtenerUsuario);
+router.get("/usuarios/:email", userController.obtenerUsuario);
+
+router.post('/usuarios', async (req: Request, res: Response) => {
+  const { email, password, nombre, apellido, telefono, direccion, imagen } = req.body;
+  try {
+    const usuario = await userController.createUsuario(email, password, nombre, apellido, telefono, direccion, imagen);
+    res.json(usuario);
+  } catch (error) {
+    res.status(400).json({ error: 'Error al crear usuario' });
+  }
+});
+
+// Ruta para actualizar un usuario por su ID
+router.put('/usuarios/:id', async (req: Request, res: Response) => {
+  const id = parseInt(req.params.id, 10);
+  const { email, password, nombre, apellido, telefono, direccion, imagen } = req.body;
+  try {
+    const usuario = await userController.updateUsuario(id, email, password, nombre, apellido, telefono, direccion, imagen);
+    res.json(usuario);
+  } catch (error) {
+    res.status(400).json({ error: 'Error al actualizar usuario' });
+  }
+});
+
+// Ruta para eliminar un usuario por su ID
+router.delete('/usuarios/:id', async (req: Request, res: Response) => {
+  const id = parseInt(req.params.id, 10);
+  try {
+    await userController.deleteUsuario(id);
+    res.json({ message: 'Usuario eliminado correctamente' });
+  } catch (error) {
+    res.status(500).json({ error: 'Error al eliminar usuario' });
+  }
+});
+
 
 // Rutas de catalogo de proveedores
 
@@ -184,6 +218,7 @@ router.get("/proveedores", async (req: Request, res: Response, next: NextFunctio
     res.json({ error: error.message })
   }
 });
+
 
 /**
  * @route GET /proveedores/:id
