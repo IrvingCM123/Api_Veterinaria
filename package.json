@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "npx ts-node app.ts",
+    "start": "npx ts-node app.ts && tsc",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
     "migrate": "npx prisma migrate dev "
