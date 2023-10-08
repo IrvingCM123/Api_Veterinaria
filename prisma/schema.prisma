@@ -22,14 +22,18 @@ model Productos {
   proveedor CatalogoProveedor @relation(fields: [id_proveedor], references: [id_proveedor])
   categoria CatalogoCategoria @relation(fields: [id_categoria], references: [id_categoria])
   inventario Inventario[]
-
 }
 
 model CatalogoProveedor {
   id_proveedor Int @id  @default(autoincrement()) 
   nombre       String @unique
   nomenclatura String @unique
-
+  direccion   String
+  ciudad      String
+  estado      String
+  telefono   String
+  email      String
+  
   // Relación inversa con Productos
   productos Productos[]
 }
@@ -96,7 +100,6 @@ model Venta {
    // Relación inversa con DetalleVenta
   detallesVenta DetalleVenta[]
 }
-
 
 model Sucursal {
   id_sucursal  Int @id  @default(autoincrement()) 

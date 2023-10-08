@@ -13,6 +13,7 @@ import * as usuarioController from "../controllers/usuarioControllers";
 import * as proveedorController from "../controllers/provedores.Controller";
 import * as categoriaController from "../controllers/categoria.Controller";
 import * as marcaController from "../controllers/marcas.Controller";
+import * as inventarioController from '../controllers/inventario.controller';
 
 import {
   validarVenta,
@@ -54,7 +55,7 @@ router.get("/productos", async (req: Request, res: Response, next: NextFunction)
     const productos = await productoController.obtenerProductos();
     res.json(productos);
   } catch (error: any) {
-    errorHandler(error, req, res, next);
+    res.json({ error: error.message})
   }
 });
 
@@ -72,7 +73,7 @@ router.get("/productos/:id", async (req: Request, res: Response, next: NextFunct
     }
     res.json(producto);
   } catch (error: any) {
-    errorHandler(error, req, res, next);
+    res.json({ error: error.message})
   }
 });
 
@@ -93,7 +94,7 @@ router.post("/productos", async (req: Request, res: Response, next: NextFunction
     const producto = await productoController.crearProducto(nombre, descripcion, precio, nomenclaturaProveedor, nomenclaturaMarca, nomenclaturaCategoria, imagen);
     res.json(producto);
   } catch (error: any) {
-    errorHandler(error, req, res, next);
+    res.status(400).json({ error: error.message });
   }
 });
 
@@ -116,7 +117,7 @@ router.put("/productos/:id", async (req: Request, res: Response, next: NextFunct
     const producto = await productoController.actualizarProducto(id, nombre, descripcion, precio, nomenclaturaProveedor, nomenclaturaMarca, nomenclaturaCategoria, imagen);
     res.json(producto);
   } catch (error: any) {
-    errorHandler(error, req, res, next);
+    res.json({ error: error.message})
   }
 });
 
@@ -131,7 +132,7 @@ router.delete("/productos/:id", async (req: Request, res: Response, next: NextFu
     await productoController.eliminarProducto(id);
     res.status(204).send();
   } catch (error: any) {
-    errorHandler(error, req, res, next);
+    res.json({ error: error.message})
   }
 });
 
@@ -176,7 +177,7 @@ router.get("/proveedores", async (req: Request, res: Response, next: NextFunctio
     const proveedores = await proveedorController.getAllProveedores();
     res.json(proveedores);
   } catch (error: any) {
-    errorHandler(error, req, res, next);
+    res.json({ error: error.message})
   }
 });
 
@@ -194,7 +195,7 @@ router.get("/proveedores/:id", async (req: Request, res: Response, next: NextFun
     }
     res.json(proveedor);
   } catch (error: any) {
-    errorHandler(error, req, res, next);
+    res.json({ error: error.message})
   }
 });
 
@@ -205,12 +206,12 @@ router.get("/proveedores/:id", async (req: Request, res: Response, next: NextFun
  * @desc Crea un nuevo proveedor.
  */
 router.post("/proveedores", async (req: Request, res: Response, next: NextFunction) => {
-  const { nombre, nomenclatura } = req.body;
+  const { nombre, nomenclatura, direccion, ciudad, estado, telefono, email } = req.body;
   try {
-    const proveedor = await proveedorController.createProveedor(nombre, nomenclatura);
+    const proveedor = await proveedorController.createProveedor(nombre, nomenclatura, direccion, ciudad, estado, telefono, email);
     res.json(proveedor);
   } catch (error: any) {
-    errorHandler(error, req, res, next);
+    res.json({ error: error.message})
   }
 });
 
@@ -226,7 +227,7 @@ router.put("/proveedores/:id", async (req: Request, res: Response, next: NextFun
     const proveedor = await proveedorController.updateProveedor(id, nombre, nomenclatura);
     res.json(proveedor);
   } catch (error: any) {
-    errorHandler(error, req, res, next);
+    res.json({ error: error.message})
   }
 });
 
@@ -241,7 +242,7 @@ router.delete("/proveedores/:id", async (req: Request, res: Response, next: Next
     await proveedorController.deleteProveedor(id);
     res.status(204).send();
   } catch (error: any) {
-    errorHandler(error, req, res, next);
+    res.json({ error: error.message})
   }
 });
 
@@ -256,7 +257,7 @@ router.get("/categorias", async (req: Request, res: Response, next: NextFunction
     const categorias = await categoriaController.getAllCategorias();
     res.json(categorias);
   } catch (error: any) {
-    errorHandler(error, req, res, next);
+    res.json({ error: error.message})
   }
 });
 
@@ -274,7 +275,7 @@ router.get("/categorias/:id", async (req: Request, res: Response, next: NextFunc
     }
     res.json(categoria);
   } catch (error: any) {
-    errorHandler(error, req, res, next);
+    res.json({ error: error.message})
   }
 });
 
@@ -290,7 +291,7 @@ router.post("/categorias", async (req: Request, res: Response, next: NextFunctio
     const categoria = await categoriaController.createCategoria(nombre, nomenclatura);
     res.json(categoria);
   } catch (error: any) {
-    errorHandler(error, req, res, next);
+    res.json({ error: error.message})
   }
 });
 
@@ -306,7 +307,7 @@ router.put("/categorias/:id", async (req: Request, res: Response, next: NextFunc
     const categoria = await categoriaController.updateCategoria(id, nombre, nomenclatura);
     res.json(categoria);
   } catch (error: any) {
-    errorHandler(error, req, res, next);
+    res.json({ error: error.message})
   }
 });
 
@@ -321,7 +322,7 @@ router.delete("/categorias/:id", async (req: Request, res: Response, next: NextF
     await categoriaController.deleteCategoria(id);
     res.status(204).send();
   } catch (error: any) {
-    errorHandler(error, req, res, next);
+    res.json({ error: error.message})
   }
 });
 
@@ -336,7 +337,7 @@ router.get("/marcas", async (req: Request, res: Response, next: NextFunction) =>
     const marcas = await marcaController.getAllMarcas();
     res.json(marcas);
   } catch (error: any) {
-    errorHandler(error, req, res, next);
+    res.json({ error: error.message})
   }
 });
 
@@ -354,7 +355,7 @@ router.get("/marcas/:id", async (req: Request, res: Response, next: NextFunction
     }
     res.json(marca);
   } catch (error: any) {
-    errorHandler(error, req, res, next);
+    res.json({ error: error.message})
   }
 });
 
@@ -370,7 +371,7 @@ router.post("/marcas", async (req: Request, res: Response, next: NextFunction) =
     const marca = await marcaController.createMarca(nombre, nomenclatura);
     res.json(marca);
   } catch (error: any) {
-    errorHandler(error, req, res, next);
+    res.json({ error: error.message });
   }
 });
 
@@ -386,7 +387,7 @@ router.put("/marcas/:id", async (req: Request, res: Response, next: NextFunction
     const marca = await marcaController.updateMarca(id, nombre, nomenclatura);
     res.json(marca);
   } catch (error: any) {
-    errorHandler(error, req, res, next);
+    res.json({ error: error.message})
   }
 });
 
@@ -401,10 +402,67 @@ router.delete("/marcas/:id", async (req: Request, res: Response, next: NextFunct
     await marcaController.deleteMarca(id);
     res.status(204).send();
   } catch (error: any) {
-    errorHandler(error, req, res, next);
+    res.json({ error: error.message})
   }
 });
 
 
+// Obtener todos los registros de inventario
+router.get('/inventario', async (req, res, next) => {
+  try {
+      const inventario = await inventarioController.getAllInventario();
+      res.json(inventario);
+  } catch (error) {
+      next(error);
+  }
+});
+
+// Obtener un registro de inventario por su ID de producto
+router.get('/inventario/:id_producto', async (req, res, next) => {
+  const id_producto = parseInt(req.params.id_producto, 10);
+  try {
+      const inventario = await inventarioController.getInventarioByProductId(id_producto);
+      if (!inventario) {
+          return res.status(404).json({ error: 'Registro de inventario no encontrado' });
+      }
+      res.json(inventario);
+  } catch (error) {
+      next(error);
+  }
+});
+
+// Crear un nuevo registro de inventario
+router.post('/inventario', async (req, res, next) => {
+  const { id_producto, existencias, StockMinimo, StockMaximo } = req.body;
+  try {
+      const inventario = await inventarioController.createInventario(id_producto, existencias, StockMinimo, StockMaximo);
+      res.status(201).json(inventario);
+  } catch (error) {
+      next(error);
+  }
+});
+
+// Actualizar un registro de inventario por su ID de producto
+router.put('/inventario/:id_producto', async (req, res, next) => {
+  const id_producto = parseInt(req.params.id_producto, 10);
+  const { existencias, StockMinimo, StockMaximo } = req.body;
+  try {
+      const inventario = await inventarioController.updateInventario(id_producto, existencias, StockMinimo, StockMaximo);
+      res.json(inventario);
+  } catch (error) {
+      next(error);
+  }
+});
+
+// Eliminar un registro de inventario por su ID de producto
+router.delete('/inventario/:id_producto', async (req, res, next) => {
+  const id_producto = parseInt(req.params.id_producto, 10);
+  try {
+      await inventarioController.deleteInventario(id_producto);
+      res.status(204).send();
+  } catch (error) {
+      next(error);
+  }
+});
 
 export default router;
