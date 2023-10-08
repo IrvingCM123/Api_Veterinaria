@@ -2,6 +2,15 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
+// En algún lugar de tu código, define el tipo DetalleVentaInput
+type DetalleVentaInput = {
+    id_producto: number;
+    cantidad_vendida: string;
+    precio_producto: string;
+    subtotal: string;
+};
+
+
 // Obtener todas las ventas
 export async function getAllVentas() {
     return await prisma.venta.findMany({
@@ -88,26 +97,44 @@ async function descontarInventario(id_producto: number, cantidadVendida: string)
     });
 }
 
+// Función para crear una venta con detalles de venta
+export async function crearVenta(
+    id_vendedor: string,
+    id_sucursal: number,
+    fecha_venta: string,
+    total_venta: string,
+    subtotal: string,
+    iva: string,
+    detallesVenta: DetalleVentaInput[]
+) {
+    const idVendedor = await obtenerIdVendedorPorAcronimo(id_vendedor);
 
-// Crear una nueva venta
-export async function createVenta(id_sucursal: number, id_vendedor: string, fecha_venta: string, total_venta: string, subtotal: string, iva: string) {
-    const idVendedor: any = await obtenerIdVendedorPorAcronimo(id_vendedor);
-
-    return await prisma.venta.create({
+    // Crear la venta principal
+    const venta = await prisma.venta.create({
         data: {
+            id_vendedor: idVendedor,
             id_sucursal,
-            idVendedor,
             fecha_venta,
             total_venta,
             subtotal,
             iva,
         },
-        include: {
-            sucursal: true,
-            vendedor: true,
-            detallesVenta: true,
-        },
     });
+
+    // Crear los detalles de venta y descontar el inventario
+    for (const detalle of detallesVenta) {
+        await descontarInventario(detalle.id_producto, detalle.cantidad_vendida);
+
+        await crearDetalleVenta(
+            venta.id_venta,
+            detalle.id_producto,
+            detalle.cantidad_vendida,
+            detalle.precio_producto,
+            detalle.subtotal
+        );
+    }
+
+    return venta;
 }
 
 // Actualizar una venta por su ID
