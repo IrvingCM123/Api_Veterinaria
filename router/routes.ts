@@ -93,9 +93,9 @@ router.get("/productos/:id", async (req: Request, res: Response, next: NextFunct
  * @desc Crea un nuevo producto.
  */
 router.post("/productos", async (req: Request, res: Response, next: NextFunction) => {
-  const { nombre, descripcion, precio, nomenclaturaProveedor, nomenclaturaMarca, nomenclaturaCategoria, imagen } = req.body;
+  const { nombre, descripcion, precio, nomenclaturaProveedor, nomenclaturaMarca, nomenclaturaCategoria, imagen, cantidad} = req.body;
   try {
-    const producto = await productoController.crearProducto(nombre, descripcion, precio, nomenclaturaProveedor, nomenclaturaMarca, nomenclaturaCategoria, imagen);
+    const producto = await productoController.crearProducto(nombre, descripcion, precio, nomenclaturaProveedor, nomenclaturaMarca, nomenclaturaCategoria, imagen, cantidad);
     res.json(producto);
   } catch (error: any) {
     res.status(400).json({ error: error.message });
@@ -116,9 +116,9 @@ router.post("/productos", async (req: Request, res: Response, next: NextFunction
  */
 router.put("/productos/:id", async (req: Request, res: Response, next: NextFunction) => {
   const id = parseInt(req.params.id, 10);
-  const { nombre, descripcion, precio, nomenclaturaProveedor, nomenclaturaMarca, nomenclaturaCategoria, imagen } = req.body;
+  const { nombre, descripcion, precio, nomenclaturaProveedor, nomenclaturaMarca, nomenclaturaCategoria, imagen, cantidad } = req.body;
   try {
-    const producto = await productoController.actualizarProducto(id, nombre, descripcion, precio, nomenclaturaProveedor, nomenclaturaMarca, nomenclaturaCategoria, imagen);
+    const producto = await productoController.actualizarProducto(id, nombre, descripcion, precio, nomenclaturaProveedor, nomenclaturaMarca, nomenclaturaCategoria, imagen, cantidad);
     res.json(producto);
   } catch (error: any) {
     res.json({ error: error.message })

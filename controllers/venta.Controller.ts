@@ -77,7 +77,6 @@ async function crearDetalleVentaPorcion(id_detalleVenta: number, id_producto: nu
 }
 
 
-// Función para descontar la cantidad vendida del inventario
 async function descontarInventario(id_producto: number, cantidadVendida: string) {
     // Obtener el inventario del producto
     const inventario = await prisma.inventario.findUnique({
@@ -88,15 +87,31 @@ async function descontarInventario(id_producto: number, cantidadVendida: string)
         throw new Error(`Inventario no encontrado para el producto con ID ${id_producto}`);
     }
 
-    // Realizar el descuento en el inventario
+    // Obtener la cantidad disponible en el producto
+    const producto = await prisma.productos.findUnique({
+        where: { id: id_producto },
+        select: { cantidad: true }, // Seleccionar solo el campo "cantidad"
+    });
+
+    if (!producto) {
+        throw new Error(`Producto no encontrado con ID ${id_producto}`);
+    }
+
+    // Realizar el descuento en el inventario y la cantidad del producto
     const cantidadActual = parseFloat(inventario.existencias);
     const cantidadVenta = parseFloat(cantidadVendida);
+    const cantidadProducto = parseFloat(producto.cantidad);
 
     if (cantidadActual < cantidadVenta) {
         throw new Error(`No hay suficiente inventario para el producto con ID ${id_producto}`);
     }
 
+    if (cantidadProducto < cantidadVenta) {
+        throw new Error(`No hay suficiente cantidad disponible para el producto con ID ${id_producto}`);
+    }
+
     const nuevaExistencia = (cantidadActual - cantidadVenta).toString();
+    const nuevaCantidadProducto = (cantidadProducto - cantidadVenta).toString();
 
     // Actualizar el inventario con la nueva existencia
     await prisma.inventario.update({
@@ -105,7 +120,16 @@ async function descontarInventario(id_producto: number, cantidadVendida: string)
             existencias: nuevaExistencia,
         },
     });
+
+    // Actualizar la cantidad disponible del producto
+    await prisma.productos.update({
+        where: { id: id_producto },
+        data: {
+            cantidad: nuevaCantidadProducto,
+        },
+    });
 }
+
 
 // Función para crear una venta con detalles de venta
 export async function crearVenta(
