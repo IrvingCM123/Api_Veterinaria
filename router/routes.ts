@@ -93,7 +93,7 @@ router.post("/productos", async (req: Request, res: Response, next: NextFunction
     const producto = await productoController.crearProducto(nombre, descripcion, precio, nomenclaturaProveedor, nomenclaturaMarca, nomenclaturaCategoria, imagen);
     res.json(producto);
   } catch (error: any) {
-    errorHandler(error, req, res, next);
+    res.status(400).json({ error: error.message });
   }
 });
 
@@ -370,7 +370,7 @@ router.post("/marcas", async (req: Request, res: Response, next: NextFunction) =
     const marca = await marcaController.createMarca(nombre, nomenclatura);
     res.json(marca);
   } catch (error: any) {
-    errorHandler(error, req, res, next);
+    res.json({ error: error.message });
   }
 });
 
