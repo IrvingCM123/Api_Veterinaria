@@ -176,12 +176,16 @@ export async function crearVenta(
 
 
 // Actualizar una venta por su ID
-export async function updateVenta(id: number, id_sucursal: number, id_vendedor: number, fecha_venta: string, total_venta: string, subtotal: string, iva: string) {
+export async function updateVenta(id: number, id_sucursal: number, id_vendedor: string, fecha_venta: string, total_venta: string, subtotal: string, iva: string) {
+
+    const idVendedor = await obtenerIdVendedorPorAcronimo(id_vendedor);
+
+
     return await prisma.venta.update({
         where: { id_venta: id },
         data: {
             id_sucursal,
-            id_vendedor,
+            id_vendedor: idVendedor, // Usar el ID del vendedor obtenido
             fecha_venta,
             total_venta,
             subtotal,
