@@ -141,10 +141,11 @@ export async function crearVenta(
     iva: string,
     detallesVenta: DetalleVentaInput[]
 ) {
+    // Obtener el ID del vendedor a partir de su acrónimo
     const idVendedor = await obtenerIdVendedorPorAcronimo(id_vendedor);
 
     // Crear la venta principal
-    const venta = await prisma.venta.create({
+    const nuevaVenta = await prisma.venta.create({
         data: {
             id_vendedor: idVendedor,
             id_sucursal,
@@ -153,10 +154,9 @@ export async function crearVenta(
             subtotal,
             iva,
         },
-        include: {
-            detallesVenta: true, // Incluimos detalles de venta para realizar un seguimiento adecuado
-        },
     });
+
+    const idVentaGenerado = nuevaVenta.id_venta; // Obtener el id_venta generado
 
     // Crear los detalles de venta y descontar el inventario
     for (const detalle of detallesVenta) {
@@ -164,29 +164,29 @@ export async function crearVenta(
         if (detalle.esVentaGranel) {
             const cantidadGranel = parseFloat(detalle.cantidad_vendida);
             // Crear una entrada en DetalleVenta por la venta principal
-            const detalleVenta = await crearDetalleVenta(
-                venta.id_venta,
+            await crearDetalleVenta(
+                idVentaGenerado, // Usar el nuevo id_venta generado
                 detalle.id_producto,
-                cantidadGranel.toFixed(2), // Ajustamos la cantidad a dos decimales
+                cantidadGranel.toFixed(2),
                 detalle.precio_producto,
                 detalle.subtotal
             );
 
             // Crear una entrada en DetalleVentaPorcion para rastrear la venta a granel
             await crearDetalleVentaPorcion(
-                detalleVenta.id_detalleVenta,
+                idVentaGenerado, // Usar el nuevo id_venta generado
                 detalle.id_producto,
-                cantidadGranel.toFixed(2) // Ajustamos la cantidad a dos decimales
+                cantidadGranel.toFixed(2)
             );
 
-            // Descontar la cantidad vendida del inventario
+            // Descontar la cantidad vendida del inventario y la cantidad del producto
             await descontarInventario(detalle.id_producto, cantidadGranel.toFixed(2));
         } else {
             // Si no es una venta a granel, el proceso es el mismo que antes
             await descontarInventario(detalle.id_producto, detalle.cantidad_vendida);
 
             await crearDetalleVenta(
-                venta.id_venta,
+                idVentaGenerado, // Usar el nuevo id_venta generado
                 detalle.id_producto,
                 detalle.cantidad_vendida,
                 detalle.precio_producto,
@@ -195,8 +195,9 @@ export async function crearVenta(
         }
     }
 
-    return venta;
+    return nuevaVenta; // Devolver la nueva venta creada
 }
+
 
 
 // Actualizar una venta por su ID
