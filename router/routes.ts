@@ -17,6 +17,7 @@ import * as inventarioController from '../controllers/inventario.controller';
 import * as sucursalController from '../controllers/sucursal.Controller';
 import * as catalogoVendedorController from '../controllers/vendedor.Controller';
 import * as ventaController from "../controllers/venta.Controller";
+import * as detalleVentaController from "../controllers/detalleVenta.Controller"
 
 import {
   validarVenta,
@@ -717,6 +718,95 @@ router.delete("/ventas/:id", async (req: Request, res: Response, next: NextFunct
   }
 });
 
+// Rutas de detalles de venta
 
+/**
+ * @route GET /detalles-venta
+ * @desc Obtiene todos los detalles de venta.
+ */
+router.get("/detalles-venta", async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const detallesVenta = await detalleVentaController.getAllDetallesVenta();
+    res.json(detallesVenta);
+  } catch (error: any) {
+    res.json({ error: error.message });
+  }
+});
+
+/**
+ * @route GET /detalles-venta/:id
+ * @param {number} :id - ID del detalle de venta a buscar.
+ * @desc Obtiene un detalle de venta por su ID.
+ */
+router.get("/detalles-venta/:id", async (req: Request, res: Response, next: NextFunction) => {
+  const id = parseInt(req.params.id, 10);
+  try {
+    const detalleVenta = await detalleVentaController.getDetalleVentaById(id);
+    if (!detalleVenta) {
+      return res.status(404).json({ error: "Detalle de venta no encontrado" });
+    }
+    res.json(detalleVenta);
+  } catch (error: any) {
+    res.json({ error: error.message });
+  }
+});
+
+/**
+ * @route POST /detalles-venta
+ * @desc Crea un nuevo detalle de venta.
+ */
+router.post("/detalles-venta", async (req: Request, res: Response, next: NextFunction) => {
+  const { id_venta, id_producto, cantidad_vendida, precio_producto, subtotal } = req.body;
+  try {
+    const detalleVenta = await detalleVentaController.createDetalleVenta(
+      id_venta,
+      id_producto,
+      cantidad_vendida,
+      precio_producto,
+      subtotal
+    );
+    res.json(detalleVenta);
+  } catch (error: any) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
+/**
+ * @route PUT /detalles-venta/:id
+ * @param {number} :id - ID del detalle de venta a modificar.
+ * @desc Actualiza un detalle de venta por su ID.
+ */
+router.put("/detalles-venta/:id", async (req: Request, res: Response, next: NextFunction) => {
+  const id = parseInt(req.params.id, 10);
+  const { id_venta, id_producto, cantidad_vendida, precio_producto, subtotal } = req.body;
+  try {
+    const detalleVenta = await detalleVentaController.updateDetalleVenta(
+      id,
+      id_venta,
+      id_producto,
+      cantidad_vendida,
+      precio_producto,
+      subtotal
+    );
+    res.json(detalleVenta);
+  } catch (error: any) {
+    res.json({ error: error.message });
+  }
+});
+
+/**
+ * @route DELETE /detalles-venta/:id
+ * @param {number} :id - ID del detalle de venta a eliminar.
+ * @desc Elimina un detalle de venta por su ID.
+ */
+router.delete("/detalles-venta/:id", async (req: Request, res: Response, next: NextFunction) => {
+  const id = parseInt(req.params.id, 10);
+  try {
+    await detalleVentaController.deleteDetalleVenta(id);
+    res.status(204).send();
+  } catch (error: any) {
+    res.json({ error: error.message });
+  }
+});
 
 export default router;
