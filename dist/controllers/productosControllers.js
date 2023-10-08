@@ -9,76 +9,133 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.crearProducto = exports.modificarProducto = exports.eliminarProducto = exports.buscarProducto = exports.obtenerProductos = void 0;
+exports.eliminarProducto = exports.actualizarProducto = exports.crearProducto = exports.obtenerProductoPorId = exports.obtenerProductos = void 0;
 const client_1 = require("@prisma/client");
 const prisma = new client_1.PrismaClient();
-const obtenerProductos = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const productos = yield prisma.productos.findMany();
-        res.json(productos);
-    }
-    catch (error) {
-        console.error("Error al obtener los productos:", error);
-        res.status(500).json({ error: "Error al obtener los productos" });
-    }
-});
+// Obtener todos los productos
+function obtenerProductos() {
+    return __awaiter(this, void 0, void 0, function* () {
+        return yield prisma.productos.findMany({
+            include: {
+                marca: true,
+                proveedor: true,
+                categoria: true,
+                inventario: true,
+            },
+        });
+    });
+}
 exports.obtenerProductos = obtenerProductos;
-const buscarProducto = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { id } = req.params;
-    try {
-        const producto = yield prisma.productos.findUnique({
+// Obtener un producto por su ID
+function obtenerProductoPorId(id) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return yield prisma.productos.findUnique({
             where: { id },
+            include: {
+                marca: true,
+                proveedor: true,
+                categoria: true,
+                inventario: true,
+            },
         });
-        res.json(producto);
-    }
-    catch (error) {
-        console.error("Error al buscar el producto:", error);
-        res.status(500).json({ error: "Error al buscar el producto" });
-    }
-});
-exports.buscarProducto = buscarProducto;
-const eliminarProducto = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { id } = req.params;
-    try {
-        yield prisma.productos.delete({
-            where: { id },
+    });
+}
+exports.obtenerProductoPorId = obtenerProductoPorId;
+// Obtener el ID de proveedor por su nomenclatura
+function obtenerIdProveedorPorNomenclatura(nomenclatura) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const proveedor = yield prisma.catalogoProveedor.findUnique({
+            where: { nomenclatura },
         });
-        res.json({ message: "Producto eliminado" });
-    }
-    catch (error) {
-        console.error("Error al eliminar el producto:", error);
-        res.status(500).json({ error: "Error al eliminar el producto" });
-    }
-});
-exports.eliminarProducto = eliminarProducto;
-const modificarProducto = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { id } = req.params;
-    const productoDetectado = req.body;
-    try {
-        yield prisma.productos.update({
-            where: { id },
-            data: productoDetectado,
+        if (!proveedor) {
+            throw new Error(`Proveedor con nomenclatura ${nomenclatura} no encontrado`);
+        }
+        return proveedor.id_proveedor;
+    });
+}
+// Obtener el ID de marca por su nomenclatura
+function obtenerIdMarcaPorNomenclatura(nomenclatura) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const marca = yield prisma.catalogoMarca.findUnique({
+            where: { nomenclatura },
         });
-        res.json({ message: "Producto modificado" });
-    }
-    catch (error) {
-        console.error("Error al modificar el producto:", error);
-        res.status(500).json({ error: "Error al modificar el producto" });
-    }
-});
-exports.modificarProducto = modificarProducto;
-const crearProducto = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const productoDetectado = req.body;
-    console.log(productoDetectado);
-    try {
-        yield prisma.productos.create({
-            data: productoDetectado,
+        if (!marca) {
+            throw new Error(`Marca con nomenclatura ${nomenclatura} no encontrada`);
+        }
+        return marca.id_marca;
+    });
+}
+// Obtener el ID de categoría por su nomenclatura
+function obtenerIdCategoriaPorNomenclatura(nomenclatura) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const categoria = yield prisma.catalogoCategoria.findUnique({
+            where: { nomenclatura },
         });
-        res.json({ message: "Producto creado" });
-    }
-    catch (error) {
-        console.error("Error al crear el producto:", error);
-        res.status(500).json({ error: "Error al crear el producto" });
-    }
-});
+        if (!categoria) {
+            throw new Error(`Categoría con nomenclatura ${nomenclatura} no encontrada`);
+        }
+        return categoria.id_categoria;
+    });
+}
+// Crear un nuevo producto con las consultas a proveedor, marca y categoría
+function crearProducto(nombre, descripcion, precio, nomenclaturaProveedor, nomenclaturaMarca, nomenclaturaCategoria, imagen) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const id_proveedor = yield obtenerIdProveedorPorNomenclatura(nomenclaturaProveedor);
+        const id_marca = yield obtenerIdMarcaPorNomenclatura(nomenclaturaMarca);
+        const id_categoria = yield obtenerIdCategoriaPorNomenclatura(nomenclaturaCategoria);
+        return yield prisma.productos.create({
+            data: {
+                nombre,
+                descripcion,
+                precio,
+                id_marca,
+                id_proveedor,
+                id_categoria,
+                imagen,
+            },
+            include: {
+                marca: true,
+                proveedor: true,
+                categoria: true,
+                inventario: true,
+            },
+        });
+    });
+}
 exports.crearProducto = crearProducto;
+// Actualizar un producto por su ID o por su nomenclatura de proveedor, marca y categoría
+function actualizarProducto(id, nombre, descripcion, precio, nomenclaturaProveedor, nomenclaturaMarca, nomenclaturaCategoria, imagen) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const id_proveedor = yield obtenerIdProveedorPorNomenclatura(nomenclaturaProveedor);
+        const id_marca = yield obtenerIdMarcaPorNomenclatura(nomenclaturaMarca);
+        const id_categoria = yield obtenerIdCategoriaPorNomenclatura(nomenclaturaCategoria);
+        return yield prisma.productos.update({
+            where: { id },
+            data: {
+                nombre,
+                descripcion,
+                precio,
+                id_marca,
+                id_proveedor,
+                id_categoria,
+                imagen,
+            },
+            include: {
+                marca: true,
+                proveedor: true,
+                categoria: true,
+                inventario: true,
+            },
+        });
+    });
+}
+exports.actualizarProducto = actualizarProducto;
+// Eliminar un producto por su ID
+function eliminarProducto(id) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return yield prisma.productos.delete({
+            where: { id },
+        });
+    });
+}
+exports.eliminarProducto = eliminarProducto;

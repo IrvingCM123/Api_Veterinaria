@@ -29,7 +29,12 @@ model CatalogoProveedor {
   id_proveedor Int @id  @default(autoincrement()) 
   nombre       String @unique
   nomenclatura String @unique
-
+  direccion   String
+  ciudad      String
+  estado      String
+  telefono   String
+  email      String
+  
   // Relación inversa con Productos
   productos Productos[]
 }
@@ -50,6 +55,20 @@ model CatalogoCategoria {
 
   // Relación inversa con Productos
   productos Productos[]
+}
+
+model Inventario {
+  id_inventario Int @id  @default(autoincrement()) 
+  id_producto   Int @unique  @default(autoincrement()) 
+  existencias   String
+  StockMinimo   String
+  StockMaximo   String
+
+  // Relación con Productos
+  producto Productos @relation(fields: [id_producto], references: [id])
+
+  // Relación inversa con DetalleVenta
+  detallesVenta DetalleVenta[]
 }
 
 model DetalleVenta {
