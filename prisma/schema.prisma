@@ -101,6 +101,19 @@ model Venta {
   detallesVenta DetalleVenta[]
 }
 
+model CatalogoVendedor {
+  id_vendedor  Int @id  @default(autoincrement()) 
+  id_usuario   Int  @default(autoincrement()) 
+  acronimo     String @unique
+  permisoVenta Boolean
+
+  // Relación con User
+  usuario      User @relation(fields: [id_usuario], references: [id_usuario])
+  // Relación inversa con Venta
+  ventas       Venta[]
+}
+
+
 model Sucursal {
   id_sucursal  Int @id  @default(autoincrement()) 
   nombre       String
@@ -115,17 +128,6 @@ model Sucursal {
   ventas       Venta[]
 }
 
-model CatalogoVendedor {
-  id_vendedor  Int @id  @default(autoincrement()) 
-  id_usuario   Int  @default(autoincrement()) 
-  acronimo     String @unique
-  permisoVenta Boolean
-
-  // Relación con User
-  usuario      User @relation(fields: [id_usuario], references: [id_usuario])
-  // Relación inversa con Venta
-  ventas       Venta[]
-}
 
 model User {
   id_usuario Int @id  @default(autoincrement()) 
