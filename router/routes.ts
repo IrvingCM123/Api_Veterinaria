@@ -15,7 +15,7 @@ import * as categoriaController from "../controllers/categoria.Controller";
 import * as marcaController from "../controllers/marcas.Controller";
 import * as inventarioController from '../controllers/inventario.controller';
 import * as sucursalController from '../controllers/sucursal.Controller';
-
+import * as catalogoVendedorController from '../controllers/vendedor.Controller';
 
 import {
   validarVenta,
