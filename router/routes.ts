@@ -205,9 +205,9 @@ router.get("/proveedores/:id", async (req: Request, res: Response, next: NextFun
  * @desc Crea un nuevo proveedor.
  */
 router.post("/proveedores", async (req: Request, res: Response, next: NextFunction) => {
-  const { nombre, nomenclatura } = req.body;
+  const { nombre, nomenclatura, direccion, ciudad, estado, telefono, email } = req.body;
   try {
-    const proveedor = await proveedorController.createProveedor(nombre, nomenclatura);
+    const proveedor = await proveedorController.createProveedor(nombre, nomenclatura, direccion, ciudad, estado, telefono, email);
     res.json(proveedor);
   } catch (error: any) {
     res.json({ error: error.message})

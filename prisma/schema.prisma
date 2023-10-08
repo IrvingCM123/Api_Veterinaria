@@ -22,7 +22,6 @@ model Productos {
   proveedor CatalogoProveedor @relation(fields: [id_proveedor], references: [id_proveedor])
   categoria CatalogoCategoria @relation(fields: [id_categoria], references: [id_categoria])
   inventario Inventario[]
-
 }
 
 model CatalogoProveedor {
