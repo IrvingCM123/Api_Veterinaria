@@ -9,20 +9,80 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.obtenerProductos = void 0;
+exports.deleteInventario = exports.updateInventario = exports.createInventario = exports.getInventarioByProductId = exports.getInventarioByProducto = exports.getAllInventario = void 0;
 const client_1 = require("@prisma/client");
 const prisma = new client_1.PrismaClient();
-// Obtener todos los productos
-const obtenerProductos = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
+// Obtener todos los registros de inventario
+function getAllInventario() {
+    return __awaiter(this, void 0, void 0, function* () {
         return yield prisma.inventario.findMany({
             include: {
                 producto: true,
             },
         });
-    }
-    catch (error) {
-        console.error("Error al obtener productos:", error);
-    }
-});
-exports.obtenerProductos = obtenerProductos;
+    });
+}
+exports.getAllInventario = getAllInventario;
+function getInventarioByProducto(producto) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return yield prisma.productos.findFirst({
+            where: { nombre: producto }
+        });
+    });
+}
+exports.getInventarioByProducto = getInventarioByProducto;
+// Obtener un registro de inventario por su ID de producto
+function getInventarioByProductId(id_producto) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return yield prisma.inventario.findUnique({
+            where: { id_producto },
+            include: {
+                producto: true,
+            },
+        });
+    });
+}
+exports.getInventarioByProductId = getInventarioByProductId;
+// Crear un nuevo registro de inventario
+function createInventario(id_producto, existencias, StockMinimo, StockMaximo) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return yield prisma.inventario.create({
+            data: {
+                id_producto,
+                existencias,
+                StockMinimo,
+                StockMaximo,
+            },
+            include: {
+                producto: true,
+            },
+        });
+    });
+}
+exports.createInventario = createInventario;
+// Actualizar un registro de inventario por su ID de producto
+function updateInventario(id_producto, existencias, StockMinimo, StockMaximo) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return yield prisma.inventario.update({
+            where: { id_producto },
+            data: {
+                existencias,
+                StockMinimo,
+                StockMaximo,
+            },
+            include: {
+                producto: true,
+            },
+        });
+    });
+}
+exports.updateInventario = updateInventario;
+// Eliminar un registro de inventario por su ID de producto
+function deleteInventario(id_producto) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return yield prisma.inventario.delete({
+            where: { id_producto },
+        });
+    });
+}
+exports.deleteInventario = deleteInventario;
