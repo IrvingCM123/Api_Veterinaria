@@ -14,7 +14,10 @@ export async function getAllSucursales() {
 // Obtener una sucursal por su ID
 export async function getSucursalById(id: number) {
     return await prisma.sucursal.findUnique({
-        where: { id_sucursal: id }
+        where: { id_sucursal: id },
+        include: {
+            ventas: true,
+        }
     });
 }
 
