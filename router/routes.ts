@@ -15,7 +15,7 @@ import * as categoriaController from "../controllers/categoria.Controller";
 import * as marcaController from "../controllers/marcas.Controller";
 import * as inventarioController from '../controllers/inventario.controller';
 import * as sucursalController from '../controllers/sucursal.Controller';
-
+import * as catalogoVendedorController from '../controllers/vendedor.Controller';
 
 import {
   validarVenta,
@@ -571,6 +571,70 @@ router.delete('/sucursales/:id', async (req, res, next) => {
   } catch (error: any) {
     // Manejo de errores
     res.json({error: error.message})
+  }
+});
+
+
+// Ruta para obtener todos los vendedores
+router.get('/vendedores', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const vendedores = await catalogoVendedorController.getAllVendedores();
+    res.json(vendedores);
+  } catch (error: any) {
+    // Manejar errores aquí
+    next(error);
+  }
+});
+
+// Ruta para obtener un vendedor por su ID
+router.get('/vendedores/:id', async (req: Request, res: Response, next: NextFunction) => {
+  const id = parseInt(req.params.id, 10);
+  try {
+    const vendedor = await catalogoVendedorController.getVendedorById(id);
+    if (!vendedor) {
+      return res.status(404).json({ error: 'Vendedor no encontrado' });
+    }
+    res.json(vendedor);
+  } catch (error: any) {
+    // Manejar errores aquí
+    next(error);
+  }
+});
+
+// Ruta para crear un nuevo vendedor
+router.post('/vendedores', async (req: Request, res: Response, next: NextFunction) => {
+  const { acronimo, permisoVenta, userId } = req.body;
+  try {
+    const vendedor = await catalogoVendedorController.createVendedor(acronimo, permisoVenta, userId);
+    res.json(vendedor);
+  } catch (error: any) {
+    // Manejar errores aquí
+    next(error);
+  }
+});
+
+// Ruta para actualizar un vendedor por su ID
+router.put('/vendedores/:id', async (req: Request, res: Response, next: NextFunction) => {
+  const id = parseInt(req.params.id, 10);
+  const { acronimo, permisoVenta, userId } = req.body;
+  try {
+    const vendedor = await catalogoVendedorController.updateVendedor(id, acronimo, permisoVenta, userId);
+    res.json(vendedor);
+  } catch (error: any) {
+    // Manejar errores aquí
+    next(error);
+  }
+});
+
+// Ruta para eliminar un vendedor por su ID
+router.delete('/vendedores/:id', async (req: Request, res: Response, next: NextFunction) => {
+  const id = parseInt(req.params.id, 10);
+  try {
+    await catalogoVendedorController.deleteVendedor(id);
+    res.status(204).send();
+  } catch (error: any) {
+    // Manejar errores aquí
+    next(error);
   }
 });
 
