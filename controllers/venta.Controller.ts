@@ -38,6 +38,25 @@ async function obtenerIdVendedorPorAcronimo(acronimo: string) {
     return vendedor.id_vendedor;
 }
 
+// Función para crear un registro en la tabla DetalleVenta
+async function crearDetalleVenta(
+    id_venta: number,
+    id_producto: number,
+    cantidad_vendida: string,
+    precio_producto: string,
+    subtotal: string
+  ) {
+    return await prisma.detalleVenta.create({
+      data: {
+        id_venta,
+        id_producto,
+        cantidad_vendida,
+        precio_producto,
+        subtotal,
+      },
+    });
+  }
+
 // Crear una nueva venta
 export async function createVenta(id_sucursal: number, id_vendedor: string, fecha_venta: string, total_venta: string, subtotal: string, iva: string) {
     const idVendedor: any = await obtenerIdVendedorPorAcronimo(id_vendedor);
