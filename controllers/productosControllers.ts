@@ -67,7 +67,7 @@ async function obtenerIdCategoriaPorNomenclatura(nomenclatura: string) {
 }
 
 // Crear un nuevo producto con las consultas a proveedor, marca y categoría
-export async function crearProducto(nombre: string, descripcion: string | null, precio: string, nomenclaturaProveedor: string, nomenclaturaMarca: string, nomenclaturaCategoria: string, imagen: string | null) {
+export async function crearProducto(nombre: string, descripcion: string | null, precio: string, nomenclaturaProveedor: string, nomenclaturaMarca: string, nomenclaturaCategoria: string, imagen: string | null, cantidad: string) {
   const id_proveedor = await obtenerIdProveedorPorNomenclatura(nomenclaturaProveedor);
   const id_marca = await obtenerIdMarcaPorNomenclatura(nomenclaturaMarca);
   const id_categoria = await obtenerIdCategoriaPorNomenclatura(nomenclaturaCategoria);
@@ -81,6 +81,7 @@ export async function crearProducto(nombre: string, descripcion: string | null, 
       id_proveedor,
       id_categoria,
       imagen,
+      cantidad
     },
     include: {
       marca: true,
@@ -93,7 +94,7 @@ export async function crearProducto(nombre: string, descripcion: string | null, 
 
 
 // Actualizar un producto por su ID o por su nomenclatura de proveedor, marca y categoría
-export async function actualizarProducto(id: number, nombre: string, descripcion: string | null, precio: string, nomenclaturaProveedor: string, nomenclaturaMarca: string, nomenclaturaCategoria: string, imagen: string | null) {
+export async function actualizarProducto(id: number, nombre: string, descripcion: string | null, precio: string, nomenclaturaProveedor: string, nomenclaturaMarca: string, nomenclaturaCategoria: string, imagen: string | null, cantidad: string) {
   const id_proveedor = await obtenerIdProveedorPorNomenclatura(nomenclaturaProveedor);
   const id_marca = await obtenerIdMarcaPorNomenclatura(nomenclaturaMarca);
   const id_categoria = await obtenerIdCategoriaPorNomenclatura(nomenclaturaCategoria);
@@ -108,6 +109,7 @@ export async function actualizarProducto(id: number, nombre: string, descripcion
       id_proveedor,
       id_categoria,
       imagen,
+      cantidad
     },
     include: {
       marca: true,
