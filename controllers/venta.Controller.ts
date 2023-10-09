@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
@@ -9,7 +9,6 @@ type DetalleVentaInput = {
     subtotal: string;
     esVentaGranel: boolean;
 };
-
 
 // Obtener todas las ventas
 export async function getAllVentas() {
@@ -66,34 +65,39 @@ async function crearDetalleVenta(
     });
 }
 
-async function crearDetalleVentaPorcion(id_detalleVenta: number, id_producto: number, cantidad_vendida: string) {
-    return await prisma.detalleVentaPorcion.create({
-        data: {
-            id_detalleVenta,
-            id_producto,
-            cantidad_vendida,
-        },
-    });
-}
-
-
-// Función para descontar la cantidad vendida del inventario
-async function descontarInventario(id_producto: number, cantidadVendida: string) {
+async function descontarInventario(
+    id_producto: number,
+    cantidadVendida: string
+) {
     // Obtener el inventario del producto
     const inventario = await prisma.inventario.findUnique({
         where: { id_producto },
     });
 
     if (!inventario) {
-        throw new Error(`Inventario no encontrado para el producto con ID ${id_producto}`);
+        throw new Error(
+            `Inventario no encontrado para el producto con ID ${id_producto}`
+        );
     }
 
-    // Realizar el descuento en el inventario
+    // Obtener la cantidad disponible en el producto
+    const producto = await prisma.productos.findUnique({
+        where: { id: id_producto },
+        select: { cantidad: true }, // Seleccionar solo el campo "cantidad"
+    });
+
+    if (!producto) {
+        throw new Error(`Producto no encontrado con ID ${id_producto}`);
+    }
+
+    // Realizar el descuento en el inventario y la cantidad del producto
     const cantidadActual = parseFloat(inventario.existencias);
     const cantidadVenta = parseFloat(cantidadVendida);
 
     if (cantidadActual < cantidadVenta) {
-        throw new Error(`No hay suficiente inventario para el producto con ID ${id_producto}`);
+        throw new Error(
+            `No hay suficiente inventario para el producto con ID ${id_producto}`
+        );
     }
 
     const nuevaExistencia = (cantidadActual - cantidadVenta).toString();
@@ -117,10 +121,11 @@ export async function crearVenta(
     iva: string,
     detallesVenta: DetalleVentaInput[]
 ) {
+    // Obtener el ID del vendedor a partir de su acrónimo
     const idVendedor = await obtenerIdVendedorPorAcronimo(id_vendedor);
 
     // Crear la venta principal
-    const venta = await prisma.venta.create({
+    const nuevaVenta = await prisma.venta.create({
         data: {
             id_vendedor: idVendedor,
             id_sucursal,
@@ -129,40 +134,21 @@ export async function crearVenta(
             subtotal,
             iva,
         },
-        include: {
-            detallesVenta: true, // Incluimos detalles de venta para realizar un seguimiento adecuado
-        },
     });
+
+    const idVentaGenerado = nuevaVenta.id_venta; // Obtener el id_venta generado
 
     // Crear los detalles de venta y descontar el inventario
     for (const detalle of detallesVenta) {
         // Verificar si se trata de una venta a granel
         if (detalle.esVentaGranel) {
-            const cantidadGranel = parseFloat(detalle.cantidad_vendida);
-            // Crear una entrada en DetalleVenta por la venta principal
-            const detalleVenta = await crearDetalleVenta(
-                venta.id_venta,
-                detalle.id_producto,
-                cantidadGranel.toFixed(2), // Ajustamos la cantidad a dos decimales
-                detalle.precio_producto,
-                detalle.subtotal
-            );
 
-            // Crear una entrada en DetalleVentaPorcion para rastrear la venta a granel
-            await crearDetalleVentaPorcion(
-                detalleVenta.id_detalleVenta,
-                detalle.id_producto,
-                cantidadGranel.toFixed(2) // Ajustamos la cantidad a dos decimales
-            );
-
-            // Descontar la cantidad vendida del inventario
-            await descontarInventario(detalle.id_producto, cantidadGranel.toFixed(2));
         } else {
-            // Si no es una venta a granel, el proceso es el mismo que antes
+            
             await descontarInventario(detalle.id_producto, detalle.cantidad_vendida);
 
             await crearDetalleVenta(
-                venta.id_venta,
+                idVentaGenerado, // Usar el nuevo id_venta generado
                 detalle.id_producto,
                 detalle.cantidad_vendida,
                 detalle.precio_producto,
@@ -171,15 +157,20 @@ export async function crearVenta(
         }
     }
 
-    return venta;
+    return nuevaVenta; // Devolver la nueva venta creada
 }
 
-
 // Actualizar una venta por su ID
-export async function updateVenta(id: number, id_sucursal: number, id_vendedor: string, fecha_venta: string, total_venta: string, subtotal: string, iva: string) {
-
+export async function updateVenta(
+    id: number,
+    id_sucursal: number,
+    id_vendedor: string,
+    fecha_venta: string,
+    total_venta: string,
+    subtotal: string,
+    iva: string
+) {
     const idVendedor = await obtenerIdVendedorPorAcronimo(id_vendedor);
-
 
     return await prisma.venta.update({
         where: { id_venta: id },
