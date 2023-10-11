@@ -66,11 +66,38 @@ async function obtenerIdCategoriaPorNomenclatura(nomenclatura: string) {
   return categoria.id_categoria;
 }
 
+async function obtenerIdAnimalPorNomenclatura(nomenclatura: string) {
+  const animal = await prisma.catalagoAnimal.findFirst({
+    where: { nomenclatura },
+  });
+
+  if(!animal) {
+    throw new Error(`Animal con nomenclatura ${nomenclatura} no encontrado`);
+  }
+
+  return animal.id_categoria
+};
+
+async function obtenerIDCantidadPorNomenclatura(nomenclatura: string) {
+  const tipoCantidad = await prisma.catalogoTipoCantidad.findFirst({
+    where: { nomenclatura },
+  });
+
+  if(!tipoCantidad) {
+    throw new Error(`Tipo de cantidad con nomenclatura ${nomenclatura} no encontrado`);
+  }
+
+  return tipoCantidad.id_tipoCantidad
+};
+
 // Crear un nuevo producto con las consultas a proveedor, marca y categoría
-export async function crearProducto(nombre: string, descripcion: string | null, precio: string, nomenclaturaProveedor: string, nomenclaturaMarca: string, nomenclaturaCategoria: string, imagen: string | null, cantidad: string) {
+export async function crearProducto(nombre: string, descripcion: string | null, precio: string, nomenclaturaProveedor: string, nomenclaturaMarca: string, nomenclaturaCategoria: string, imagen: string | null, cantidad: string, nomenclaturaAnimal: string, nomenclaturaTipoCantidad: string) {
+
   const id_proveedor = await obtenerIdProveedorPorNomenclatura(nomenclaturaProveedor);
   const id_marca = await obtenerIdMarcaPorNomenclatura(nomenclaturaMarca);
   const id_categoria = await obtenerIdCategoriaPorNomenclatura(nomenclaturaCategoria);
+  const id_animal = await obtenerIdAnimalPorNomenclatura(nomenclaturaAnimal);
+  const id_tipoCantidad = await obtenerIDCantidadPorNomenclatura(nomenclaturaTipoCantidad);
 
   return await prisma.productos.create({
     data: {
@@ -81,7 +108,9 @@ export async function crearProducto(nombre: string, descripcion: string | null, 
       id_proveedor,
       id_categoria,
       imagen,
-      cantidad
+      cantidad,
+      id_animal,
+      id_tipoCantidad
     },
     include: {
       marca: true,
@@ -94,10 +123,12 @@ export async function crearProducto(nombre: string, descripcion: string | null, 
 
 
 // Actualizar un producto por su ID o por su nomenclatura de proveedor, marca y categoría
-export async function actualizarProducto(id: number, nombre: string, descripcion: string | null, precio: string, nomenclaturaProveedor: string, nomenclaturaMarca: string, nomenclaturaCategoria: string, imagen: string | null, cantidad: string) {
+export async function actualizarProducto(id: number, nombre: string, descripcion: string | null, precio: string, nomenclaturaProveedor: string, nomenclaturaMarca: string, nomenclaturaCategoria: string, imagen: string | null, cantidad: string, nomenclaturaAnimal: string, nomenclaturaTipoCantidad: string) {
   const id_proveedor = await obtenerIdProveedorPorNomenclatura(nomenclaturaProveedor);
   const id_marca = await obtenerIdMarcaPorNomenclatura(nomenclaturaMarca);
   const id_categoria = await obtenerIdCategoriaPorNomenclatura(nomenclaturaCategoria);
+  const id_animal = await obtenerIdAnimalPorNomenclatura(nomenclaturaAnimal);
+  const id_tipoCantidad = await obtenerIDCantidadPorNomenclatura(nomenclaturaTipoCantidad);
 
   return await prisma.productos.update({
     where: { id },
@@ -109,7 +140,9 @@ export async function actualizarProducto(id: number, nombre: string, descripcion
       id_proveedor,
       id_categoria,
       imagen,
-      cantidad
+      cantidad,
+      id_animal,
+      id_tipoCantidad
     },
     include: {
       marca: true,

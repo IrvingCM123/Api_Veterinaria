@@ -1,0 +1,20 @@
+{
+    "Inventario1": {
+        "id_producto": 1,
+        "existencias": 20,
+        "StockMinimo": 10,
+        "StockMaximo": 30
+    },
+    "Inventario2": {
+        "id_producto": 2,
+        "existencias": 20,
+        "StockMinimo": 10,
+        "StockMaximo": 30
+    },
+    "Inventario3": {
+        "id_producto": 3,
+        "existencias": 20,
+        "StockMinimo": 10,
+        "StockMaximo": 30
+    }
+}

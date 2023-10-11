@@ -1,0 +1,58 @@
+{
+    "Producto1": {
+        "nombre": "Cama de concha",
+        "precio": 600,
+        "cantidad": 1,
+        "descripcion": "Concha rosada",
+        "imagen": "https://i.pinimg.com/originals/a8/50/b6/a850b60a7746fa9689b98a835406c427.jpg",
+        "id_marca": 1,
+        "id_categoria": 4,
+        "id_proveedor": 5,
+        "id_animal": 3
+    },
+    "Producto2": {
+        "nombre": "Cama de concha",
+        "precio": 700,
+        "cantidad": 1,
+        "descripcion": "Concha cafe",
+        "imagen": "https://petcountry.cl/wp-content/uploads/2021/07/Cama_Dreamwell_Donut_Beige-Cafe.jpg",
+        "id_marca": 1,
+        "id_categoria": 4,
+        "id_proveedor": 5,
+        "id_animal": 3
+    },
+    "Producto3": {
+        "nombre": "Juego de cama",
+        "precio": 1690,
+        "cantidad": 3,
+        "descripcion": "Juego de camas de Batman",
+        "imagen": "https://th.bing.com/th/id/OIP.eTCbdR_AFzbqHMPXhrJWUQHaEK?pid=ImgDet&rs=1",
+        "id_marca": 1,
+        "id_categoria": 4,
+        "id_proveedor": 5,
+        "id_animal": 3
+    },
+    "Producto4": {
+        "nombre": "Juego de cama",
+        "precio": 1690,
+        "cantidad": 3,
+        "descripcion": "Juego de camas de Superman",
+        "imagen": "https://th.bing.com/th/id/OIP.eTCbdR_AFzbqHMPXhrJWUQHaEK?pid=ImgDet&rs=1",
+        "id_marca": 1,
+        "id_categoria": 4,
+        "id_proveedor": 5,
+        "id_animal": 3
+    },
+    "Producto5": {
+        "nombre": "Cama de coche",
+        "precio": 1300,
+        "cantidad": 1,
+        "descripcion": "Cama con forma de coche de carreras",
+        "imagen": "https://th.bing.com/th/id/OIP.eTCbdR_AFzbqHMPXhrJWUQHaEK?pid=ImgDet&rs=1",
+        "id_marca": 1,
+        "id_categoria": 4,
+        "id_proveedor": 5,
+        "id_animal": 3
+    }
+
+}

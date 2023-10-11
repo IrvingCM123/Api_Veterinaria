@@ -1,0 +1,48 @@
+{
+    "Proveedor1": {
+        "nombre": "Nupeec",
+        "direccion": "Av. 1",
+        "telefono": "1234567890",
+        "correo": "Sabritas@Gmail.com",
+        "nomenclatura": "SABRITAS",
+        "ciudad": "Ciudad de México",
+        "estado": "Ciudad de México"
+    },
+    "Proveedor2": {
+        "nombre": "Pedigree",
+        "direccion": "Av. 2",
+        "telefono": "0987654321",
+        "correo": "Gamesa@Gmail.com",
+        "nomenclatura": "GAMESA",
+        "ciudad": "Ciudad de México",
+        "estado": "Ciudad de México"
+    },
+    "Proveedor3": {
+        "nombre": "Purina",
+        "direccion": "Av. 3",
+        "telefono": "1234567890",
+        "correo": "Barsel@Gmail.com",
+        "nomenclatura": "BARCEL",
+        "ciudad": "Ciudad de México",
+        "estado": "Ciudad de México"
+    },
+    "Proveedor4": {
+        "nombre": "Whiskas",
+        "direccion": "Av. 4",
+        "telefono": "0987654321",
+        "correo": "CocaCola@Gmail.com",
+        "nomenclatura": "COCA-COLA",
+        "ciudad": "Ciudad de México",
+        "estado": "Ciudad de México"
+    },
+    "Proveedor5": {
+        "nombre": "Carma",
+        "direccion": "Av. 4",
+        "telefono": "0987654321",
+        "correo": "CocaCola@Gmail.com",
+        "nomenclatura": "COCA-COLA",
+        "ciudad": "Ciudad de México",
+        "estado": "Ciudad de México"
+    }
+
+}

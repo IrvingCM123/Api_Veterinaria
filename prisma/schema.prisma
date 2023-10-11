@@ -4,7 +4,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL_LOCAL")
+  url      = env("DATABASE_URL_NEON")
 }
 
 model Productos {
@@ -15,12 +15,17 @@ model Productos {
   id_marca     Int
   id_proveedor Int
   id_categoria Int
+  id_animal    Int
   imagen       String?
   cantidad String
+  id_tipoCantidad Int
 
   marca               CatalogoMarca         @relation(fields: [id_marca], references: [id_marca])
   proveedor           CatalogoProveedor     @relation(fields: [id_proveedor], references: [id_proveedor])
   categoria           CatalogoCategoria     @relation(fields: [id_categoria], references: [id_categoria])
+  animal              CatalagoAnimal        @relation(fields: [id_animal], references: [id_categoria])
+  tipoCantidad        CatalogoTipoCantidad  @relation(fields: [id_tipoCantidad], references: [id_tipoCantidad])
+  
   inventario          Inventario[]
   detallesVenta       DetalleVenta[]
   detalleVentaPorcion DetalleVentaPorcion[]
@@ -41,6 +46,14 @@ model CatalogoProveedor {
   productos Productos[]
 }
 
+model CatalogoTipoCantidad {
+  id_tipoCantidad Int    @id @default(autoincrement())
+  nombre          String @unique
+  nomenclatura    String @unique
+
+  productos Productos[]
+}
+
 model CatalogoMarca {
   id_marca     Int    @id @default(autoincrement())
   nombre       String @unique
@@ -53,6 +66,14 @@ model CatalogoCategoria {
   id_categoria Int    @id @default(autoincrement())
   nombre       String @unique
   nomenclatura String @unique
+
+  productos Productos[]
+}
+
+model CatalagoAnimal {
+  id_categoria Int   @id @default(autoincrement())
+  nombre       String
+  nomenclatura String
 
   productos Productos[]
 }
