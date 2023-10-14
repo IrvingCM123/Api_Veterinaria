@@ -33,7 +33,8 @@ export async function createDetalleVenta(
     id_producto: number,
     cantidad_vendida: string,
     precio_producto: string,
-    subtotal: string
+    subtotal: string,
+    venta_granel: boolean
 ) {
     return await prisma.detalleVenta.create({
         data: {
@@ -42,6 +43,7 @@ export async function createDetalleVenta(
             cantidad_vendida,
             precio_producto,
             subtotal,
+            venta_granel
         },
         include: {
             venta: true,

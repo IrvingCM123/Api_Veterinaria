@@ -91,7 +91,7 @@ async function obtenerIDCantidadPorNomenclatura(nomenclatura: string) {
 };
 
 // Crear un nuevo producto con las consultas a proveedor, marca y categoría
-export async function crearProducto(nombre: string, descripcion: string | null, precio: string, nomenclaturaProveedor: string, nomenclaturaMarca: string, nomenclaturaCategoria: string, imagen: string | null, cantidad: string, nomenclaturaAnimal: string, nomenclaturaTipoCantidad: string) {
+export async function crearProducto(nombre: string, descripcion: string | null, precio: string, nomenclaturaProveedor: string, nomenclaturaMarca: string, nomenclaturaCategoria: string, imagen: string | null, cantidad: string, nomenclaturaAnimal: string, nomenclaturaTipoCantidad: string, precio_granel: string, venta_granel: boolean) {
 
   const id_proveedor = await obtenerIdProveedorPorNomenclatura(nomenclaturaProveedor);
   const id_marca = await obtenerIdMarcaPorNomenclatura(nomenclaturaMarca);
@@ -110,7 +110,9 @@ export async function crearProducto(nombre: string, descripcion: string | null, 
       imagen,
       cantidad,
       id_animal,
-      id_tipoCantidad
+      id_tipoCantidad,
+      precio_granel,
+      venta_granel
     },
     include: {
       marca: true,
