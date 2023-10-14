@@ -4,28 +4,34 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL_LOCAL")
+  url      = env("DATABASE_URL_NEON")
 }
 
 model Productos {
-  id           Int     @id @default(autoincrement())
-  nombre       String
-  descripcion  String?
-  precio       String
-  id_marca     Int
-  id_proveedor Int
-  id_categoria Int
-  imagen       String?
-  cantidad String
+  id              Int     @id @default(autoincrement())
+  nombre          String
+  descripcion     String?
+  precio          String
+  id_marca        Int
+  id_proveedor    Int
+  id_categoria    Int
+  id_animal       Int
+  imagen          String?
+  cantidad        String
+  id_tipoCantidad Int
 
-  marca               CatalogoMarca         @relation(fields: [id_marca], references: [id_marca])
-  proveedor           CatalogoProveedor     @relation(fields: [id_proveedor], references: [id_proveedor])
-  categoria           CatalogoCategoria     @relation(fields: [id_categoria], references: [id_categoria])
-  inventario          Inventario[]
-  detallesVenta       DetalleVenta[]
-  detalleVentaPorcion DetalleVentaPorcion[]
-  // Agregar la relación inversa en Productos
-  // detallesVenta: DetalleVenta[]
+  venta_granel  Boolean
+  precio_granel String
+
+  marca        CatalogoMarca        @relation(fields: [id_marca], references: [id_marca])
+  proveedor    CatalogoProveedor    @relation(fields: [id_proveedor], references: [id_proveedor])
+  categoria    CatalogoCategoria    @relation(fields: [id_categoria], references: [id_categoria])
+  animal       CatalagoAnimal       @relation(fields: [id_animal], references: [id_categoria])
+  tipoCantidad CatalogoTipoCantidad @relation(fields: [id_tipoCantidad], references: [id_tipoCantidad])
+
+  inventario       Inventario[]
+  inventario_granel inventario_granel[]
+  detallesVenta    DetalleVenta[]
 }
 
 model CatalogoProveedor {
@@ -37,6 +43,14 @@ model CatalogoProveedor {
   estado       String
   telefono     String
   email        String?
+
+  productos Productos[]
+}
+
+model CatalogoTipoCantidad {
+  id_tipoCantidad Int    @id @default(autoincrement())
+  nombre          String @unique
+  nomenclatura    String @unique
 
   productos Productos[]
 }
@@ -57,9 +71,17 @@ model CatalogoCategoria {
   productos Productos[]
 }
 
+model CatalagoAnimal {
+  id_categoria Int    @id @default(autoincrement())
+  nombre       String
+  nomenclatura String
+
+  productos Productos[]
+}
+
 model Inventario {
   id_inventario Int    @id @default(autoincrement())
-  id_producto   Int    @unique @default(autoincrement())
+  id_producto   Int    @unique
   existencias   String
   StockMinimo   String
   StockMaximo   String
@@ -67,15 +89,18 @@ model Inventario {
   producto Productos @relation(fields: [id_producto], references: [id])
 
   detallesVenta DetalleVenta[]
+
+  detalleVentaPorcion DetalleVentaPorcion[]
 }
 
 model DetalleVenta {
-  id_detalleVenta  Int    @id @default(autoincrement())
-  id_venta         Int    @unique
-  id_producto      Int
-  cantidad_vendida String
-  precio_producto  String
-  subtotal         String
+  id_detalleVenta         Int    @id @default(autoincrement())
+  id_venta                Int    @unique
+  id_producto             Int
+  cantidad_vendida        String
+  precio_producto         String
+  subtotal                String
+  venta_granel            Boolean
 
   venta                Venta                 @relation(fields: [id_venta], references: [id_venta])
   productoInventario   Inventario            @relation(fields: [id_producto], references: [id_producto])
@@ -84,41 +109,48 @@ model DetalleVenta {
   productosId          Int?
 }
 
+
 model DetalleVentaPorcion {
   id_detalleVentaPorcion Int    @id @default(autoincrement())
   id_detalleVenta        Int
   id_producto            Int
-  cantidad_vendida       String
+  cantidad_producto Int
+  cantidad_granel_vendida Int
+  subtotal Int
 
   detalleVenta  DetalleVenta @relation(fields: [id_detalleVenta], references: [id_venta])
   Venta         Venta?       @relation(fields: [ventaId_venta], references: [id_venta])
   ventaId_venta Int?
-  Productos     Productos?   @relation(fields: [id_producto], references: [id])
-  productosId   Int?
+  Productos     Inventario?  @relation(fields: [id_producto], references: [id_producto])
+}
+
+model inventario_granel {
+  id_inventario_granel Int    @id @default(autoincrement())
+  id_producto          Int    @unique
+  cantidad_producto    String
+  cantidad_restante    String
+
+  producto Productos @relation(fields: [id_producto], references: [id])
 }
 
 model Venta {
-  id_venta    Int    @id @default(autoincrement())
-  id_vendedor Int    @default(autoincrement())
-  id_sucursal Int    @default(autoincrement())
-  fecha_venta String
-  total_venta String
-  subtotal    String
-  iva         String
+  id_venta      Int     @id @default(autoincrement())
+  id_vendedor   Int
+  id_sucursal   Int
+  fecha_venta   String
+  total_venta   String
+  subtotal      String
+  iva           String
 
   sucursal             Sucursal              @relation(fields: [id_sucursal], references: [id_sucursal])
   vendedor             CatalogoVendedor      @relation(fields: [id_vendedor], references: [id_vendedor])
   detallesVenta        DetalleVenta[]
   detallesVentaPorcion DetalleVentaPorcion[]
-
-  // Agregar la relación inversa en Venta
-  // detallesVenta: DetalleVenta[]
-  // detallesVentaPorcion: DetalleVentaPorcion[]
 }
 
 model CatalogoVendedor {
   id_vendedor  Int     @id @default(autoincrement())
-  id_usuario   Int     
+  id_usuario   Int
   acronimo     String  @unique
   permisoVenta Boolean
 

@@ -1,0 +1,62 @@
+{
+    "Marca1": {
+        "nombre": "Carma",
+        "nomenclatura": "Cm"
+    },
+    "Marca2": {
+        "nombre": "Pau's Pets",
+        "nomenclatura": "PP"
+    },
+    "Marca3": {
+        "nombre": "Sin Marca",
+        "nomenclatura": "SM"
+    },
+    "Marca4": {
+        "nombre": "Sunny",
+        "nomenclatura": "Sn"
+    },
+    "Marca5": {
+        "nombre": "Evo Travel",
+        "nomenclatura": "Et"
+    },
+    "Marca6": {
+        "nombre": "Perizzimo",
+        "nomenclatura": "Pz"
+    },
+    "Marca7": {
+        "nombre": "Aksi",
+        "nomenclatura": "Ak"
+    },
+    "Marca8": {
+        "nombre": "Laes",
+        "nomenclatura": "La"
+    },
+    "Marca9": {
+        "nombre": "Nunbell",
+        "nomenclatura": "Nb"
+    },
+    "Marca10": {
+        "nombre": "Pet trash",
+        "nomenclatura": "Pt"
+    },
+    "Marca11": {
+        "nombre": "Super Mascota",
+        "nomenclatura": "Sp"
+    },
+    "Marca12": {
+        "nombre": "Fiame",
+        "nomenclatura": "Fm"
+    },
+    "Marca13": {
+        "nombre": "Fancy Pets",
+        "nomenclatura": "Fp"
+    },
+    "Marca14": {
+        "nombre": "For pets",
+        "nomenclatura": "Fr"
+    },
+    "Marca15": {
+        "nombre": "Clean Pets",
+        "nomenclatura": "Cp"
+    }
+}
