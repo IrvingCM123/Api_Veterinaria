@@ -102,7 +102,8 @@ export async function crearProducto(
   nomenclaturaAnimal: string,
   nomenclaturaTipoCantidad: string,
   precio_granel: string | null,
-  venta_granel: boolean
+  venta_granel: boolean,
+  codigo_barras: string | null
 ) {
   const id_proveedor = await obtenerIdProveedorPorNomenclatura(nomenclaturaProveedor);
   const id_marca = await obtenerIdMarcaPorNomenclatura(nomenclaturaMarca);
@@ -124,6 +125,7 @@ export async function crearProducto(
       id_tipoCantidad,
       precio_granel: venta_granel ? precio_granel : null, 
       venta_granel,
+      codigo_barras,
     },
     include: {
       marca: true,

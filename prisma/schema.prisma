@@ -19,6 +19,7 @@ model Productos {
   imagen          String?
   cantidad        String
   id_tipoCantidad Int
+  codigo_barras  String?
 
   venta_granel  Boolean
   precio_granel String?
@@ -33,6 +34,8 @@ model Productos {
   inventario_granel inventario_granel[]
   detallesVenta    DetalleVenta[]
 }
+
+
 
 model CatalogoProveedor {
   id_proveedor Int     @id @default(autoincrement())
