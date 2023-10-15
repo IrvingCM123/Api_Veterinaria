@@ -119,10 +119,11 @@ router.post("/productos", async (req: Request, res: Response, next: NextFunction
  * @desc Modifica un producto por su ID.
  */
 router.put("/productos/:id", async (req: Request, res: Response, next: NextFunction) => {
+  console.log(req.body)
   const id = parseInt(req.params.id, 10);
-  const { nombre, descripcion, precio, nomenclaturaProveedor, nomenclaturaMarca, nomenclaturaCategoria, imagen, cantidad, animal, tipocantidad } = req.body;
+  const { nombre, descripcion, precio, nomenclaturaProveedor, nomenclaturaMarca, nomenclaturaCategoria, url_imagen, cantidad, animal, tipocantidad,precio_granel, venta_granel } = req.body;
   try {
-    const producto = await productoController.actualizarProducto(id, nombre, descripcion, precio, nomenclaturaProveedor, nomenclaturaMarca, nomenclaturaCategoria, imagen, cantidad, animal, tipocantidad);
+    const producto = await productoController.actualizarProducto(id, nombre, descripcion, precio, nomenclaturaProveedor, nomenclaturaMarca, nomenclaturaCategoria, url_imagen, cantidad, animal, tipocantidad, precio_granel, venta_granel);
     res.json(producto);
   } catch (error: any) {
     res.json({ error: error.message })
@@ -135,6 +136,7 @@ router.put("/productos/:id", async (req: Request, res: Response, next: NextFunct
  * @desc Elimina un producto por su ID.
  */
 router.delete("/productos/:id", async (req: Request, res: Response, next: NextFunction) => {
+  console.log(req.params)
   const id = parseInt(req.params.id, 10);
   try {
     await productoController.eliminarProducto(id);
