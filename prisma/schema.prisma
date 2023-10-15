@@ -21,7 +21,7 @@ model Productos {
   id_tipoCantidad Int
 
   venta_granel  Boolean
-  precio_granel String
+  precio_granel String?
 
   marca        CatalogoMarca        @relation(fields: [id_marca], references: [id_marca])
   proveedor    CatalogoProveedor    @relation(fields: [id_proveedor], references: [id_proveedor])

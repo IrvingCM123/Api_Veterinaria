@@ -96,9 +96,10 @@ router.get("/productos/:id", async (req: Request, res: Response, next: NextFunct
  * @desc Crea un nuevo producto.
  */
 router.post("/productos", async (req: Request, res: Response, next: NextFunction) => {
-  const { nombre, descripcion, precio, nomenclaturaProveedor, nomenclaturaMarca, nomenclaturaCategoria, imagen, cantidad, animal, tipocantidad, precio_granel, venta_granel} = req.body;
+
+  const { nombre, descripcion, precio, nomenclaturaProveedor, nomenclaturaMarca, nomenclaturaCategoria, url_imagen, cantidad, animal, tipocantidad, precio_granel, venta_granel} = req.body;
   try {
-    const producto = await productoController.crearProducto(nombre, descripcion, precio, nomenclaturaProveedor, nomenclaturaMarca, nomenclaturaCategoria, imagen, cantidad, animal, tipocantidad, precio_granel, venta_granel);
+    const producto = await productoController.crearProducto(nombre, descripcion, precio, nomenclaturaProveedor, nomenclaturaMarca, nomenclaturaCategoria, url_imagen, cantidad, animal, tipocantidad, precio_granel, venta_granel);
     res.json(producto);
   } catch (error: any) {
     res.status(400).json({ error: error.message });
@@ -475,9 +476,10 @@ router.get('/inventario/:id_producto', async (req, res, next) => {
 
 // Crear un nuevo registro de inventario
 router.post('/inventario', async (req, res, next) => {
-  const { id_producto, existencias, StockMinimo, StockMaximo } = req.body;
+  console.log (req);
+  const { id_producto, existencias, stock_minimo, stock_maximo } = req.body;
   try {
-    const inventario = await inventarioController.createInventario(id_producto, existencias, StockMinimo, StockMaximo);
+    const inventario = await inventarioController.createInventario(id_producto, existencias, stock_minimo, stock_maximo);
     res.status(201).json(inventario);
   } catch (error: any) {
     res.json({ error: error.message })
