@@ -1,0 +1,14 @@
+{
+    "Animal1": {
+        "nombre": "Perros",
+        "nomenclatura": "P"
+    },
+    "Animal2": {
+        "nombre": "Gatos",
+        "nomenclatura": "G"
+    },
+    "Animal3": {
+        "nombre": "Ambos",
+        "nomenclatura": "A"
+    }
+}

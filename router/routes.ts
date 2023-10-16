@@ -18,6 +18,9 @@ import * as sucursalController from '../controllers/sucursal.Controller';
 import * as catalogoVendedorController from '../controllers/vendedor.Controller';
 import * as ventaController from "../controllers/venta.Controller";
 import * as detalleVentaController from "../controllers/detalleVenta.Controller"
+import * as animalController from "../controllers/animal.Controller";
+import * as tipoProductoController from "../controllers/tipoProducto.Controller";
+import * as inventariogranelController from "../controllers/inventario_granel.Controller";
 
 import {
   validarVenta,
@@ -93,9 +96,10 @@ router.get("/productos/:id", async (req: Request, res: Response, next: NextFunct
  * @desc Crea un nuevo producto.
  */
 router.post("/productos", async (req: Request, res: Response, next: NextFunction) => {
-  const { nombre, descripcion, precio, nomenclaturaProveedor, nomenclaturaMarca, nomenclaturaCategoria, imagen, cantidad} = req.body;
+
+  const { nombre, descripcion, precio, nomenclaturaProveedor, nomenclaturaMarca, nomenclaturaCategoria, url_imagen, cantidad, nomenclaturaAnimal, tipocantidad, precio_granel, venta_granel, codigo} = req.body;
   try {
-    const producto = await productoController.crearProducto(nombre, descripcion, precio, nomenclaturaProveedor, nomenclaturaMarca, nomenclaturaCategoria, imagen, cantidad);
+    const producto = await productoController.crearProducto(nombre, descripcion, precio, nomenclaturaProveedor, nomenclaturaMarca, nomenclaturaCategoria, url_imagen, cantidad, nomenclaturaAnimal, tipocantidad, precio_granel, venta_granel, codigo);
     res.json(producto);
   } catch (error: any) {
     res.status(400).json({ error: error.message });
@@ -115,10 +119,11 @@ router.post("/productos", async (req: Request, res: Response, next: NextFunction
  * @desc Modifica un producto por su ID.
  */
 router.put("/productos/:id", async (req: Request, res: Response, next: NextFunction) => {
+  console.log(req.body)
   const id = parseInt(req.params.id, 10);
-  const { nombre, descripcion, precio, nomenclaturaProveedor, nomenclaturaMarca, nomenclaturaCategoria, imagen, cantidad } = req.body;
+  const { nombre, descripcion, precio, nomenclaturaProveedor, nomenclaturaMarca, nomenclaturaCategoria, url_imagen, cantidad, animal, tipocantidad,precio_granel, venta_granel } = req.body;
   try {
-    const producto = await productoController.actualizarProducto(id, nombre, descripcion, precio, nomenclaturaProveedor, nomenclaturaMarca, nomenclaturaCategoria, imagen, cantidad);
+    const producto = await productoController.actualizarProducto(id, nombre, descripcion, precio, nomenclaturaProveedor, nomenclaturaMarca, nomenclaturaCategoria, url_imagen, cantidad, animal, tipocantidad, precio_granel, venta_granel);
     res.json(producto);
   } catch (error: any) {
     res.json({ error: error.message })
@@ -131,6 +136,7 @@ router.put("/productos/:id", async (req: Request, res: Response, next: NextFunct
  * @desc Elimina un producto por su ID.
  */
 router.delete("/productos/:id", async (req: Request, res: Response, next: NextFunction) => {
+  console.log(req.params)
   const id = parseInt(req.params.id, 10);
   try {
     await productoController.eliminarProducto(id);
@@ -472,9 +478,9 @@ router.get('/inventario/:id_producto', async (req, res, next) => {
 
 // Crear un nuevo registro de inventario
 router.post('/inventario', async (req, res, next) => {
-  const { id_producto, existencias, StockMinimo, StockMaximo } = req.body;
+  const { id_producto, existencias, stock_minimo, stock_maximo } = req.body;
   try {
-    const inventario = await inventarioController.createInventario(id_producto, existencias, StockMinimo, StockMaximo);
+    const inventario = await inventarioController.createInventario(id_producto, existencias, stock_minimo, stock_maximo);
     res.status(201).json(inventario);
   } catch (error: any) {
     res.json({ error: error.message })
@@ -791,14 +797,15 @@ router.get("/detalles-venta/:id", async (req: Request, res: Response, next: Next
  * @desc Crea un nuevo detalle de venta.
  */
 router.post("/detalles-venta", async (req: Request, res: Response, next: NextFunction) => {
-  const { id_venta, id_producto, cantidad_vendida, precio_producto, subtotal } = req.body;
+  const { id_venta, id_producto, cantidad_vendida, precio_producto, subtotal, venta_granel } = req.body;
   try {
     const detalleVenta = await detalleVentaController.createDetalleVenta(
       id_venta,
       id_producto,
       cantidad_vendida,
       precio_producto,
-      subtotal
+      subtotal,
+      venta_granel
     );
     res.json(detalleVenta);
   } catch (error: any) {
@@ -843,5 +850,227 @@ router.delete("/detalles-venta/:id", async (req: Request, res: Response, next: N
     res.json({ error: error.message });
   }
 });
+
+// Rutas de animales
+
+/**
+ * @route GET /animales
+ * @desc Obtiene todos los animales.
+ */
+router.get("/animales", async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const animales = await animalController.getAllAnimales();
+    res.json(animales);
+  } catch (error: any) {
+    res.json({ error: error.message });
+  }
+}
+);
+
+/**
+ * @route GET /animales/:id
+ * @param {number} :id - ID del animal a buscar.
+ * @desc Obtiene un animal por su ID.
+ */
+router.get("/animales/:id", async (req: Request, res: Response, next: NextFunction) => {
+  const id = parseInt(req.params.id, 10)
+  try {
+    const animal = await animalController.getAnimalById(id);
+    if (!animal) {
+      return res.status(404).json({ error: "Animal no encontrado" });
+    }
+    res.json(animal);
+  } catch (error: any) {
+    res.json({ error: error.message });
+  }
+}
+);
+
+/**
+ * @route POST /animales
+ * @desc Crea un nuevo animal.
+ */
+router.post("/animales", async (req: Request, res: Response, next: NextFunction) => {
+  const { nombre, nomenclatura } = req.body;
+  try {
+    const animal = await animalController.createAnimal(nombre, nomenclatura);
+    res.json(animal);
+  } catch (error: any) {
+    res.status(400).json({ error: error.message });
+  }
+}
+);
+
+/**
+ * @route PUT /animales/:id
+ * @param {number} :id - ID del animal a modificar.
+ * @desc Actualiza un animal por su ID.
+ */
+router.put("/animales/:id", async (req: Request, res: Response, next: NextFunction) => {
+  const id = parseInt(req.params.id, 10)
+  const { nombre, nomenclatura } = req.body;
+  try {
+    const animal = await animalController.updateAnimal(id, nombre, nomenclatura);
+    res.json(animal);
+  } catch (error: any) {
+    res.json({ error: error.message });
+  }
+}
+);
+
+/**
+ * @route DELETE /animales/:id
+ * @param {number} :id - ID del animal a eliminar.
+ * @desc Elimina un animal por su ID.
+ */
+router.delete("/animales/:id", async (req: Request, res: Response, next: NextFunction) => {
+  const id = parseInt(req.params.id, 10)
+  try {
+    await animalController.deleteAnimal(id);
+    res.status(204).send();
+  } catch (error: any) {
+    res.json({ error: error.message });
+  }
+}
+);
+
+// Rutas de tipos de cantidad
+
+/**
+ * @route GET /tipos-cantidad
+ * @desc Obtiene todos los tipos de cantidad.
+ */
+router.get("/tipos-cantidad", async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const tiposCantidad = await tipoProductoController.getAllTipoCantidad();
+    res.json(tiposCantidad);
+  } catch (error: any) {
+    res.json({ error: error.message });
+  }
+}
+);
+
+/**
+ * @route GET /tipos-cantidad/:id
+ * @param {number} :id - ID del tipo de cantidad a buscar.
+ * @desc Obtiene un tipo de cantidad por su ID.
+ */
+router.get("/tipos-cantidad/:id", async (req: Request, res: Response, next: NextFunction) => {
+  const id = parseInt(req.params.id, 10)
+  try {
+    const tipoCantidad = await tipoProductoController.getTipoCantidadById(id);
+    if (!tipoCantidad) {
+      return res.status(404).json({ error: "Tipo de cantidad no encontrado" });
+    }
+    res.json(tipoCantidad);
+  } catch (error: any) {
+    res.json({ error: error.message });
+  }
+}
+);
+
+/**
+ * @route POST /tipos-cantidad
+ * @desc Crea un nuevo tipo de cantidad.
+ */
+router.post("/tipos-cantidad", async (req: Request, res: Response, next: NextFunction) => {
+  const { nombre, nomenclatura } = req.body;
+  try {
+    const tipoCantidad = await tipoProductoController.createTipoCantidad(nombre, nomenclatura);
+    res.json(tipoCantidad);
+  } catch (error: any) {
+    res.status(400).json({ error: error.message });
+  }
+}
+);
+
+/**
+ * @route PUT /tipos-cantidad/:id
+ * @param {number} :id - ID del tipo de cantidad a modificar.
+ * @desc Actualiza un tipo de cantidad por su ID.
+ */
+
+router.put("/tipos-cantidad/:id", async (req: Request, res: Response, next: NextFunction) => {
+  const id = parseInt(req.params.id, 10)
+  const { nombre, nomenclatura } = req.body;
+  try {
+    const tipoCantidad = await tipoProductoController.updateTipoCantidad(id, nombre, nomenclatura);
+    res.json(tipoCantidad);
+  } catch (error: any) {
+    res.json({ error: error.message });
+  }
+}
+);
+
+// Rutas para inventario_granel
+
+/**
+ * @route GET /inventario-granel
+ * @desc Obtiene todos los registros de inventario granel.
+ */
+
+router.get("/inventario-granel", async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const inventarioGranel = await inventariogranelController.getAllInventarioGranel();
+    res.json(inventarioGranel);
+  } catch (error: any) {
+    res.json({ error: error.message });
+  }
+}
+);
+
+/**
+ * @route GET /inventario-granel/:id
+ * @param {number} :id - ID del registro de inventario granel a buscar.
+ * @desc Obtiene un registro de inventario granel por su ID.
+ */
+
+router.get("/inventario-granel/:id", async (req: Request, res: Response, next: NextFunction) => {
+  const id = parseInt(req.params.id, 10)
+  try {
+    const inventarioGranel = await inventariogranelController.getInventarioGranelById(id);
+    if (!inventarioGranel) {
+      return res.status(404).json({ error: "Registro de inventario granel no encontrado" });
+    }
+    res.json(inventarioGranel);
+  } catch (error: any) {
+    res.json({ error: error.message });
+  }
+}
+);
+
+/**
+ * @route POST /inventario-granel
+ * @desc Crea un nuevo registro de inventario granel.
+ */
+
+router.post("/inventario-granel", async (req: Request, res: Response, next: NextFunction) => {
+  const { id_producto, existencias, StockMinimo, StockMaximo } = req.body;
+  try {
+    const inventarioGranel = await inventariogranelController.createInventarioGranel(id_producto);
+    res.json(inventarioGranel);
+  } catch (error: any) {
+    res.status(400).json({ error: error.message });
+  }
+}
+);
+
+/**
+ * @route PUT /inventario-granel/:id
+ * @param {number} :id - ID del registro de inventario granel a modificar.
+ * @desc Actualiza un registro de inventario granel por su ID.
+ */
+
+router.put("/inventario-granel/:id", async (req: Request, res: Response, next: NextFunction) => {
+  const id = parseInt(req.params.id, 10)
+  const { existencias, StockMinimo, StockMaximo } = req.body;
+  try {
+    const inventarioGranel = await inventariogranelController.updateInventarioGranel(id, existencias);
+    res.json(inventarioGranel);
+  } catch (error: any) {
+    res.json({ error: error.message });
+  }
+}
+);
 
 export default router;

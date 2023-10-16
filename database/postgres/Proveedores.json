@@ -1,0 +1,48 @@
+{
+    "Proveedor1": {
+        "nombre": "Nupec",
+        "direccion": "Av. 1",
+        "telefono": "1234567890",
+        "correo": "Nupec@Gmail.com",
+        "nomenclatura": "Nc",
+        "ciudad": "Ciudad de México",
+        "estado": "Ciudad de México"
+    },
+    "Proveedor2": {
+        "nombre": "Pedigree",
+        "direccion": "Av. 2",
+        "telefono": "0987654321",
+        "correo": "Pedigree@Gmail.com",
+        "nomenclatura": "Pg",
+        "ciudad": "Ciudad de México",
+        "estado": "Ciudad de México"
+    },
+    "Proveedor3": {
+        "nombre": "Purina",
+        "direccion": "Av. 3",
+        "telefono": "1234567890",
+        "correo": "Purina@Gmail.com",
+        "nomenclatura": "Pu",
+        "ciudad": "Ciudad de México",
+        "estado": "Ciudad de México"
+    },
+    "Proveedor4": {
+        "nombre": "Whiskas",
+        "direccion": "Av. 4",
+        "telefono": "0987654321",
+        "correo": "Whiskas@Gmail.com",
+        "nomenclatura": "Wh",
+        "ciudad": "Ciudad de México",
+        "estado": "Ciudad de México"
+    },
+    "Proveedor5": {
+        "nombre": "Carma",
+        "direccion": "Av. 4",
+        "telefono": "0987654321",
+        "correo": "Carma@Gmail.com",
+        "nomenclatura": "Cm",
+        "ciudad": "Ciudad de México",
+        "estado": "Ciudad de México"
+    }
+
+}
