@@ -16,8 +16,8 @@ export async function obtenerProductos() {
 
 // Obtener un producto por su ID
 export async function obtenerProductoPorId(id: number) {
-  return await prisma.productos.findUnique({
-    where: { id },
+  return await prisma.productos.findFirst({
+    where: { codigo_barras: id.toString() },
     include: {
       marca: true,
       proveedor: true,
