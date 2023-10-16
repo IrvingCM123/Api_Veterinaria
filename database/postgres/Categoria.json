@@ -1,0 +1,35 @@
+{
+    "Categoria1": {
+        "nombre": "Alimento",
+        "nomenclatura": "Al"
+    },
+    "Categoria2": {
+        "nombre": "Juguetes",
+        "nomenclatura": "Jg"
+    },
+    "Categoria3": {
+        "nombre": "Ropa",
+        "nomenclatura": "Rp"
+    },
+    "Categoria4": {
+        "nombre": "Camas",
+        "nomenclatura": "Cm"
+    },
+    "Categoria5": {
+        "nombre": "Accesorios",
+        "nomenclatura": "Ac"
+    },
+    "Categoria6": {
+        "nombre": "Higiene",
+        "nomenclatura": "Hg"
+    },
+    "Categoria7": {
+        "nombre": "Transporte",
+        "nomenclatura": "Tp"
+    },
+    "Categoria8": {
+        "nombre": "Otros",
+        "nomenclatura": "Ot"
+    }
+    
+}
