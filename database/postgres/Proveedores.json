@@ -1,10 +1,10 @@
 {
     "Proveedor1": {
-        "nombre": "Nupeec",
+        "nombre": "Nupec",
         "direccion": "Av. 1",
         "telefono": "1234567890",
-        "correo": "Sabritas@Gmail.com",
-        "nomenclatura": "SABRITAS",
+        "correo": "Nupec@Gmail.com",
+        "nomenclatura": "Nc",
         "ciudad": "Ciudad de México",
         "estado": "Ciudad de México"
     },
@@ -12,8 +12,8 @@
         "nombre": "Pedigree",
         "direccion": "Av. 2",
         "telefono": "0987654321",
-        "correo": "Gamesa@Gmail.com",
-        "nomenclatura": "GAMESA",
+        "correo": "Pedigree@Gmail.com",
+        "nomenclatura": "Pg",
         "ciudad": "Ciudad de México",
         "estado": "Ciudad de México"
     },
@@ -21,8 +21,8 @@
         "nombre": "Purina",
         "direccion": "Av. 3",
         "telefono": "1234567890",
-        "correo": "Barsel@Gmail.com",
-        "nomenclatura": "BARCEL",
+        "correo": "Purina@Gmail.com",
+        "nomenclatura": "Pu",
         "ciudad": "Ciudad de México",
         "estado": "Ciudad de México"
     },
@@ -30,8 +30,8 @@
         "nombre": "Whiskas",
         "direccion": "Av. 4",
         "telefono": "0987654321",
-        "correo": "CocaCola@Gmail.com",
-        "nomenclatura": "COCA-COLA",
+        "correo": "Whiskas@Gmail.com",
+        "nomenclatura": "Wh",
         "ciudad": "Ciudad de México",
         "estado": "Ciudad de México"
     },
@@ -39,8 +39,8 @@
         "nombre": "Carma",
         "direccion": "Av. 4",
         "telefono": "0987654321",
-        "correo": "CocaCola@Gmail.com",
-        "nomenclatura": "COCA-COLA",
+        "correo": "Carma@Gmail.com",
+        "nomenclatura": "Cm",
         "ciudad": "Ciudad de México",
         "estado": "Ciudad de México"
     }

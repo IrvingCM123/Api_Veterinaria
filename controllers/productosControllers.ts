@@ -16,8 +16,8 @@ export async function obtenerProductos() {
 
 // Obtener un producto por su ID
 export async function obtenerProductoPorId(id: number) {
-  return await prisma.productos.findUnique({
-    where: { id },
+  return await prisma.productos.findFirst({
+    where: { codigo_barras: id.toString() },
     include: {
       marca: true,
       proveedor: true,
@@ -89,10 +89,22 @@ async function obtenerIDCantidadPorNomenclatura(nomenclatura: string) {
 
   return tipoCantidad.id_tipoCantidad
 };
-
 // Crear un nuevo producto con las consultas a proveedor, marca y categoría
-export async function crearProducto(nombre: string, descripcion: string | null, precio: string, nomenclaturaProveedor: string, nomenclaturaMarca: string, nomenclaturaCategoria: string, imagen: string | null, cantidad: string, nomenclaturaAnimal: string, nomenclaturaTipoCantidad: string, precio_granel: string, venta_granel: boolean) {
-
+export async function crearProducto(
+  nombre: string,
+  descripcion: string | null,
+  precio: string,
+  nomenclaturaProveedor: string,
+  nomenclaturaMarca: string,
+  nomenclaturaCategoria: string,
+  imagen: string | null,
+  cantidad: string,
+  nomenclaturaAnimal: string,
+  nomenclaturaTipoCantidad: string,
+  precio_granel: string | null,
+  venta_granel: boolean,
+  codigo_barras: string | null
+) {
   const id_proveedor = await obtenerIdProveedorPorNomenclatura(nomenclaturaProveedor);
   const id_marca = await obtenerIdMarcaPorNomenclatura(nomenclaturaMarca);
   const id_categoria = await obtenerIdCategoriaPorNomenclatura(nomenclaturaCategoria);
@@ -111,8 +123,9 @@ export async function crearProducto(nombre: string, descripcion: string | null, 
       cantidad,
       id_animal,
       id_tipoCantidad,
-      precio_granel,
-      venta_granel
+      precio_granel: venta_granel ? precio_granel : null, 
+      venta_granel,
+      codigo_barras,
     },
     include: {
       marca: true,
@@ -125,7 +138,7 @@ export async function crearProducto(nombre: string, descripcion: string | null, 
 
 
 // Actualizar un producto por su ID o por su nomenclatura de proveedor, marca y categoría
-export async function actualizarProducto(id: number, nombre: string, descripcion: string | null, precio: string, nomenclaturaProveedor: string, nomenclaturaMarca: string, nomenclaturaCategoria: string, imagen: string | null, cantidad: string, nomenclaturaAnimal: string, nomenclaturaTipoCantidad: string) {
+export async function actualizarProducto(id: number, nombre: string, descripcion: string | null, precio: string, nomenclaturaProveedor: string, nomenclaturaMarca: string, nomenclaturaCategoria: string, imagen: string | null, cantidad: string, nomenclaturaAnimal: string, nomenclaturaTipoCantidad: string, precio_granel: string | null, venta_granel: boolean) {
   const id_proveedor = await obtenerIdProveedorPorNomenclatura(nomenclaturaProveedor);
   const id_marca = await obtenerIdMarcaPorNomenclatura(nomenclaturaMarca);
   const id_categoria = await obtenerIdCategoriaPorNomenclatura(nomenclaturaCategoria);
@@ -144,7 +157,9 @@ export async function actualizarProducto(id: number, nombre: string, descripcion
       imagen,
       cantidad,
       id_animal,
-      id_tipoCantidad
+      id_tipoCantidad,
+      precio_granel: venta_granel ? precio_granel : null,
+      venta_granel,
     },
     include: {
       marca: true,

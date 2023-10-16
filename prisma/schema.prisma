@@ -19,9 +19,10 @@ model Productos {
   imagen          String?
   cantidad        String
   id_tipoCantidad Int
+  codigo_barras  String?
 
   venta_granel  Boolean
-  precio_granel String
+  precio_granel String?
 
   marca        CatalogoMarca        @relation(fields: [id_marca], references: [id_marca])
   proveedor    CatalogoProveedor    @relation(fields: [id_proveedor], references: [id_proveedor])
@@ -33,6 +34,8 @@ model Productos {
   inventario_granel inventario_granel[]
   detallesVenta    DetalleVenta[]
 }
+
+
 
 model CatalogoProveedor {
   id_proveedor Int     @id @default(autoincrement())
