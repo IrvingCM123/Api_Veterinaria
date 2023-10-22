@@ -103,3 +103,4 @@ export async function eliminarProducto(id: number) {
         where: { id },
     });
 }
+
