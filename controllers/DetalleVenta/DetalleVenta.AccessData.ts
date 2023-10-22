@@ -15,7 +15,7 @@ export async function getAllDetallesVenta() {
 }
 
 // Obtener un detalle de venta por su ID de detalle
-export async function getDetalleVentaById(id: number) {
+export async function getDetalleVentaById(id: any) {
     return await prisma.detalleVenta.findUnique({
         where: { id_detalleVenta: id },
         include: {
@@ -28,14 +28,7 @@ export async function getDetalleVentaById(id: number) {
 }
 
 // Crear un nuevo detalle de venta
-export async function createDetalleVenta(
-    id_venta: number,
-    id_producto: number,
-    cantidad_vendida: string,
-    precio_producto: string,
-    subtotal: string,
-    venta_granel: boolean
-) {
+export async function createDetalleVenta(id_venta: any, id_producto: any, cantidad_vendida: any, precio_producto: any, subtotal: any, venta_granel: any) {
     return await prisma.detalleVenta.create({
         data: {
             id_venta,
@@ -43,7 +36,7 @@ export async function createDetalleVenta(
             cantidad_vendida,
             precio_producto,
             subtotal,
-            venta_granel
+            venta_granel,
         },
         include: {
             venta: true,
@@ -55,14 +48,7 @@ export async function createDetalleVenta(
 }
 
 // Actualizar un detalle de venta por su ID de detalle
-export async function updateDetalleVenta(
-    id: number,
-    id_venta: number,
-    id_producto: number,
-    cantidad_vendida: string,
-    precio_producto: string,
-    subtotal: string
-) {
+export async function updateDetalleVenta(id: any, id_venta: any, id_producto: any, cantidad_vendida: any, precio_producto: any, subtotal: any) {
     return await prisma.detalleVenta.update({
         where: { id_detalleVenta: id },
         data: {
@@ -82,7 +68,7 @@ export async function updateDetalleVenta(
 }
 
 // Eliminar un detalle de venta por su ID de detalle
-export async function deleteDetalleVenta(id: number) {
+export async function deleteDetalleVenta(id: any) {
     return await prisma.detalleVenta.delete({
         where: { id_detalleVenta: id },
     });

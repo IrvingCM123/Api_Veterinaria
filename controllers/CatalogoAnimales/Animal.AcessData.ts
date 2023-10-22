@@ -41,7 +41,3 @@ export async function deleteAnimal(id: number) {
         where: { id_categoria: id },
     });
 }
-
-
-
-

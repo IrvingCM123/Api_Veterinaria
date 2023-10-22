@@ -8,19 +8,19 @@ import {
 
 import { check, validationResult } from "express-validator";
 
-import * as productoController from "../controllers/productosControllers";
-import * as userController from '../controllers/usuarioControllers';
-import * as proveedorController from "../controllers/provedores.Controller";
-import * as categoriaController from "../controllers/categoria.Controller";
-import * as marcaController from "../controllers/marcas.Controller";
-import * as inventarioController from '../controllers/inventario.controller';
-import * as sucursalController from '../controllers/sucursal.Controller';
-import * as catalogoVendedorController from '../controllers/vendedor.Controller';
-import * as ventaController from "../controllers/venta.Controller";
-import * as detalleVentaController from "../controllers/detalleVenta.Controller"
-import * as animalController from "../controllers/animal.Controller";
-import * as tipoProductoController from "../controllers/tipoProducto.Controller";
-import * as inventariogranelController from "../controllers/inventario_granel.Controller";
+import * as productoController from "../controllers/Productos/Productos.Logic";
+import * as userController from '../controllers/Usuario/Usuarios.Logic';
+import * as proveedorController from "../controllers/CatalogoProveedores/Proveedores.Logic";
+import * as categoriaController from "../controllers/CatalogoCategoria/Categoria.Logic";
+import * as marcaController from "../controllers/CatalogoMarcas/Marcas.Logic";
+import * as inventarioController from '../controllers/Inventario/Inventario.Logic';
+import * as sucursalController from '../controllers/CatalogoSucursales/Sucursales.Logic';
+import * as catalogoVendedorController from '../controllers/Vendedor/Vendedores.Logic';
+import * as ventaController from "../controllers/Venta/Ventas.Logic";
+import * as detalleVentaController from "../controllers/DetalleVenta/DetalleVenta.Logic"
+import * as animalController from "../controllers/CatalogoAnimales/Animal.Logic";
+import * as tipoProductoController from "../controllers/CatalogoTipoProducto/TipoProducto.Logic";
+import * as inventariogranelController from "../controllers/InventarioGranel/InventarioGranel.Logic";
 
 import {
   validarVenta,
@@ -1046,6 +1046,7 @@ router.get("/inventario-granel/:id", async (req: Request, res: Response, next: N
 
 router.post("/inventario-granel", async (req: Request, res: Response, next: NextFunction) => {
   const { id_producto, existencias, StockMinimo, StockMaximo } = req.body;
+  
   try {
     const inventarioGranel = await inventariogranelController.createInventarioGranel(id_producto);
     res.json(inventarioGranel);

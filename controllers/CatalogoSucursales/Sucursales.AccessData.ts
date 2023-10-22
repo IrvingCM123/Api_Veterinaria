@@ -7,7 +7,7 @@ export async function getAllSucursales() {
     return await prisma.sucursal.findMany({
         include: {
             ventas: true,
-        },
+        }
     });
 }
 
@@ -75,3 +75,5 @@ export async function deleteSucursal(id: number) {
         where: { id_sucursal: id },
     });
 }
+
+

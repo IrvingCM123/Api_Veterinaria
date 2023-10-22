@@ -2,7 +2,6 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-// Obtener todos los registros de inventario
 export async function getAllInventario() {
     return await prisma.inventario.findMany({
         include: {
@@ -11,14 +10,13 @@ export async function getAllInventario() {
     });
 }
 
-export async function getInventarioByProducto(producto: string) {
+export async function getInventarioByProducto(producto: any) {
     return await prisma.productos.findFirst({
         where: { nombre: producto }
     });
 }
 
-// Obtener un registro de inventario por su ID de producto
-export async function getInventarioByProductId(id_producto: number) {
+export async function getInventarioByProductId(id_producto: any) {
     return await prisma.inventario.findUnique({
         where: { id_producto },
         include: {
@@ -27,8 +25,7 @@ export async function getInventarioByProductId(id_producto: number) {
     });
 }
 
-// Crear un nuevo registro de inventario
-export async function createInventario(id_producto: number, existencias: string, StockMinimo: string, StockMaximo: string) {
+export async function createInventario(id_producto: any, existencias: any, StockMinimo: any, StockMaximo: any) {
     return await prisma.inventario.create({
         data: {
             id_producto,
@@ -42,8 +39,7 @@ export async function createInventario(id_producto: number, existencias: string,
     });
 }
 
-// Actualizar un registro de inventario por su ID de producto
-export async function updateInventario(id_producto: number, existencias: string, StockMinimo: string, StockMaximo: string) {
+export async function updateInventario(id_producto: any, existencias: any, StockMinimo: any, StockMaximo: any) {
     return await prisma.inventario.update({
         where: { id_producto },
         data: {
@@ -57,9 +53,9 @@ export async function updateInventario(id_producto: number, existencias: string,
     });
 }
 
-// Eliminar un registro de inventario por su ID de producto
-export async function deleteInventario(id_producto: number) {
+export async function deleteInventario(id_producto: any) {
     return await prisma.inventario.delete({
         where: { id_producto },
     });
 }
+

@@ -35,7 +35,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const express_validator_1 = require("express-validator");
 const productoController = __importStar(require("../controllers/productosControllers"));
-const usuarioController = __importStar(require("../controllers/usuarioControllers"));
+const userController = __importStar(require("../controllers/usuarioControllers"));
 const proveedorController = __importStar(require("../controllers/provedores.Controller"));
 const categoriaController = __importStar(require("../controllers/categoria.Controller"));
 const marcaController = __importStar(require("../controllers/marcas.Controller"));
@@ -44,6 +44,9 @@ const sucursalController = __importStar(require("../controllers/sucursal.Control
 const catalogoVendedorController = __importStar(require("../controllers/vendedor.Controller"));
 const ventaController = __importStar(require("../controllers/venta.Controller"));
 const detalleVentaController = __importStar(require("../controllers/detalleVenta.Controller"));
+const animalController = __importStar(require("../controllers/animal.Controller"));
+const tipoProductoController = __importStar(require("../controllers/tipoProducto.Controller"));
+const inventariogranelController = __importStar(require("../controllers/inventario_granel.Controller"));
 const Usuario_Validator_1 = require("../Validators/Usuario_Validator");
 const router = (0, express_1.Router)();
 // Ruta principal de bienvenida
@@ -94,9 +97,9 @@ router.get("/productos/:id", (req, res, next) => __awaiter(void 0, void 0, void 
  * @desc Crea un nuevo producto.
  */
 router.post("/productos", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const { nombre, descripcion, precio, nomenclaturaProveedor, nomenclaturaMarca, nomenclaturaCategoria, imagen } = req.body;
+    const { nombre, descripcion, precio, nomenclaturaProveedor, nomenclaturaMarca, nomenclaturaCategoria, url_imagen, cantidad, nomenclaturaAnimal, tipocantidad, precio_granel, venta_granel, codigo } = req.body;
     try {
-        const producto = yield productoController.crearProducto(nombre, descripcion, precio, nomenclaturaProveedor, nomenclaturaMarca, nomenclaturaCategoria, imagen);
+        const producto = yield productoController.crearProducto(nombre, descripcion, precio, nomenclaturaProveedor, nomenclaturaMarca, nomenclaturaCategoria, url_imagen, cantidad, nomenclaturaAnimal, tipocantidad, precio_granel, venta_granel, codigo);
         res.json(producto);
     }
     catch (error) {
@@ -116,10 +119,11 @@ router.post("/productos", (req, res, next) => __awaiter(void 0, void 0, void 0, 
  * @desc Modifica un producto por su ID.
  */
 router.put("/productos/:id", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log(req.body);
     const id = parseInt(req.params.id, 10);
-    const { nombre, descripcion, precio, nomenclaturaProveedor, nomenclaturaMarca, nomenclaturaCategoria, imagen } = req.body;
+    const { nombre, descripcion, precio, nomenclaturaProveedor, nomenclaturaMarca, nomenclaturaCategoria, url_imagen, cantidad, animal, tipocantidad, precio_granel, venta_granel } = req.body;
     try {
-        const producto = yield productoController.actualizarProducto(id, nombre, descripcion, precio, nomenclaturaProveedor, nomenclaturaMarca, nomenclaturaCategoria, imagen);
+        const producto = yield productoController.actualizarProducto(id, nombre, descripcion, precio, nomenclaturaProveedor, nomenclaturaMarca, nomenclaturaCategoria, url_imagen, cantidad, animal, tipocantidad, precio_granel, venta_granel);
         res.json(producto);
     }
     catch (error) {
@@ -132,6 +136,7 @@ router.put("/productos/:id", (req, res, next) => __awaiter(void 0, void 0, void 
  * @desc Elimina un producto por su ID.
  */
 router.delete("/productos/:id", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log(req.params);
     const id = parseInt(req.params.id, 10);
     try {
         yield productoController.eliminarProducto(id);
@@ -153,19 +158,52 @@ router.post("/usuarios/login", Usuario_Validator_1.InicioSesion, (req, res) => {
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
     }
-    usuarioController.iniciarSesion(req, res);
+    userController.iniciarSesion(req, res);
 });
 /**
  * @route GET /usuarios
  * @desc Obtiene todos los usuarios.
  */
-router.get("/usuarios", usuarioController.obtenerUsuarios);
+router.get("/usuarios", userController.obtenerUsuarios);
 /**
  * @route GET /usuarios/:email
  * @param {string} :email - Correo electrónico del usuario a buscar.
  * @desc Obtiene un usuario por su correo electrónico.
  */
-router.get("/usuarios/:email", usuarioController.obtenerUsuario);
+router.get("/usuarios/:email", userController.obtenerUsuario);
+router.post('/usuarios', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { email, password, nombre, apellido, telefono, direccion, imagen } = req.body;
+    try {
+        const usuario = yield userController.createUsuario(email, password, nombre, apellido, telefono, direccion, imagen);
+        res.json(usuario);
+    }
+    catch (error) {
+        res.status(400).json({ error: 'Error al crear usuario' });
+    }
+}));
+// Ruta para actualizar un usuario por su ID
+router.put('/usuarios/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const id = parseInt(req.params.id, 10);
+    const { email, password, nombre, apellido, telefono, direccion, imagen } = req.body;
+    try {
+        const usuario = yield userController.updateUsuario(id, email, password, nombre, apellido, telefono, direccion, imagen);
+        res.json(usuario);
+    }
+    catch (error) {
+        res.status(400).json({ error: 'Error al actualizar usuario' });
+    }
+}));
+// Ruta para eliminar un usuario por su ID
+router.delete('/usuarios/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const id = parseInt(req.params.id, 10);
+    try {
+        yield userController.deleteUsuario(id);
+        res.json({ message: 'Usuario eliminado correctamente' });
+    }
+    catch (error) {
+        res.status(500).json({ error: 'Error al eliminar usuario' });
+    }
+}));
 // Rutas de catalogo de proveedores
 /**
  * @route GET /proveedores
@@ -429,9 +467,9 @@ router.get('/inventario/:id_producto', (req, res, next) => __awaiter(void 0, voi
 }));
 // Crear un nuevo registro de inventario
 router.post('/inventario', (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const { id_producto, existencias, StockMinimo, StockMaximo } = req.body;
+    const { id_producto, existencias, stock_minimo, stock_maximo } = req.body;
     try {
-        const inventario = yield inventarioController.createInventario(id_producto, existencias, StockMinimo, StockMaximo);
+        const inventario = yield inventarioController.createInventario(id_producto, existencias, stock_minimo, stock_maximo);
         res.status(201).json(inventario);
     }
     catch (error) {
@@ -727,9 +765,9 @@ router.get("/detalles-venta/:id", (req, res, next) => __awaiter(void 0, void 0, 
  * @desc Crea un nuevo detalle de venta.
  */
 router.post("/detalles-venta", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const { id_venta, id_producto, cantidad_vendida, precio_producto, subtotal } = req.body;
+    const { id_venta, id_producto, cantidad_vendida, precio_producto, subtotal, venta_granel } = req.body;
     try {
-        const detalleVenta = yield detalleVentaController.createDetalleVenta(id_venta, id_producto, cantidad_vendida, precio_producto, subtotal);
+        const detalleVenta = yield detalleVentaController.createDetalleVenta(id_venta, id_producto, cantidad_vendida, precio_producto, subtotal, venta_granel);
         res.json(detalleVenta);
     }
     catch (error) {
@@ -762,6 +800,207 @@ router.delete("/detalles-venta/:id", (req, res, next) => __awaiter(void 0, void 
     try {
         yield detalleVentaController.deleteDetalleVenta(id);
         res.status(204).send();
+    }
+    catch (error) {
+        res.json({ error: error.message });
+    }
+}));
+// Rutas de animales
+/**
+ * @route GET /animales
+ * @desc Obtiene todos los animales.
+ */
+router.get("/animales", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const animales = yield animalController.getAllAnimales();
+        res.json(animales);
+    }
+    catch (error) {
+        res.json({ error: error.message });
+    }
+}));
+/**
+ * @route GET /animales/:id
+ * @param {number} :id - ID del animal a buscar.
+ * @desc Obtiene un animal por su ID.
+ */
+router.get("/animales/:id", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const id = parseInt(req.params.id, 10);
+    try {
+        const animal = yield animalController.getAnimalById(id);
+        if (!animal) {
+            return res.status(404).json({ error: "Animal no encontrado" });
+        }
+        res.json(animal);
+    }
+    catch (error) {
+        res.json({ error: error.message });
+    }
+}));
+/**
+ * @route POST /animales
+ * @desc Crea un nuevo animal.
+ */
+router.post("/animales", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const { nombre, nomenclatura } = req.body;
+    try {
+        const animal = yield animalController.createAnimal(nombre, nomenclatura);
+        res.json(animal);
+    }
+    catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+}));
+/**
+ * @route PUT /animales/:id
+ * @param {number} :id - ID del animal a modificar.
+ * @desc Actualiza un animal por su ID.
+ */
+router.put("/animales/:id", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const id = parseInt(req.params.id, 10);
+    const { nombre, nomenclatura } = req.body;
+    try {
+        const animal = yield animalController.updateAnimal(id, nombre, nomenclatura);
+        res.json(animal);
+    }
+    catch (error) {
+        res.json({ error: error.message });
+    }
+}));
+/**
+ * @route DELETE /animales/:id
+ * @param {number} :id - ID del animal a eliminar.
+ * @desc Elimina un animal por su ID.
+ */
+router.delete("/animales/:id", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const id = parseInt(req.params.id, 10);
+    try {
+        yield animalController.deleteAnimal(id);
+        res.status(204).send();
+    }
+    catch (error) {
+        res.json({ error: error.message });
+    }
+}));
+// Rutas de tipos de cantidad
+/**
+ * @route GET /tipos-cantidad
+ * @desc Obtiene todos los tipos de cantidad.
+ */
+router.get("/tipos-cantidad", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const tiposCantidad = yield tipoProductoController.getAllTipoCantidad();
+        res.json(tiposCantidad);
+    }
+    catch (error) {
+        res.json({ error: error.message });
+    }
+}));
+/**
+ * @route GET /tipos-cantidad/:id
+ * @param {number} :id - ID del tipo de cantidad a buscar.
+ * @desc Obtiene un tipo de cantidad por su ID.
+ */
+router.get("/tipos-cantidad/:id", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const id = parseInt(req.params.id, 10);
+    try {
+        const tipoCantidad = yield tipoProductoController.getTipoCantidadById(id);
+        if (!tipoCantidad) {
+            return res.status(404).json({ error: "Tipo de cantidad no encontrado" });
+        }
+        res.json(tipoCantidad);
+    }
+    catch (error) {
+        res.json({ error: error.message });
+    }
+}));
+/**
+ * @route POST /tipos-cantidad
+ * @desc Crea un nuevo tipo de cantidad.
+ */
+router.post("/tipos-cantidad", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const { nombre, nomenclatura } = req.body;
+    try {
+        const tipoCantidad = yield tipoProductoController.createTipoCantidad(nombre, nomenclatura);
+        res.json(tipoCantidad);
+    }
+    catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+}));
+/**
+ * @route PUT /tipos-cantidad/:id
+ * @param {number} :id - ID del tipo de cantidad a modificar.
+ * @desc Actualiza un tipo de cantidad por su ID.
+ */
+router.put("/tipos-cantidad/:id", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const id = parseInt(req.params.id, 10);
+    const { nombre, nomenclatura } = req.body;
+    try {
+        const tipoCantidad = yield tipoProductoController.updateTipoCantidad(id, nombre, nomenclatura);
+        res.json(tipoCantidad);
+    }
+    catch (error) {
+        res.json({ error: error.message });
+    }
+}));
+// Rutas para inventario_granel
+/**
+ * @route GET /inventario-granel
+ * @desc Obtiene todos los registros de inventario granel.
+ */
+router.get("/inventario-granel", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const inventarioGranel = yield inventariogranelController.getAllInventarioGranel();
+        res.json(inventarioGranel);
+    }
+    catch (error) {
+        res.json({ error: error.message });
+    }
+}));
+/**
+ * @route GET /inventario-granel/:id
+ * @param {number} :id - ID del registro de inventario granel a buscar.
+ * @desc Obtiene un registro de inventario granel por su ID.
+ */
+router.get("/inventario-granel/:id", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const id = parseInt(req.params.id, 10);
+    try {
+        const inventarioGranel = yield inventariogranelController.getInventarioGranelById(id);
+        if (!inventarioGranel) {
+            return res.status(404).json({ error: "Registro de inventario granel no encontrado" });
+        }
+        res.json(inventarioGranel);
+    }
+    catch (error) {
+        res.json({ error: error.message });
+    }
+}));
+/**
+ * @route POST /inventario-granel
+ * @desc Crea un nuevo registro de inventario granel.
+ */
+router.post("/inventario-granel", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id_producto, existencias, StockMinimo, StockMaximo } = req.body;
+    try {
+        const inventarioGranel = yield inventariogranelController.createInventarioGranel(id_producto);
+        res.json(inventarioGranel);
+    }
+    catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+}));
+/**
+ * @route PUT /inventario-granel/:id
+ * @param {number} :id - ID del registro de inventario granel a modificar.
+ * @desc Actualiza un registro de inventario granel por su ID.
+ */
+router.put("/inventario-granel/:id", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const id = parseInt(req.params.id, 10);
+    const { existencias, StockMinimo, StockMaximo } = req.body;
+    try {
+        const inventarioGranel = yield inventariogranelController.updateInventarioGranel(id, existencias);
+        res.json(inventarioGranel);
     }
     catch (error) {
         res.json({ error: error.message });

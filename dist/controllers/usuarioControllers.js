@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.obtenerUsuario = exports.obtenerUsuarios = exports.iniciarSesion = void 0;
+exports.deleteUsuario = exports.updateUsuario = exports.createUsuario = exports.obtenerUsuario = exports.obtenerUsuarios = exports.iniciarSesion = void 0;
 const client_1 = require("@prisma/client");
 const prisma = new client_1.PrismaClient();
 const iniciarSesion = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -60,3 +60,47 @@ const obtenerUsuario = (req, res) => __awaiter(void 0, void 0, void 0, function*
     }
 });
 exports.obtenerUsuario = obtenerUsuario;
+// Crear un nuevo usuario
+function createUsuario(email, password, nombre, apellido, telefono, direccion, imagen) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return yield prisma.user.create({
+            data: {
+                email,
+                password,
+                nombre,
+                apellido,
+                telefono,
+                direccion,
+                imagen,
+            },
+        });
+    });
+}
+exports.createUsuario = createUsuario;
+// Actualizar un usuario por su ID
+function updateUsuario(id, email, password, nombre, apellido, telefono, direccion, imagen) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return yield prisma.user.update({
+            where: { id_usuario: id },
+            data: {
+                email,
+                password,
+                nombre,
+                apellido,
+                telefono,
+                direccion,
+                imagen,
+            },
+        });
+    });
+}
+exports.updateUsuario = updateUsuario;
+// Eliminar un usuario por su ID
+function deleteUsuario(id) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return yield prisma.user.delete({
+            where: { id_usuario: id },
+        });
+    });
+}
+exports.deleteUsuario = deleteUsuario;

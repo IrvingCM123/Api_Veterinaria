@@ -15,7 +15,15 @@ export async function getProveedorById(id: number) {
 }
 
 // Crear un nuevo proveedor
-export async function createProveedor(nombre: string, nomenclatura: string, direccion: string, ciudad: string, estado: string, telefono: string, email: string ) {
+export async function createProveedor(
+    nombre: string,
+    nomenclatura: string,
+    direccion: string,
+    ciudad: string,
+    estado: string,
+    telefono: string,
+    email: string
+) {
     return await prisma.catalogoProveedor.create({
         data: {
             nombre,
@@ -24,7 +32,7 @@ export async function createProveedor(nombre: string, nomenclatura: string, dire
             ciudad,
             estado,
             telefono,
-            email
+            email,
         },
     });
 }
@@ -46,3 +54,5 @@ export async function deleteProveedor(id: number) {
         where: { id_proveedor: id },
     });
 }
+
+
