@@ -29,8 +29,8 @@ exports.obtenerProductos = obtenerProductos;
 // Obtener un producto por su ID
 function obtenerProductoPorId(id) {
     return __awaiter(this, void 0, void 0, function* () {
-        return yield prisma.productos.findUnique({
-            where: { id },
+        return yield prisma.productos.findFirst({
+            where: { codigo_barras: id.toString() },
             include: {
                 marca: true,
                 proveedor: true,
@@ -77,12 +77,38 @@ function obtenerIdCategoriaPorNomenclatura(nomenclatura) {
         return categoria.id_categoria;
     });
 }
+function obtenerIdAnimalPorNomenclatura(nomenclatura) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const animal = yield prisma.catalagoAnimal.findFirst({
+            where: { nomenclatura },
+        });
+        if (!animal) {
+            throw new Error(`Animal con nomenclatura ${nomenclatura} no encontrado`);
+        }
+        return animal.id_categoria;
+    });
+}
+;
+function obtenerIDCantidadPorNomenclatura(nomenclatura) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const tipoCantidad = yield prisma.catalogoTipoCantidad.findFirst({
+            where: { nomenclatura },
+        });
+        if (!tipoCantidad) {
+            throw new Error(`Tipo de cantidad con nomenclatura ${nomenclatura} no encontrado`);
+        }
+        return tipoCantidad.id_tipoCantidad;
+    });
+}
+;
 // Crear un nuevo producto con las consultas a proveedor, marca y categoría
-function crearProducto(nombre, descripcion, precio, nomenclaturaProveedor, nomenclaturaMarca, nomenclaturaCategoria, imagen) {
+function crearProducto(nombre, descripcion, precio, nomenclaturaProveedor, nomenclaturaMarca, nomenclaturaCategoria, imagen, cantidad, nomenclaturaAnimal, nomenclaturaTipoCantidad, precio_granel, venta_granel, codigo_barras) {
     return __awaiter(this, void 0, void 0, function* () {
         const id_proveedor = yield obtenerIdProveedorPorNomenclatura(nomenclaturaProveedor);
         const id_marca = yield obtenerIdMarcaPorNomenclatura(nomenclaturaMarca);
         const id_categoria = yield obtenerIdCategoriaPorNomenclatura(nomenclaturaCategoria);
+        const id_animal = yield obtenerIdAnimalPorNomenclatura(nomenclaturaAnimal);
+        const id_tipoCantidad = yield obtenerIDCantidadPorNomenclatura(nomenclaturaTipoCantidad);
         return yield prisma.productos.create({
             data: {
                 nombre,
@@ -92,6 +118,12 @@ function crearProducto(nombre, descripcion, precio, nomenclaturaProveedor, nomen
                 id_proveedor,
                 id_categoria,
                 imagen,
+                cantidad,
+                id_animal,
+                id_tipoCantidad,
+                precio_granel: venta_granel ? precio_granel : null,
+                venta_granel,
+                codigo_barras,
             },
             include: {
                 marca: true,
@@ -104,11 +136,13 @@ function crearProducto(nombre, descripcion, precio, nomenclaturaProveedor, nomen
 }
 exports.crearProducto = crearProducto;
 // Actualizar un producto por su ID o por su nomenclatura de proveedor, marca y categoría
-function actualizarProducto(id, nombre, descripcion, precio, nomenclaturaProveedor, nomenclaturaMarca, nomenclaturaCategoria, imagen) {
+function actualizarProducto(id, nombre, descripcion, precio, nomenclaturaProveedor, nomenclaturaMarca, nomenclaturaCategoria, imagen, cantidad, nomenclaturaAnimal, nomenclaturaTipoCantidad, precio_granel, venta_granel) {
     return __awaiter(this, void 0, void 0, function* () {
         const id_proveedor = yield obtenerIdProveedorPorNomenclatura(nomenclaturaProveedor);
         const id_marca = yield obtenerIdMarcaPorNomenclatura(nomenclaturaMarca);
         const id_categoria = yield obtenerIdCategoriaPorNomenclatura(nomenclaturaCategoria);
+        const id_animal = yield obtenerIdAnimalPorNomenclatura(nomenclaturaAnimal);
+        const id_tipoCantidad = yield obtenerIDCantidadPorNomenclatura(nomenclaturaTipoCantidad);
         return yield prisma.productos.update({
             where: { id },
             data: {
@@ -119,6 +153,11 @@ function actualizarProducto(id, nombre, descripcion, precio, nomenclaturaProveed
                 id_proveedor,
                 id_categoria,
                 imagen,
+                cantidad,
+                id_animal,
+                id_tipoCantidad,
+                precio_granel: venta_granel ? precio_granel : null,
+                venta_granel,
             },
             include: {
                 marca: true,

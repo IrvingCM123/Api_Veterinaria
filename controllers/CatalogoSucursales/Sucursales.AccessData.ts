@@ -7,7 +7,7 @@ export async function getAllSucursales() {
     return await prisma.sucursal.findMany({
         include: {
             ventas: true,
-        },
+        }
     });
 }
 

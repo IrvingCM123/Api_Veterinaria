@@ -1046,6 +1046,7 @@ router.get("/inventario-granel/:id", async (req: Request, res: Response, next: N
 
 router.post("/inventario-granel", async (req: Request, res: Response, next: NextFunction) => {
   const { id_producto, existencias, StockMinimo, StockMaximo } = req.body;
+  
   try {
     const inventarioGranel = await inventariogranelController.createInventarioGranel(id_producto);
     res.json(inventarioGranel);
