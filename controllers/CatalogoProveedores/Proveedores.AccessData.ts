@@ -38,12 +38,17 @@ export async function createProveedor(
 }
 
 // Actualizar un proveedor por su ID
-export async function updateProveedor(id: number, nombre: string, nomenclatura: string) {
+export async function updateProveedor(id: number, nombre: string, nomenclatura: string, direccion: string, ciudad: string, estado: string, telefono: string, email: string) {
     return await prisma.catalogoProveedor.update({
         where: { id_proveedor: id },
         data: {
             nombre,
             nomenclatura,
+            direccion,
+            ciudad,
+            estado,
+            telefono,
+            email,
         },
     });
 }

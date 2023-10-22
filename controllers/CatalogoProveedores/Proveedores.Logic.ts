@@ -1,4 +1,10 @@
-import { getAllProveedores, getProveedorById, createProveedor, updateProveedor, deleteProveedor } from './Proveedores.AccessData';
+import {
+    getAllProveedores,
+    getProveedorById,
+    createProveedor,
+    updateProveedor,
+    deleteProveedor,
+} from "./Proveedores.AccessData";
 
 // Obtener todos los proveedores
 export async function getAllProveedoresController() {
@@ -20,16 +26,41 @@ export async function createProveedorController(
     telefono: string,
     email: string
 ) {
-    return await createProveedor(nombre, nomenclatura, direccion, ciudad, estado, telefono, email);
+    return await createProveedor(
+        nombre,
+        nomenclatura,
+        direccion,
+        ciudad,
+        estado,
+        telefono,
+        email
+    );
 }
 
 // Actualizar un proveedor por su ID
-export async function updateProveedorController(id: number, nombre: string, nomenclatura: string) {
-    return await updateProveedor(id, nombre, nomenclatura);
+export async function updateProveedorController(
+    id: number,
+    nombre: string,
+    nomenclatura: string,
+    direccion: string,
+    ciudad: string,
+    estado: string,
+    telefono: string,
+    email: string
+) {
+    return await updateProveedor(
+        id,
+        nombre,
+        nomenclatura,
+        direccion,
+        ciudad,
+        estado,
+        telefono,
+        email
+    );
 }
 
 // Eliminar un proveedor por su ID
 export async function deleteProveedorController(id: number) {
     return await deleteProveedor(id);
 }
-
