@@ -28,3 +28,4 @@ export async function deleteTipoCantidad(id: number) {
         where: { id_tipoCantidad: id },
     });
 }
+

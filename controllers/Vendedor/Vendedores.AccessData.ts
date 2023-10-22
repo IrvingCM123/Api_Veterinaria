@@ -12,7 +12,7 @@ export async function getAllVendedores() {
 }
 
 // Obtener un vendedor por su ID
-export async function getVendedorById(id: number) {
+export async function getVendedorById(id: any) {
     return await prisma.catalogoVendedor.findUnique({
         where: { id_vendedor: id },
         include: {
@@ -22,7 +22,7 @@ export async function getVendedorById(id: number) {
 }
 
 // Crear un nuevo vendedor
-export async function createVendedor(acronimo: string, permisoVenta: boolean, userId: number) {
+export async function createVendedor(acronimo: any, permisoVenta: any, userId: any) {
     return await prisma.catalogoVendedor.create({
         data: {
             acronimo,
@@ -40,7 +40,7 @@ export async function createVendedor(acronimo: string, permisoVenta: boolean, us
 }
 
 // Actualizar un vendedor por su ID
-export async function updateVendedor(id: number, acronimo: string, permisoVenta: boolean, userId: number) {
+export async function updateVendedor(id: any, acronimo: any, permisoVenta: any, userId: any) {
     return await prisma.catalogoVendedor.update({
         where: { id_vendedor: id },
         data: {
@@ -59,8 +59,9 @@ export async function updateVendedor(id: number, acronimo: string, permisoVenta:
 }
 
 // Eliminar un vendedor por su ID
-export async function deleteVendedor(id: number) {
+export async function deleteVendedor(id: any) {
     return await prisma.catalogoVendedor.delete({
         where: { id_vendedor: id },
     });
 }
+

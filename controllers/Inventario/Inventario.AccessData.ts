@@ -1,5 +1,3 @@
-// inventarioAccessData.js
-
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
@@ -60,3 +58,4 @@ export async function deleteInventario(id_producto: any) {
         where: { id_producto },
     });
 }
+

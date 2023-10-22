@@ -75,3 +75,5 @@ export async function deleteSucursal(id: number) {
         where: { id_sucursal: id },
     });
 }
+
+

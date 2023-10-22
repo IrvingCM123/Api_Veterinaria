@@ -52,3 +52,5 @@ export async function deleteUsuario(id: string) {
         where: { id_usuario: Number(id) },
     });
 }
+
+
