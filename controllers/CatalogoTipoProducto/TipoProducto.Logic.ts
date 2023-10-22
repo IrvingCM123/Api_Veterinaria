@@ -7,6 +7,11 @@ import {
     deleteTipoCantidad,
 } from "./TipoProducto.AccessData";
 
+interface ITipoCantidad {
+    nombre: string;
+    nomenclatura: string;
+}
+
 // Obtener todos los tipos de cantidad
 
 export async function getAllTipoCantidadNegocio() {
@@ -17,11 +22,11 @@ export async function getTipoCantidadByIdNegocio(id: number) {
     return await getTipoCantidadById(id);
 } 
 
-export async function createTipoCantidadNegocio(data: any) {
+export async function createTipoCantidadNegocio(data: ITipoCantidad) {
     return await createTipoCantidad(data);
 }
 
-export async function updateTipoCantidadNegocio(id: number, data: any) {
+export async function updateTipoCantidadNegocio(id: number, data: ITipoCantidad) {
     return await updateTipoCantidad(id, data);
 }
 

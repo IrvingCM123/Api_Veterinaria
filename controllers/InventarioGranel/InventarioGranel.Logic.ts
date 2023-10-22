@@ -7,7 +7,7 @@ import {
     createInventarioGranel,
     updateInventarioGranel,
     deleteInventarioGranel,
-} from './InventarioGranel.AccessData';
+} from "./InventarioGranel.AccessData";
 
 // Tipo de entrada para la creación y actualización de inventario granel
 type InventarioGranelInput = {
@@ -27,12 +27,17 @@ export async function obtenerInventarioGranelPorId(id: any) {
 }
 
 // Crear un nuevo registro de inventario granel
-export async function crearNuevoInventarioGranel(inventarioGranelData: InventarioGranelInput) {
+export async function crearNuevoInventarioGranel(
+    inventarioGranelData: InventarioGranelInput
+) {
     return await createInventarioGranel(inventarioGranelData);
 }
 
 // Actualizar un registro de inventario granel por su ID
-export async function actualizarInventarioGranel(id: any, inventarioGranelData: InventarioGranelInput) {
+export async function actualizarInventarioGranel(
+    id: any,
+    inventarioGranelData: InventarioGranelInput
+) {
     return await updateInventarioGranel(id, inventarioGranelData);
 }
 

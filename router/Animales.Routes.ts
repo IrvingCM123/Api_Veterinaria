@@ -1,7 +1,15 @@
 import { Request, Response, NextFunction, Router } from "express";
 
 import * as AnimalesController from "../controllers/CatalogoAnimales/Animal.Logic";
-import { parse } from "path";
+
+import { handleValidationErrors } from "../middleware/Animales/Animal.Middleware";
+
+import {
+    validateCreateAnimal,
+    validateDeleteAnimal,
+    validateGetAnimalById,
+    validateUpdateAnimal,
+} from "../Validators/CatalogoAnimal/Animal.Validator";
 
 const router = Router();
 
@@ -12,6 +20,7 @@ const router = Router();
  *  @desc Get All Animales
  *  @access Public
  *  @params null
+ *  @validation null
  *  @return json con todos los animales
  */
 
@@ -20,28 +29,34 @@ router.get("/", async (req: Request, res: Response, next: NextFunction) => {
         const animales = await AnimalesController.getAllAnimalesController();
         res.status(200).json(animales);
     } catch (error) {
-        next(error);
+        return res
+            .status(500)
+            .json({ message: "No se pudieron obtener los animales" });
     }
-}
-);
+});
 
 /**
  *  @route GET api/animales/:id
  *  @desc Get An Animal
  *  @access Public
  *  @params id
+ *  @validation validateGetAnimalById, handleValidationErrors
  *  @return json con el animal solicitado
  */
 
-router.get("/:id", async (req: Request, res: Response, next: NextFunction) => {
-    const id = parseInt(req.params.id, 10);
-    try {
-        const animal = await AnimalesController.getAnimalByIdController(id);
-        res.status(200).json(animal);
-    } catch (error) {
-        next(error);
+router.get(
+    "/:id",
+    validateGetAnimalById,
+    handleValidationErrors,
+    async (req: Request, res: Response, next: NextFunction) => {
+        const id = parseInt(req.params.id, 10);
+        try {
+            const animal = await AnimalesController.getAnimalByIdController(id);
+            res.status(200).json(animal);
+        } catch (error) {
+            return res.status(500).json({ message: "Error al obtener el animal" });
+        }
     }
-}
 );
 
 /**
@@ -49,18 +64,26 @@ router.get("/:id", async (req: Request, res: Response, next: NextFunction) => {
  *  @desc Create An Animal
  *  @access Public
  *  @params -nombre: string, -nomenclatura: string
+ *  @validation validateCreateAnimal, handleValidationErrors
  *  @return json con el animal creado
  */
 
-router.post("/", async (req: Request, res: Response, next: NextFunction) => {
-    const { nombre, nomenclatura } = req.body;
-    try {
-        const animal = await AnimalesController.createAnimalController(nombre, nomenclatura);
-        res.status(200).json(animal);
-    } catch (error) {
-        next(error);
+router.post(
+    "/",
+    validateCreateAnimal,
+    handleValidationErrors,
+    async (req: Request, res: Response, next: NextFunction) => {
+        const { nombre, nomenclatura } = req.body;
+        try {
+            const animal = await AnimalesController.createAnimalController(
+                nombre,
+                nomenclatura
+            );
+            res.status(200).json(animal);
+        } catch (error) {
+            return res.status(500).json({ message: "No se pudo crear el animal" });
+        }
     }
-}
 );
 
 /**
@@ -68,19 +91,30 @@ router.post("/", async (req: Request, res: Response, next: NextFunction) => {
  *  @desc Update An Animal
  *  @access Public
  *  @params id, -nombre: string, -nomenclatura: string
+ *  @validation
  *  @return json con el animal actualizado
  */
 
-router.put("/:id", async (req: Request, res: Response, next: NextFunction) => {
-    const id = parseInt(req.params.id, 10);
-    const { nombre, nomenclatura } = req.body;
-    try {
-        const animal = await AnimalesController.updateAnimalController(id, nombre, nomenclatura);
-        res.status(200).json(animal);
-    } catch (error) {
-        next(error);
+router.put(
+    "/:id",
+    validateUpdateAnimal,
+    handleValidationErrors,
+    async (req: Request, res: Response, next: NextFunction) => {
+        const id = parseInt(req.params.id, 10);
+        const { nombre, nomenclatura } = req.body;
+        try {
+            const animal = await AnimalesController.updateAnimalController(
+                id,
+                nombre,
+                nomenclatura
+            );
+            res.status(200).json(animal);
+        } catch (error) {
+            return res
+                .status(500)
+                .json({ message: "No se pudo actualizar el animal" });
+        }
     }
-}
 );
 
 /**
@@ -91,15 +125,19 @@ router.put("/:id", async (req: Request, res: Response, next: NextFunction) => {
  *  @return json con el animal eliminado
  */
 
-router.delete("/:id", async (req: Request, res: Response, next: NextFunction) => {
-    const id = parseInt(req.params.id, 10);
-    try {
-        const animal = await AnimalesController.deleteAnimalController(id);
-        res.status(200).json(animal);
-    } catch (error) {
-        next(error);
+router.delete(
+    "/:id",
+    validateDeleteAnimal,
+    handleValidationErrors,
+    async (req: Request, res: Response, next: NextFunction) => {
+        const id = parseInt(req.params.id, 10);
+        try {
+            const animal = await AnimalesController.deleteAnimalController(id);
+            res.status(200).json(animal);
+        } catch (error) {
+            return res.status(500).json({ message: "No se pudo eliminar el animal" });
+        }
     }
-}
 );
 
 export default router;

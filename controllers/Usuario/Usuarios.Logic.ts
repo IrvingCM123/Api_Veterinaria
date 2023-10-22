@@ -1,6 +1,13 @@
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
-import { iniciarSesion, obtenerUsuarios, obtenerUsuario, createUsuario, updateUsuario, deleteUsuario } from "./Usuarios.AcessData";
+import {
+    iniciarSesion,
+    obtenerUsuarios,
+    obtenerUsuario,
+    createUsuario,
+    updateUsuario,
+    deleteUsuario,
+} from "./Usuarios.AcessData";
 
 const secretKey = "Centenito";
 
@@ -10,18 +17,21 @@ export async function iniciarSesionNegocio(email: string, password: string) {
     const usuario = await iniciarSesion(email, password);
 
     if (!usuario) {
-        return ({ error: "Usuario no encontrado" });
+        return { error: "Usuario no encontrado" };
     }
 
     if (usuario.password !== password) {
-        return ({ error: "Contraseña incorrecta" });
+        return { error: "Contraseña incorrecta" };
     }
 
     // Si el usuario existe y la contraseña es correcta, crea un token JWT
 
-    const token = jwt.sign({ id: usuario.id_usuario, email: usuario.email }, secretKey);
+    const token = jwt.sign(
+        { id: usuario.id_usuario, email: usuario.email },
+        secretKey
+    );
 
-    return ({ token });
+    return { token };
 }
 
 export async function obtenerUsuariosNegocio() {
@@ -32,12 +42,46 @@ export async function obtenerUsuarioNegocio(email: string) {
     return await obtenerUsuario(email);
 }
 
-export async function crearUsuarioNegocio( email: string, password: string, nombre: string, apellido: string, telefono: string, direccion: string, imagen: string) {
-    return await createUsuario(email, password, nombre, apellido, telefono, direccion, imagen);
+export async function crearUsuarioNegocio(
+    email: string,
+    password: string,
+    nombre: string,
+    apellido: string,
+    telefono: string,
+    direccion: string,
+    imagen: string
+) {
+    return await createUsuario(
+        email,
+        password,
+        nombre,
+        apellido,
+        telefono,
+        direccion,
+        imagen
+    );
 }
 
-export async function actualizarUsuarioNegocio(id: any, email: string, password: string, nombre: string, apellido: string, telefono: string, direccion: string, imagen: string) {
-    return await updateUsuario(id, email, password, nombre, apellido, telefono, direccion, imagen);
+export async function actualizarUsuarioNegocio(
+    id: any,
+    email: string,
+    password: string,
+    nombre: string,
+    apellido: string,
+    telefono: string,
+    direccion: string,
+    imagen: string
+) {
+    return await updateUsuario(
+        id,
+        email,
+        password,
+        nombre,
+        apellido,
+        telefono,
+        direccion,
+        imagen
+    );
 }
 
 export async function eliminarUsuarioNegocio(id: any) {
