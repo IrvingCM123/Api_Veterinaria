@@ -25,12 +25,14 @@ const router = Router();
  *  @return json con todos los inventarios granel
  */
 
-router.get("/",
+router.get(
+    "/",
     validateObtenerTodosLosInventariosGranel,
     handleValidationErrors,
     async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const inventariogranel = await InventarioGranelController.obtenerTodosLosInventariosGranel();
+            const inventariogranel =
+                await InventarioGranelController.obtenerTodosLosInventariosGranel();
             res.status(200).json(inventariogranel);
         } catch (error) {
             next(error);
@@ -47,13 +49,15 @@ router.get("/",
  *  @return json con el inventario granel solicitado
  */
 
-router.get("/:id",
+router.get(
+    "/:id",
     validateObtenerInventarioGranelPorId,
     handleValidationErrors,
     async (req: Request, res: Response, next: NextFunction) => {
         const id = parseInt(req.params.id, 10);
         try {
-            const inventariogranel = await InventarioGranelController.obtenerInventarioGranelPorId(id);
+            const inventariogranel =
+                await InventarioGranelController.obtenerInventarioGranelPorId(id);
             res.status(200).json(inventariogranel);
         } catch (error) {
             next(error);
@@ -70,14 +74,22 @@ router.get("/:id",
  *  @return json con el inventario granel creado
  */
 
-router.post("/",
+router.post(
+    "/",
     validateCrearNuevoInventarioGranel,
     handleValidationErrors,
     async (req: Request, res: Response, next: NextFunction) => {
         const { id_producto, cantidad_producto, cantidad_restante } = req.body;
-        const ObjetoInventarioGranel = { id_producto, cantidad_producto, cantidad_restante };
+        const ObjetoInventarioGranel = {
+            id_producto,
+            cantidad_producto,
+            cantidad_restante,
+        };
         try {
-            const inventariogranel = await InventarioGranelController.crearNuevoInventarioGranel(ObjetoInventarioGranel);
+            const inventariogranel =
+                await InventarioGranelController.crearNuevoInventarioGranel(
+                    ObjetoInventarioGranel
+                );
             res.status(200).json(inventariogranel);
         } catch (error) {
             next(error);
@@ -94,15 +106,24 @@ router.post("/",
  *  @return json con el inventario granel actualizado
  */
 
-router.put("/:id",
+router.put(
+    "/:id",
     validateActualizarInventarioGranel,
     handleValidationErrors,
     async (req: Request, res: Response, next: NextFunction) => {
         const id = parseInt(req.params.id, 10);
         const { id_producto, cantidad_producto, cantidad_restante } = req.body;
-        const ObjetoInventarioGranel = { id_producto, cantidad_producto, cantidad_restante };
+        const ObjetoInventarioGranel = {
+            id_producto,
+            cantidad_producto,
+            cantidad_restante,
+        };
         try {
-            const inventariogranel = await InventarioGranelController.actualizarInventarioGranel(id, ObjetoInventarioGranel);
+            const inventariogranel =
+                await InventarioGranelController.actualizarInventarioGranel(
+                    id,
+                    ObjetoInventarioGranel
+                );
             res.status(200).json(inventariogranel);
         } catch (error) {
             next(error);
@@ -119,13 +140,15 @@ router.put("/:id",
  *  @return json con el inventario granel eliminado
  */
 
-router.delete("/:id",
+router.delete(
+    "/:id",
     validateEliminarInventarioGranel,
     handleValidationErrors,
     async (req: Request, res: Response, next: NextFunction) => {
         const id = parseInt(req.params.id, 10);
         try {
-            const inventariogranel = await InventarioGranelController.eliminarInventarioGranel(id);
+            const inventariogranel =
+                await InventarioGranelController.eliminarInventarioGranel(id);
             res.status(200).json(inventariogranel);
         } catch (error) {
             next(error);
@@ -134,4 +157,3 @@ router.delete("/:id",
 );
 
 export default router;
-

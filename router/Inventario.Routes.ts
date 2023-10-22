@@ -26,12 +26,14 @@ const router = Router();
  *  @return json con todos los inventarios
  */
 
-router.get("/",
+router.get(
+    "/",
     validateObtenerTodosLosInventarios,
     handleValidationErrors,
     async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const inventario = await InventarioController.obtenerTodosLosInventarios();
+            const inventario =
+                await InventarioController.obtenerTodosLosInventarios();
             res.status(200).json(inventario);
         } catch (error) {
             next(error);
@@ -48,7 +50,8 @@ router.get("/",
  *  @return json con el inventario solicitado
  */
 
-router.get("/:id",
+router.get(
+    "/:id",
     validateObtenerInventarioPorId,
     handleValidationErrors,
     async (req: Request, res: Response, next: NextFunction) => {
@@ -71,13 +74,15 @@ router.get("/:id",
  * @return json con el inventario solicitado
  */
 
-router.get("/:producto",
+router.get(
+    "/:producto",
     validateObtenerInventarioPorProducto,
     handleValidationErrors,
     async (req: Request, res: Response, next: NextFunction) => {
         const producto = req.params.producto;
         try {
-            const inventario = await InventarioController.obtenerInventarioPorProducto(producto);
+            const inventario =
+                await InventarioController.obtenerInventarioPorProducto(producto);
             res.status(200).json(inventario);
         } catch (error) {
             next(error);
@@ -94,13 +99,19 @@ router.get("/:producto",
  *  @return json con el inventario creado
  */
 
-router.post("/",
+router.post(
+    "/",
     validateCrearNuevoInventario,
     handleValidationErrors,
     async (req: Request, res: Response, next: NextFunction) => {
         const { id_producto, existencias, StockMinimo, StockMaximo } = req.body;
         try {
-            const inventario = await InventarioController.crearNuevoInventario(id_producto, existencias, StockMinimo, StockMaximo);
+            const inventario = await InventarioController.crearNuevoInventario(
+                id_producto,
+                existencias,
+                StockMinimo,
+                StockMaximo
+            );
             res.status(200).json(inventario);
         } catch (error) {
             next(error);
@@ -117,14 +128,20 @@ router.post("/",
  *  @return json con el inventario actualizado
  */
 
-router.put("/:id",
+router.put(
+    "/:id",
     validateActualizarInventario,
     handleValidationErrors,
     async (req: Request, res: Response, next: NextFunction) => {
         const id = parseInt(req.params.id, 10);
         const { existencias, StockMinimo, StockMaximo } = req.body;
         try {
-            const inventario = await InventarioController.actualizarInventario(id, existencias, StockMinimo, StockMaximo);
+            const inventario = await InventarioController.actualizarInventario(
+                id,
+                existencias,
+                StockMinimo,
+                StockMaximo
+            );
             res.status(200).json(inventario);
         } catch (error) {
             next(error);
@@ -141,7 +158,8 @@ router.put("/:id",
  *  @return json con el inventario eliminado
  */
 
-router.delete("/:id",
+router.delete(
+    "/:id",
     validateEliminarInventario,
     handleValidationErrors,
     async (req: Request, res: Response, next: NextFunction) => {
@@ -156,4 +174,3 @@ router.delete("/:id",
 );
 
 export default router;
-
