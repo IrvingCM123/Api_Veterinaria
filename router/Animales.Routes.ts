@@ -20,6 +20,7 @@ const router = Router();
  *  @desc Get All Animales
  *  @access Public
  *  @params null
+ *  @validation null
  *  @return json con todos los animales
  */
 
