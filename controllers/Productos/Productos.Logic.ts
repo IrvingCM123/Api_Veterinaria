@@ -25,4 +25,3 @@ export async function actualizarProductoNegocio(id: number, data: any) {
 export async function eliminarProductoNegocio(id: number) {
     return await eliminarProducto(id);
 }
-

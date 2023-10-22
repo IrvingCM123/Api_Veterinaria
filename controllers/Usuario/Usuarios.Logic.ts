@@ -43,5 +43,3 @@ export async function actualizarUsuarioNegocio(id: any, email: string, password:
 export async function eliminarUsuarioNegocio(id: any) {
     return await deleteUsuario(id);
 }
-
-
