@@ -352,3 +352,5 @@ export async function deleteVenta(id: number) {
 
     return transaction;
 }
+
+
