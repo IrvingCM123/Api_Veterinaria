@@ -9,7 +9,7 @@ import {
     validateObtenerVendedorPorId,
     validateCrearNuevoVendedor,
     validateActualizarVendedor,
-    validateEliminarVendedor
+    validateEliminarVendedor,
 } from "../Validators/Vendedores/Vendedor.Validator";
 
 const router = Router();
@@ -25,7 +25,8 @@ const router = Router();
  *  @return json con todos los vendedores
  */
 
-router.get("/",
+router.get(
+    "/",
     validateObtenerTodosLosVendedores,
     handleValidationErrors,
     async (req: Request, res: Response, next: NextFunction) => {
@@ -47,7 +48,8 @@ router.get("/",
  *  @return json con el vendedor solicitado
  */
 
-router.get("/:id",
+router.get(
+    "/:id",
     validateObtenerVendedorPorId,
     handleValidationErrors,
     async (req: Request, res: Response, next: NextFunction) => {
@@ -70,13 +72,18 @@ router.get("/:id",
  *  @return json con el vendedor creado
  */
 
-router.post("/",
+router.post(
+    "/",
     validateCrearNuevoVendedor,
     handleValidationErrors,
     async (req: Request, res: Response, next: NextFunction) => {
         const { acronimo, permisoVenta, userId } = req.body;
         try {
-            const vendedor = await VendedorController.crearNuevoVendedor(acronimo, permisoVenta, userId);
+            const vendedor = await VendedorController.crearNuevoVendedor(
+                acronimo,
+                permisoVenta,
+                userId
+            );
             res.status(200).json(vendedor);
         } catch (error) {
             next(error);
@@ -93,14 +100,20 @@ router.post("/",
  *  @return json con el vendedor actualizado
  */
 
-router.put("/:id",
+router.put(
+    "/:id",
     validateActualizarVendedor,
     handleValidationErrors,
     async (req: Request, res: Response, next: NextFunction) => {
         const id = parseInt(req.params.id, 10);
         const { acronimo, permisoVenta, userId } = req.body;
         try {
-            const vendedor = await VendedorController.actualizarVendedor(id, acronimo, permisoVenta, userId);
+            const vendedor = await VendedorController.actualizarVendedor(
+                id,
+                acronimo,
+                permisoVenta,
+                userId
+            );
             res.status(200).json(vendedor);
         } catch (error) {
             next(error);
@@ -117,7 +130,8 @@ router.put("/:id",
  *  @return json con el vendedor eliminado
  */
 
-router.delete("/:id",
+router.delete(
+    "/:id",
     validateEliminarVendedor,
     handleValidationErrors,
     async (req: Request, res: Response, next: NextFunction) => {
