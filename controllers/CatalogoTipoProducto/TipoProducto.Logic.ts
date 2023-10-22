@@ -7,62 +7,25 @@ import {
     deleteTipoCantidad,
 } from "./TipoProducto.AccessData";
 
-export const getAllTipoCantidadNegocio = async (req: Request, res: Response) => {
-    try {
-        const tiposCantidad = await getAllTipoCantidad();
-        res.json(tiposCantidad);
-    } catch (error) {
-        console.error("Error al obtener tipos de cantidad:", error);
-        res.status(500).json({ error: "Error al obtener tipos de cantidad" });
-    }
-};
+// Obtener todos los tipos de cantidad
 
-export const getTipoCantidadByIdNegocio = async (req: Request, res: Response) => {
-    const { id }: any = req.params;
-    try {
-        const tipoCantidad = await getTipoCantidadById(Number(id));
-        if (!tipoCantidad) {
-            return res.status(404).json({ error: "Tipo de cantidad no encontrado" });
-        }
-        res.json(tipoCantidad);
-    } catch (error) {
-        console.error("Error al obtener tipo de cantidad por ID:", error);
-        res.status(500).json({ error: "Error al obtener tipo de cantidad por ID" });
-    }
-};
+export async function getAllTipoCantidadNegocio() {
+    return await getAllTipoCantidad();
+}
 
-export const createTipoCantidadNegocio = async (req: Request, res: Response) => {
-    const data = req.body;
+export async function getTipoCantidadByIdNegocio(id: number) {
+    return await getTipoCantidadById(id);
+} 
 
-    try {
-        const nuevoTipoCantidad = await createTipoCantidad(data);
-        res.json(nuevoTipoCantidad);
-    } catch (error) {
-        console.error("Error al crear tipo de cantidad:", error);
-        res.status(500).json({ error: "Error al crear tipo de cantidad" });
-    }
-};
+export async function createTipoCantidadNegocio(data: any) {
+    return await createTipoCantidad(data);
+}
 
-export const updateTipoCantidadNegocio = async (req: Request, res: Response) => {
-    const { id }: any = req.params;
-    const data = req.body;
+export async function updateTipoCantidadNegocio(id: number, data: any) {
+    return await updateTipoCantidad(id, data);
+}
 
-    try {
-        const tipoCantidadActualizado = await updateTipoCantidad(Number(id), data);
-        res.json(tipoCantidadActualizado);
-    } catch (error) {
-        console.error("Error al actualizar tipo de cantidad:", error);
-        res.status(500).json({ error: "Error al actualizar tipo de cantidad" });
-    }
-};
+export async function deleteTipoCantidadNegocio(id: number) {
+    return await deleteTipoCantidad(id);
+}
 
-export const deleteTipoCantidadNegocio = async (req: Request, res: Response) => {
-    const { id }: any = req.params;
-    try {
-        await deleteTipoCantidad(Number(id));
-        res.json({ mensaje: "Tipo de cantidad eliminado exitosamente" });
-    } catch (error) {
-        console.error("Error al eliminar tipo de cantidad:", error);
-        res.status(500).json({ error: "Error al eliminar tipo de cantidad" });
-    }
-};
