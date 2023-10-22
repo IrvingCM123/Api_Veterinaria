@@ -15,7 +15,7 @@ export async function getAllDetallesVenta() {
 }
 
 // Obtener un detalle de venta por su ID de detalle
-export async function getDetalleVentaById(id) {
+export async function getDetalleVentaById(id: any) {
     return await prisma.detalleVenta.findUnique({
         where: { id_detalleVenta: id },
         include: {
@@ -28,7 +28,7 @@ export async function getDetalleVentaById(id) {
 }
 
 // Crear un nuevo detalle de venta
-export async function createDetalleVenta(id_venta, id_producto, cantidad_vendida, precio_producto, subtotal, venta_granel) {
+export async function createDetalleVenta(id_venta: any, id_producto: any, cantidad_vendida: any, precio_producto: any, subtotal: any, venta_granel: any) {
     return await prisma.detalleVenta.create({
         data: {
             id_venta,
@@ -48,7 +48,7 @@ export async function createDetalleVenta(id_venta, id_producto, cantidad_vendida
 }
 
 // Actualizar un detalle de venta por su ID de detalle
-export async function updateDetalleVenta(id, id_venta, id_producto, cantidad_vendida, precio_producto, subtotal) {
+export async function updateDetalleVenta(id: any, id_venta: any, id_producto: any, cantidad_vendida: any, precio_producto: any, subtotal: any) {
     return await prisma.detalleVenta.update({
         where: { id_detalleVenta: id },
         data: {
@@ -68,7 +68,7 @@ export async function updateDetalleVenta(id, id_venta, id_producto, cantidad_ven
 }
 
 // Eliminar un detalle de venta por su ID de detalle
-export async function deleteDetalleVenta(id) {
+export async function deleteDetalleVenta(id: any) {
     return await prisma.detalleVenta.delete({
         where: { id_detalleVenta: id },
     });
