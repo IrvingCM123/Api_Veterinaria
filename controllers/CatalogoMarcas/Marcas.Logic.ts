@@ -24,3 +24,4 @@ export async function updateMarcaController(id: number, nombre: string, nomencla
 export async function deleteMarcaController(id: number) {
     return await deleteMarca(id);
 }
+

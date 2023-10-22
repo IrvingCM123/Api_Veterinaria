@@ -72,3 +72,4 @@ export async function actualizarVenta(id: number, venta: VentaInput) {
 export async function eliminarVenta(id: number) {
     return await deleteVenta(id);
 }
+

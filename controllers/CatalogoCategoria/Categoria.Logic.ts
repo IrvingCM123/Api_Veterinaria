@@ -24,3 +24,4 @@ export async function updateCategoriaController(id: number, nombre: string, nome
 export async function deleteCategoriaController(id: number) {
     return await deleteCategoria(id);
 }
+

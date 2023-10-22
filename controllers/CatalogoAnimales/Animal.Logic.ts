@@ -24,3 +24,4 @@ export async function updateAnimalController(id: number, nombre: string, nomencl
 export async function deleteAnimalController(id: number) {
     return await deleteAnimal(id);
 }
+
