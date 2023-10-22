@@ -25,12 +25,14 @@ const router = Router();
  *  @return json con todos los sucursales
  */
 
-router.get("/",
+router.get(
+    "/",
     validateGetAllSucursalesController,
     handleValidationErrors,
     async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const sucursales = await SucursalesController.getAllSucursalesController();
+            const sucursales =
+                await SucursalesController.getAllSucursalesController();
             res.status(200).json(sucursales);
         } catch (error) {
             next(error);
@@ -47,7 +49,8 @@ router.get("/",
  *  @return json con el sucursal solicitado
  */
 
-router.get("/:id",
+router.get(
+    "/:id",
     validateGetSucursalByIdController,
     handleValidationErrors,
     async (req: Request, res: Response, next: NextFunction) => {
@@ -70,13 +73,30 @@ router.get("/:id",
  *  @return json con el sucursal creado
  */
 
-router.post("/",
+router.post(
+    "/",
     validateCreateSucursalController,
     handleValidationErrors,
     async (req: Request, res: Response, next: NextFunction) => {
-        const { nombre, direccion, ciudad, estado, codigoPostal, telefono, encargado } = req.body;
+        const {
+            nombre,
+            direccion,
+            ciudad,
+            estado,
+            codigoPostal,
+            telefono,
+            encargado,
+        } = req.body;
         try {
-            const sucursal = await SucursalesController.createSucursalController(nombre, direccion, ciudad, estado, codigoPostal, telefono, encargado);
+            const sucursal = await SucursalesController.createSucursalController(
+                nombre,
+                direccion,
+                ciudad,
+                estado,
+                codigoPostal,
+                telefono,
+                encargado
+            );
             res.status(200).json(sucursal);
         } catch (error) {
             next(error);
@@ -93,14 +113,32 @@ router.post("/",
  *  @return json con el sucursal actualizado
  */
 
-router.put("/:id",
+router.put(
+    "/:id",
     validateUpdateSucursalController,
     handleValidationErrors,
     async (req: Request, res: Response, next: NextFunction) => {
         const id = parseInt(req.params.id, 10);
-        const { nombre, direccion, ciudad, estado, codigoPostal, telefono, encargado } = req.body;
+        const {
+            nombre,
+            direccion,
+            ciudad,
+            estado,
+            codigoPostal,
+            telefono,
+            encargado,
+        } = req.body;
         try {
-            const sucursal = await SucursalesController.updateSucursalController(id, nombre, direccion, ciudad, estado, codigoPostal, telefono, encargado);
+            const sucursal = await SucursalesController.updateSucursalController(
+                id,
+                nombre,
+                direccion,
+                ciudad,
+                estado,
+                codigoPostal,
+                telefono,
+                encargado
+            );
             res.status(200).json(sucursal);
         } catch (error) {
             next(error);
@@ -117,7 +155,8 @@ router.put("/:id",
  *  @return json con el sucursal eliminado
  */
 
-router.delete("/:id",
+router.delete(
+    "/:id",
     validateDeleteSucursalController,
     handleValidationErrors,
     async (req: Request, res: Response, next: NextFunction) => {

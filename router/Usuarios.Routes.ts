@@ -10,7 +10,7 @@ import {
     validateCrearUsuarioNegocio,
     validateActualizarUsuarioNegocio,
     validateEliminarUsuarioNegocio,
-    validateIniciarSesionNegocio
+    validateIniciarSesionNegocio,
 } from "../Validators/Usuarios/Usuario.Validator";
 
 const router = Router();
@@ -26,7 +26,8 @@ const router = Router();
  *  @return json con todos los usuarios
  */
 
-router.get("/",
+router.get(
+    "/",
     validateObtenerUsuariosNegocio,
     handleValidationErrors,
     async (req: Request, res: Response, next: NextFunction) => {
@@ -48,7 +49,8 @@ router.get("/",
  *  @return json con el usuario solicitado
  */
 
-router.get("/:id",
+router.get(
+    "/:id",
     validateObtenerUsuarioNegocio,
     handleValidationErrors,
     async (req: Request, res: Response, next: NextFunction) => {
@@ -62,7 +64,7 @@ router.get("/:id",
     }
 );
 
-/** 
+/**
  * @route GET api/usuarios/login
  * @desc Iniciar Sesion
  * @access Public
@@ -71,13 +73,17 @@ router.get("/:id",
  * @return json con el token
  */
 
-router.get("/login",
+router.get(
+    "/login",
     validateIniciarSesionNegocio,
     handleValidationErrors,
     async (req: Request, res: Response, next: NextFunction) => {
         const { email, password } = req.body;
         try {
-            const usuario = await UsuariosController.iniciarSesionNegocio(email, password);
+            const usuario = await UsuariosController.iniciarSesionNegocio(
+                email,
+                password
+            );
             res.status(200).json(usuario);
         } catch (error) {
             next(error);
@@ -94,13 +100,23 @@ router.get("/login",
  *  @return json con el usuario creado
  */
 
-router.post("/",
+router.post(
+    "/",
     validateCrearUsuarioNegocio,
     handleValidationErrors,
     async (req: Request, res: Response, next: NextFunction) => {
-        const { email, password, nombre, apellido, telefono, direccion, imagen } = req.body;
+        const { email, password, nombre, apellido, telefono, direccion, imagen } =
+            req.body;
         try {
-            const usuario = await UsuariosController.crearUsuarioNegocio(email, password, nombre, apellido, telefono, direccion, imagen);
+            const usuario = await UsuariosController.crearUsuarioNegocio(
+                email,
+                password,
+                nombre,
+                apellido,
+                telefono,
+                direccion,
+                imagen
+            );
             res.status(200).json(usuario);
         } catch (error) {
             next(error);
@@ -117,14 +133,25 @@ router.post("/",
  *  @return json con el usuario actualizado
  */
 
-router.put("/:id",
+router.put(
+    "/:id",
     validateActualizarUsuarioNegocio,
     handleValidationErrors,
     async (req: Request, res: Response, next: NextFunction) => {
         const id = parseInt(req.params.id, 10);
-        const { email, password, nombre, apellido, telefono, direccion, imagen } = req.body;
+        const { email, password, nombre, apellido, telefono, direccion, imagen } =
+            req.body;
         try {
-            const usuario = await UsuariosController.actualizarUsuarioNegocio(id, email, password, nombre, apellido, telefono, direccion, imagen);
+            const usuario = await UsuariosController.actualizarUsuarioNegocio(
+                id,
+                email,
+                password,
+                nombre,
+                apellido,
+                telefono,
+                direccion,
+                imagen
+            );
             res.status(200).json(usuario);
         } catch (error) {
             next(error);
@@ -141,7 +168,8 @@ router.put("/:id",
  *  @return json con el usuario eliminado
  */
 
-router.delete("/:id",
+router.delete(
+    "/:id",
     validateEliminarUsuarioNegocio,
     handleValidationErrors,
     async (req: Request, res: Response, next: NextFunction) => {

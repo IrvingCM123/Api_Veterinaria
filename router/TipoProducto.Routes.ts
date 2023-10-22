@@ -25,12 +25,14 @@ const router = Router();
  *  @return json con todos los tipo producto
  */
 
-router.get("/",
+router.get(
+    "/",
     validateGetAllTipoCantidadNegocio,
     handleValidationErrors,
     async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const tipoProducto = await TipoProductoController.getAllTipoCantidadNegocio();
+            const tipoProducto =
+                await TipoProductoController.getAllTipoCantidadNegocio();
             res.status(200).json(tipoProducto);
         } catch (error) {
             next(error);
@@ -47,13 +49,15 @@ router.get("/",
  *  @return json con el tipo producto solicitado
  */
 
-router.get("/:id",
+router.get(
+    "/:id",
     validateGetTipoCantidadByIdNegocio,
     handleValidationErrors,
     async (req: Request, res: Response, next: NextFunction) => {
         const id = parseInt(req.params.id, 10);
         try {
-            const tipoProducto = await TipoProductoController.getTipoCantidadByIdNegocio(id);
+            const tipoProducto =
+                await TipoProductoController.getTipoCantidadByIdNegocio(id);
             res.status(200).json(tipoProducto);
         } catch (error) {
             next(error);
@@ -70,14 +74,16 @@ router.get("/:id",
  *  @return json con el tipo producto creado
  */
 
-router.post("/",
+router.post(
+    "/",
     validateCreateTipoCantidadNegocio,
     handleValidationErrors,
     async (req: Request, res: Response, next: NextFunction) => {
         const { nombre, nomenclatura } = req.body;
         const data = { nombre, nomenclatura };
         try {
-            const tipoProducto = await TipoProductoController.createTipoCantidadNegocio(data);
+            const tipoProducto =
+                await TipoProductoController.createTipoCantidadNegocio(data);
             res.status(200).json(tipoProducto);
         } catch (error) {
             next(error);
@@ -94,7 +100,8 @@ router.post("/",
  *  @return json con el tipo producto actualizado
  */
 
-router.put("/:id",
+router.put(
+    "/:id",
     validateUpdateTipoCantidadNegocio,
     handleValidationErrors,
     async (req: Request, res: Response, next: NextFunction) => {
@@ -102,7 +109,8 @@ router.put("/:id",
         const { nombre, nomenclatura } = req.body;
         const data = { nombre, nomenclatura };
         try {
-            const tipoProducto = await TipoProductoController.updateTipoCantidadNegocio(id, data);
+            const tipoProducto =
+                await TipoProductoController.updateTipoCantidadNegocio(id, data);
             res.status(200).json(tipoProducto);
         } catch (error) {
             next(error);
@@ -119,13 +127,15 @@ router.put("/:id",
  *  @return json con el tipo producto eliminado
  */
 
-router.delete("/:id",
+router.delete(
+    "/:id",
     validateDeleteTipoCantidadNegocio,
     handleValidationErrors,
     async (req: Request, res: Response, next: NextFunction) => {
         const id = parseInt(req.params.id, 10);
         try {
-            const tipoProducto = await TipoProductoController.deleteTipoCantidadNegocio(id);
+            const tipoProducto =
+                await TipoProductoController.deleteTipoCantidadNegocio(id);
             res.status(200).json(tipoProducto);
         } catch (error) {
             next(error);
