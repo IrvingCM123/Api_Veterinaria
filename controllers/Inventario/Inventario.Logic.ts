@@ -1,5 +1,3 @@
-// inventarioService.js
-
 // Importa las funciones de acceso a datos de la capa de acceso a datos
 import {
     getAllInventario,
@@ -39,3 +37,4 @@ export async function actualizarInventario(id_producto: any, existencias: any, S
 export async function eliminarInventario(id_producto: any) {
     return await deleteInventario(id_producto);
 }
+
