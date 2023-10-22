@@ -9,7 +9,7 @@ import {
     validateDeleteMarca,
     validateGetAllMarcas,
     validateGetMarcaById,
-    validateUpdateMarca
+    validateUpdateMarca,
 } from "../Validators/Marcas/Marcas.Validator";
 
 const router = Router();
@@ -25,7 +25,8 @@ const router = Router();
  *  @return json con todos las marcas
  */
 
-router.get("/",
+router.get(
+    "/",
     validateGetAllMarcas,
     handleValidationErrors,
     async (req: Request, res: Response, next: NextFunction) => {
@@ -47,7 +48,8 @@ router.get("/",
  *  @return json con la marca solicitada
  */
 
-router.get("/:id",
+router.get(
+    "/:id",
     validateGetMarcaById,
     handleValidationErrors,
     async (req: Request, res: Response, next: NextFunction) => {
@@ -70,13 +72,17 @@ router.get("/:id",
  *  @return json con la marca creada
  */
 
-router.post("/",
+router.post(
+    "/",
     validateCreateMarca,
     handleValidationErrors,
     async (req: Request, res: Response, next: NextFunction) => {
         const { nombre, nomenclatura } = req.body;
         try {
-            const marca = await MarcasController.createMarcaController(nombre, nomenclatura);
+            const marca = await MarcasController.createMarcaController(
+                nombre,
+                nomenclatura
+            );
             res.status(200).json(marca);
         } catch (error) {
             next(error);
@@ -93,14 +99,19 @@ router.post("/",
  *  @return json con la marca actualizada
  */
 
-router.put("/:id",
+router.put(
+    "/:id",
     validateUpdateMarca,
     handleValidationErrors,
     async (req: Request, res: Response, next: NextFunction) => {
         const id = parseInt(req.params.id, 10);
         const { nombre, nomenclatura } = req.body;
         try {
-            const marca = await MarcasController.updateMarcaController(id, nombre, nomenclatura);
+            const marca = await MarcasController.updateMarcaController(
+                id,
+                nombre,
+                nomenclatura
+            );
             res.status(200).json(marca);
         } catch (error) {
             next(error);
@@ -117,7 +128,8 @@ router.put("/:id",
  *  @return json con la marca eliminada
  */
 
-router.delete("/:id",
+router.delete(
+    "/:id",
     validateDeleteMarca,
     handleValidationErrors,
     async (req: Request, res: Response, next: NextFunction) => {

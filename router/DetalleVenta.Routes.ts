@@ -25,12 +25,14 @@ const router = Router();
  *  @return json con todos los detalles de venta
  */
 
-router.get("/",
+router.get(
+    "/",
     validateObtenerTodosLosDetallesVenta,
     handleValidationErrors,
     async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const detalleventa = await DetalleVentaController.obtenerTodosLosDetallesVenta();
+            const detalleventa =
+                await DetalleVentaController.obtenerTodosLosDetallesVenta();
             res.status(200).json(detalleventa);
         } catch (error) {
             next(error);
@@ -47,13 +49,15 @@ router.get("/",
  *  @return json con el detalle de venta solicitado
  */
 
-router.get("/:id",
+router.get(
+    "/:id",
     validateObtenerDetalleVentaPorId,
     handleValidationErrors,
     async (req: Request, res: Response, next: NextFunction) => {
         const id = parseInt(req.params.id, 10);
         try {
-            const detalleventa = await DetalleVentaController.obtenerDetalleVentaPorId(id);
+            const detalleventa =
+                await DetalleVentaController.obtenerDetalleVentaPorId(id);
             res.status(200).json(detalleventa);
         } catch (error) {
             next(error);
@@ -70,13 +74,28 @@ router.get("/:id",
  *  @return json con el detalle de venta creado
  */
 
-router.post("/",
+router.post(
+    "/",
     validateCrearNuevoDetalleVenta,
     handleValidationErrors,
     async (req: Request, res: Response, next: NextFunction) => {
-        const { id_venta, id_producto, cantidad_vendida, precio_producto, subtotal, venta_granel } = req.body;
+        const {
+            id_venta,
+            id_producto,
+            cantidad_vendida,
+            precio_producto,
+            subtotal,
+            venta_granel,
+        } = req.body;
         try {
-            const detalleventa = await DetalleVentaController.crearNuevoDetalleVenta(id_venta, id_producto, cantidad_vendida, precio_producto, subtotal, venta_granel);
+            const detalleventa = await DetalleVentaController.crearNuevoDetalleVenta(
+                id_venta,
+                id_producto,
+                cantidad_vendida,
+                precio_producto,
+                subtotal,
+                venta_granel
+            );
             res.status(200).json(detalleventa);
         } catch (error) {
             next(error);
@@ -93,14 +112,28 @@ router.post("/",
  *  @return json con el detalle de venta actualizado
  */
 
-router.put("/:id",
+router.put(
+    "/:id",
     validateActualizarDetalleVenta,
     handleValidationErrors,
     async (req: Request, res: Response, next: NextFunction) => {
         const id = parseInt(req.params.id, 10);
-        const { id_venta, id_producto, cantidad_vendida, precio_producto, subtotal } = req.body;
+        const {
+            id_venta,
+            id_producto,
+            cantidad_vendida,
+            precio_producto,
+            subtotal,
+        } = req.body;
         try {
-            const detalleventa = await DetalleVentaController.actualizarDetalleVenta(id, id_venta, id_producto, cantidad_vendida, precio_producto, subtotal);
+            const detalleventa = await DetalleVentaController.actualizarDetalleVenta(
+                id,
+                id_venta,
+                id_producto,
+                cantidad_vendida,
+                precio_producto,
+                subtotal
+            );
             res.status(200).json(detalleventa);
         } catch (error) {
             next(error);
@@ -117,13 +150,16 @@ router.put("/:id",
  *  @return json con el detalle de venta eliminado
  */
 
-router.delete("/:id",
+router.delete(
+    "/:id",
     validateEliminarDetalleVenta,
     handleValidationErrors,
     async (req: Request, res: Response, next: NextFunction) => {
         const id = parseInt(req.params.id, 10);
         try {
-            const detalleventa = await DetalleVentaController.eliminarDetalleVenta(id);
+            const detalleventa = await DetalleVentaController.eliminarDetalleVenta(
+                id
+            );
             res.status(200).json(detalleventa);
         } catch (error) {
             next(error);
