@@ -54,3 +54,5 @@ export async function deleteProveedor(id: number) {
         where: { id_proveedor: id },
     });
 }
+
+

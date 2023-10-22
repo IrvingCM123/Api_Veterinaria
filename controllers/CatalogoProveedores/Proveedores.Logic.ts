@@ -32,3 +32,4 @@ export async function updateProveedorController(id: number, nombre: string, nome
 export async function deleteProveedorController(id: number) {
     return await deleteProveedor(id);
 }
+
