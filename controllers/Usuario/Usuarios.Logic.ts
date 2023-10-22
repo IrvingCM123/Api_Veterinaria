@@ -4,85 +4,44 @@ import { iniciarSesion, obtenerUsuarios, obtenerUsuario, createUsuario, updateUs
 
 const secretKey = "Centenito";
 
-export const iniciarSesionNegocio = async (req: Request, res: Response) => {
-    const { email, password } = req.body;
-    try {
-        const usuario = await iniciarSesion(email, password);
+// Obtener todos los usuarios
 
-        if (!usuario) {
-            return res.status(404).json({ error: "Usuario no encontrado" });
-        }
+export async function iniciarSesionNegocio(email: string, password: string) {
+    const usuario = await iniciarSesion(email, password);
 
-        if (usuario.password !== password) {
-            return res.status(401).json({ error: "Contraseña incorrecta" });
-        }
-
-        // Si el usuario existe y la contraseña es correcta, crea un token JWT
-        const token = jwt.sign({ id: usuario.id_usuario, email: usuario.email }, secretKey);
-
-        // Retorna el token y otros datos del usuario si es necesario
-        res.json({ token });
-    } catch (error) {
-        console.error("Error al iniciar sesión:", error);
-        res.status(500).json({ error: "Error al iniciar sesión" });
+    if (!usuario) {
+        return ({ error: "Usuario no encontrado" });
     }
-};
 
-export const obtenerUsuariosNegocio = async (req: Request, res: Response) => {
-    try {
-        const usuarios = await obtenerUsuarios();
-        res.json(usuarios);
-    } catch (error) {
-        console.error("Error al obtener usuarios:", error);
-        res.status(500).json({ error: "Error al obtener usuarios" });
+    if (usuario.password !== password) {
+        return ({ error: "Contraseña incorrecta" });
     }
-};
 
-export const obtenerUsuarioNegocio = async (req: Request, res: Response) => {
-    const { email }: any = req.params;
-    try {
-        const usuario: any = await obtenerUsuario(email);
-        if (!usuario) {
-            return res.status(404).json({ error: "Usuario no encontrado" });
-        }
-        res.json(usuario);
-    } catch (error) {
-        console.error("Error al obtener usuario:", error);
-        res.status(500).json({ error: "Error al obtener usuario" });
-    }
-};
+    // Si el usuario existe y la contraseña es correcta, crea un token JWT
 
-export const crearUsuarioNegocio = async (req: Request, res: Response) => {
-    const { email, password, nombre, apellido, telefono, direccion, imagen } = req.body;
-    try {
-        const nuevoUsuario = await createUsuario(email, password, nombre, apellido, telefono, direccion, imagen);
-        res.json(nuevoUsuario);
-    } catch (error) {
-        console.error("Error al crear usuario:", error);
-        res.status(500).json({ error: "Error al crear usuario" });
-    }
-};
+    const token = jwt.sign({ id: usuario.id_usuario, email: usuario.email }, secretKey);
 
-export const actualizarUsuarioNegocio = async (req: Request, res: Response) => {
-    const { id } = req.params;
-    const { email, password, nombre, apellido, telefono, direccion, imagen } = req.body;
-    try {
-        const usuarioActualizado = await updateUsuario(id, email, password, nombre, apellido, telefono, direccion, imagen);
-        res.json(usuarioActualizado);
-    } catch (error) {
-        console.error("Error al actualizar usuario:", error);
-        res.status(500).json({ error: "Error al actualizar usuario" });
-    }
-};
+    return ({ token });
+}
 
-export const eliminarUsuarioNegocio = async (req: Request, res: Response) => {
-    const { id } = req.params;
-    try {
-        await deleteUsuario(id);
-        res.json({ mensaje: "Usuario eliminado exitosamente" });
-    } catch (error) {
-        console.error("Error al eliminar usuario:", error);
-        res.status(500).json({ error: "Error al eliminar usuario" });
-    }
-};
+export async function obtenerUsuariosNegocio() {
+    return await obtenerUsuarios();
+}
+
+export async function obtenerUsuarioNegocio(email: string) {
+    return await obtenerUsuario(email);
+}
+
+export async function crearUsuarioNegocio( email: string, password: string, nombre: string, apellido: string, telefono: string, direccion: string, imagen: string) {
+    return await createUsuario(email, password, nombre, apellido, telefono, direccion, imagen);
+}
+
+export async function actualizarUsuarioNegocio(id: any, email: string, password: string, nombre: string, apellido: string, telefono: string, direccion: string, imagen: string) {
+    return await updateUsuario(id, email, password, nombre, apellido, telefono, direccion, imagen);
+}
+
+export async function eliminarUsuarioNegocio(id: any) {
+    return await deleteUsuario(id);
+}
+
 
