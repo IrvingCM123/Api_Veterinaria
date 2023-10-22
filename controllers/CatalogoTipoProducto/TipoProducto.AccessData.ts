@@ -12,11 +12,11 @@ export async function getTipoCantidadById(id: number) {
     });
 }
 
-export async function createTipoCantidad(data: any) {
+export async function createTipoCantidad(n) {
     return await prisma.catalogoTipoCantidad.create(data);
 }
 
-export async function updateTipoCantidad(id: number, data: any) {
+export async function updateTipoCantidad(id: number, n) {
     return await prisma.catalogoTipoCantidad.update({
         where: { id_tipoCantidad: id },
         data,
