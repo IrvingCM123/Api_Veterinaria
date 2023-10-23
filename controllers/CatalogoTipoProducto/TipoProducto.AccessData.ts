@@ -2,6 +2,8 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
+
+
 export async function getAllTipoCantidad() {
     return await prisma.catalogoTipoCantidad.findMany();
 }
@@ -12,11 +14,11 @@ export async function getTipoCantidadById(id: number) {
     });
 }
 
-export async function createTipoCantidad(n) {
+export async function createTipoCantidad(data: any) {
     return await prisma.catalogoTipoCantidad.create(data);
 }
 
-export async function updateTipoCantidad(id: number, n) {
+export async function updateTipoCantidad(id: number, data: any) {
     return await prisma.catalogoTipoCantidad.update({
         where: { id_tipoCantidad: id },
         data,
