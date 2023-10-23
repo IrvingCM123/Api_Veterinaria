@@ -34,6 +34,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const ProductosController = __importStar(require("../controllers/Productos/Productos.Logic"));
+const Productos_Middleware_1 = require("../middleware/Productos/Productos.Middleware");
+const Productos_Validator_1 = require("../Validators/Productos/Productos.Validator");
 const router = (0, express_1.Router)();
 // Rutas para el controlador de productos
 /**
@@ -41,9 +43,10 @@ const router = (0, express_1.Router)();
  *  @desc Get All Productos
  *  @access Public
  *  @params null
+ *  @validation validateObtenerProductosNegocio, handleValidationErrors
  *  @return json con todos los productos
  */
-router.get("/", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+router.get("/", Productos_Validator_1.validateObtenerProductosNegocio, Productos_Middleware_1.handleValidationErrors, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const productos = yield ProductosController.obtenerProductosNegocio();
         res.status(200).json(productos);
@@ -57,9 +60,10 @@ router.get("/", (req, res, next) => __awaiter(void 0, void 0, void 0, function* 
  *  @desc Get An Producto
  *  @access Public
  *  @params id
+ *  @validation validateObtenerProductoPorIdNegocio, handleValidationErrors
  *  @return json con el producto solicitado
  */
-router.get("/:id", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+router.get("/:id", Productos_Validator_1.validateObtenerProductoPorIdNegocio, Productos_Middleware_1.handleValidationErrors, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const id = parseInt(req.params.id, 10);
     try {
         const producto = yield ProductosController.obtenerProductoPorIdNegocio(id);
@@ -74,11 +78,26 @@ router.get("/:id", (req, res, next) => __awaiter(void 0, void 0, void 0, functio
  *  @desc Create An Producto
  *  @access Public
  *  @params -nombre: string -descripcion: string, -precio: string, -idMarca: number, -idAnimal: number, -idCategoria: number, -idProveedor: number, -imagen: string, -cantidad: string, -id_tipoCantidad: number, -codigoBarra: string, -venta_granel: boolean, -precio_granel: string
+ *  @validation validateCrearProductoNegocio, handleValidationErrors
  *  @return json con el producto creado
  */
-router.post("/", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+router.post("/", Productos_Validator_1.validateCrearProductoNegocio, Productos_Middleware_1.handleValidationErrors, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { nombre, descripcion, precio, idMarca, idAnimal, idCategoria, idProveedor, imagen, cantidad, id_tipoCantidad, codigoBarra, venta_granel, precio_granel, } = req.body;
-    const productoObjeto = { nombre, descripcion, precio, idMarca, idAnimal, idCategoria, idProveedor, imagen, cantidad, id_tipoCantidad, codigoBarra, venta_granel, precio_granel };
+    const productoObjeto = {
+        nombre,
+        descripcion,
+        precio,
+        idMarca,
+        idAnimal,
+        idCategoria,
+        idProveedor,
+        imagen,
+        cantidad,
+        id_tipoCantidad,
+        codigoBarra,
+        venta_granel,
+        precio_granel,
+    };
     try {
         const producto = yield ProductosController.crearProductoNegocio(productoObjeto);
         res.status(200).json(producto);
@@ -92,12 +111,27 @@ router.post("/", (req, res, next) => __awaiter(void 0, void 0, void 0, function*
  *  @desc Update An Producto
  *  @access Public
  *  @params id, -nombre: string -descripcion: string, -precio: string, -idMarca: number, -idAnimal: number, -idCategoria: number, -idProveedor: number, -imagen: string, -cantidad: string, -id_tipoCantidad: number, -codigoBarra: string, -venta_granel: boolean, -precio_granel: string
+ *  @validation validateActualizarProductoNegocio, handleValidationErrors
  *  @return json con el producto actualizado
  */
-router.put("/:id", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+router.put("/:id", Productos_Validator_1.validateActualizarProductoNegocio, Productos_Middleware_1.handleValidationErrors, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const id = parseInt(req.params.id, 10);
     const { nombre, descripcion, precio, idMarca, idAnimal, idCategoria, idProveedor, imagen, cantidad, id_tipoCantidad, codigoBarra, venta_granel, precio_granel, } = req.body;
-    const productoObjeto = { nombre, descripcion, precio, idMarca, idAnimal, idCategoria, idProveedor, imagen, cantidad, id_tipoCantidad, codigoBarra, venta_granel, precio_granel };
+    const productoObjeto = {
+        nombre,
+        descripcion,
+        precio,
+        idMarca,
+        idAnimal,
+        idCategoria,
+        idProveedor,
+        imagen,
+        cantidad,
+        id_tipoCantidad,
+        codigoBarra,
+        venta_granel,
+        precio_granel,
+    };
     try {
         const producto = yield ProductosController.actualizarProductoNegocio(id, productoObjeto);
         res.status(200).json(producto);
@@ -111,9 +145,10 @@ router.put("/:id", (req, res, next) => __awaiter(void 0, void 0, void 0, functio
  *  @desc Delete An Producto
  *  @access Public
  *  @params id
+ *  @validation validateDeleteProductoNegocio, handleValidationErrors
  *  @return json con el producto eliminado
  */
-router.delete("/:id", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+router.delete("/:id", Productos_Validator_1.validateActualizarProductoNegocio, Productos_Middleware_1.handleValidationErrors, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const id = parseInt(req.params.id, 10);
     try {
         const producto = yield ProductosController.eliminarProductoNegocio(id);

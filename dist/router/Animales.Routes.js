@@ -34,6 +34,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const AnimalesController = __importStar(require("../controllers/CatalogoAnimales/Animal.Logic"));
+const Animal_Middleware_1 = require("../middleware/Animales/Animal.Middleware");
+const Animal_Validator_1 = require("../Validators/CatalogoAnimal/Animal.Validator");
 const router = (0, express_1.Router)();
 // Rutas para el controlador de animales
 /**
@@ -41,6 +43,7 @@ const router = (0, express_1.Router)();
  *  @desc Get All Animales
  *  @access Public
  *  @params null
+ *  @validation null
  *  @return json con todos los animales
  */
 router.get("/", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
@@ -49,7 +52,9 @@ router.get("/", (req, res, next) => __awaiter(void 0, void 0, void 0, function* 
         res.status(200).json(animales);
     }
     catch (error) {
-        next(error);
+        return res
+            .status(500)
+            .json({ message: "No se pudieron obtener los animales" });
     }
 }));
 /**
@@ -57,16 +62,17 @@ router.get("/", (req, res, next) => __awaiter(void 0, void 0, void 0, function* 
  *  @desc Get An Animal
  *  @access Public
  *  @params id
+ *  @validation validateGetAnimalById, handleValidationErrors
  *  @return json con el animal solicitado
  */
-router.get("/:id", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+router.get("/:id", Animal_Validator_1.validateGetAnimalById, Animal_Middleware_1.handleValidationErrors, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const id = parseInt(req.params.id, 10);
     try {
         const animal = yield AnimalesController.getAnimalByIdController(id);
         res.status(200).json(animal);
     }
     catch (error) {
-        next(error);
+        return res.status(500).json({ message: "Error al obtener el animal" });
     }
 }));
 /**
@@ -74,16 +80,17 @@ router.get("/:id", (req, res, next) => __awaiter(void 0, void 0, void 0, functio
  *  @desc Create An Animal
  *  @access Public
  *  @params -nombre: string, -nomenclatura: string
+ *  @validation validateCreateAnimal, handleValidationErrors
  *  @return json con el animal creado
  */
-router.post("/", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+router.post("/", Animal_Validator_1.validateCreateAnimal, Animal_Middleware_1.handleValidationErrors, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { nombre, nomenclatura } = req.body;
     try {
         const animal = yield AnimalesController.createAnimalController(nombre, nomenclatura);
         res.status(200).json(animal);
     }
     catch (error) {
-        next(error);
+        return res.status(500).json({ message: "No se pudo crear el animal" });
     }
 }));
 /**
@@ -91,9 +98,10 @@ router.post("/", (req, res, next) => __awaiter(void 0, void 0, void 0, function*
  *  @desc Update An Animal
  *  @access Public
  *  @params id, -nombre: string, -nomenclatura: string
+ *  @validation
  *  @return json con el animal actualizado
  */
-router.put("/:id", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+router.put("/:id", Animal_Validator_1.validateUpdateAnimal, Animal_Middleware_1.handleValidationErrors, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const id = parseInt(req.params.id, 10);
     const { nombre, nomenclatura } = req.body;
     try {
@@ -101,7 +109,9 @@ router.put("/:id", (req, res, next) => __awaiter(void 0, void 0, void 0, functio
         res.status(200).json(animal);
     }
     catch (error) {
-        next(error);
+        return res
+            .status(500)
+            .json({ message: "No se pudo actualizar el animal" });
     }
 }));
 /**
@@ -111,14 +121,14 @@ router.put("/:id", (req, res, next) => __awaiter(void 0, void 0, void 0, functio
  *  @params id
  *  @return json con el animal eliminado
  */
-router.delete("/:id", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+router.delete("/:id", Animal_Validator_1.validateDeleteAnimal, Animal_Middleware_1.handleValidationErrors, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const id = parseInt(req.params.id, 10);
     try {
         const animal = yield AnimalesController.deleteAnimalController(id);
         res.status(200).json(animal);
     }
     catch (error) {
-        next(error);
+        return res.status(500).json({ message: "No se pudo eliminar el animal" });
     }
 }));
 exports.default = router;

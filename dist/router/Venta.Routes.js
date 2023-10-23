@@ -34,6 +34,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const VentaController = __importStar(require("../controllers/Venta/Ventas.Logic"));
+const Venta_Middleware_1 = require("../middleware/Venta/Venta.Middleware");
+const Venta_Validator_1 = require("../Validators/Venta/Venta.Validator");
 const router = (0, express_1.Router)();
 // Rutas para el controlador de ventas
 /**
@@ -41,9 +43,10 @@ const router = (0, express_1.Router)();
  *  @desc Get All Venta
  *  @access Public
  *  @params null
+ *  @validation validateObtenerTodasLasVentas, handleValidationErrors
  *  @return json con todos los venta
  */
-router.get("/", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+router.get("/", Venta_Validator_1.validateObtenerTodasLasVentas, Venta_Middleware_1.handleValidationErrors, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const venta = yield VentaController.obtenerTodasLasVentas();
         res.status(200).json(venta);
@@ -57,9 +60,10 @@ router.get("/", (req, res, next) => __awaiter(void 0, void 0, void 0, function* 
  *  @desc Get An Venta
  *  @access Public
  *  @params id
+ *  @validation validateObtenerVentaPorId, handleValidationErrors
  *  @return json con el venta solicitado
  */
-router.get("/:id", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+router.get("/:id", Venta_Validator_1.validateObtenerVentaPorId, Venta_Middleware_1.handleValidationErrors, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const id = parseInt(req.params.id, 10);
     try {
         const venta = yield VentaController.obtenerVentaPorId(id);
@@ -74,12 +78,21 @@ router.get("/:id", (req, res, next) => __awaiter(void 0, void 0, void 0, functio
  *  @desc Create An Venta
  *  @access Public
  *  @params -id_vendedor: string, -id_sucursal: number, -fecha_venta: string, -total_venta: string, -subtotal: string, -iva: string, -detallesVenta: DetalleVentaInput[]
+ *  @validation validateCrearNuevaVenta, handleValidationErrors
  *  @return json con el venta creado
  */
-router.post("/", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const { id_vendedor, id_sucursal, fecha_venta, total_venta, subtotal, iva, detallesVenta } = req.body;
+router.post("/", Venta_Validator_1.validateCrearNuevaVenta, Venta_Middleware_1.handleValidationErrors, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id_vendedor, id_sucursal, fecha_venta, total_venta, subtotal, iva, detallesVenta, } = req.body;
     try {
-        const venta = yield VentaController.crearNuevaVenta({ id_vendedor, id_sucursal, fecha_venta, total_venta, subtotal, iva, detallesVenta });
+        const venta = yield VentaController.crearNuevaVenta({
+            id_vendedor,
+            id_sucursal,
+            fecha_venta,
+            total_venta,
+            subtotal,
+            iva,
+            detallesVenta,
+        });
         res.status(200).json(venta);
     }
     catch (error) {
@@ -91,15 +104,21 @@ router.post("/", (req, res, next) => __awaiter(void 0, void 0, void 0, function*
  *  @desc Update An Venta
  *  @access Public
  *  @params id, -id_vendedor: string, -id_sucursal: number, -fecha_venta: string, -total_venta: string, -subtotal: string, -iva: string
+ *  @validation validateActualizarVenta, handleValidationErrors
  *  @return json con el venta actualizado
  */
-router.put("/:id", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+router.put("/:id", Venta_Validator_1.validateActualizarVenta, Venta_Middleware_1.handleValidationErrors, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const id = parseInt(req.params.id, 10);
-    const { id_vendedor, id_sucursal, fecha_venta, total_venta, subtotal, iva } = req.body;
+    const { id_vendedor, id_sucursal, fecha_venta, total_venta, subtotal, iva, } = req.body;
     try {
         const venta = yield VentaController.actualizarVenta(id, {
-            id_vendedor, id_sucursal, fecha_venta, total_venta, subtotal, iva,
-            detallesVenta: []
+            id_vendedor,
+            id_sucursal,
+            fecha_venta,
+            total_venta,
+            subtotal,
+            iva,
+            detallesVenta: [],
         });
         res.status(200).json(venta);
     }
@@ -112,9 +131,10 @@ router.put("/:id", (req, res, next) => __awaiter(void 0, void 0, void 0, functio
  *  @desc Delete An Venta
  *  @access Public
  *  @params id
+ *  @validation validateEliminarVenta, handleValidationErrors
  *  @return json con el venta eliminado
  */
-router.delete("/:id", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+router.delete("/:id", Venta_Validator_1.validateEliminarVenta, Venta_Middleware_1.handleValidationErrors, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const id = parseInt(req.params.id, 10);
     try {
         const venta = yield VentaController.eliminarVenta(id);

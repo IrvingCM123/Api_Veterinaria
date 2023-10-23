@@ -34,6 +34,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const TipoProductoController = __importStar(require("../controllers/CatalogoTipoProducto/TipoProducto.Logic"));
+const TipoProducto_Middleware_1 = require("../middleware/TipoProducto/TipoProducto.Middleware");
+const TipoProducto_Validator_1 = require("../Validators/TipoProducto/TipoProducto.Validator");
 const router = (0, express_1.Router)();
 // Rutas para el controlador de tipo producto
 /**
@@ -41,9 +43,10 @@ const router = (0, express_1.Router)();
  *  @desc Get All TipoProducto
  *  @access Public
  *  @params null
+ *  @validation validateGetAllTipoCantidadNegocio, handleValidationErrors
  *  @return json con todos los tipo producto
  */
-router.get("/", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+router.get("/", TipoProducto_Validator_1.validateGetAllTipoCantidadNegocio, TipoProducto_Middleware_1.handleValidationErrors, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const tipoProducto = yield TipoProductoController.getAllTipoCantidadNegocio();
         res.status(200).json(tipoProducto);
@@ -57,9 +60,10 @@ router.get("/", (req, res, next) => __awaiter(void 0, void 0, void 0, function* 
  *  @desc Get An TipoProducto
  *  @access Public
  *  @params id
+ *  @validation validateGetTipoCantidadByIdNegocio, handleValidationErrors
  *  @return json con el tipo producto solicitado
  */
-router.get("/:id", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+router.get("/:id", TipoProducto_Validator_1.validateGetTipoCantidadByIdNegocio, TipoProducto_Middleware_1.handleValidationErrors, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const id = parseInt(req.params.id, 10);
     try {
         const tipoProducto = yield TipoProductoController.getTipoCantidadByIdNegocio(id);
@@ -74,9 +78,10 @@ router.get("/:id", (req, res, next) => __awaiter(void 0, void 0, void 0, functio
  *  @desc Create An TipoProducto
  *  @access Public
  *  @params -nombre: string, -nomenclatura: string
+ *  @validation validateCreateTipoCantidadNegocio, handleValidationErrors
  *  @return json con el tipo producto creado
  */
-router.post("/", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+router.post("/", TipoProducto_Validator_1.validateCreateTipoCantidadNegocio, TipoProducto_Middleware_1.handleValidationErrors, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { nombre, nomenclatura } = req.body;
     const data = { nombre, nomenclatura };
     try {
@@ -92,9 +97,10 @@ router.post("/", (req, res, next) => __awaiter(void 0, void 0, void 0, function*
  *  @desc Update An TipoProducto
  *  @access Public
  *  @params id, -nombre: string, -nomenclatura: string
+ *  @validation validateUpdateTipoCantidadNegocio, handleValidationErrors
  *  @return json con el tipo producto actualizado
  */
-router.put("/:id", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+router.put("/:id", TipoProducto_Validator_1.validateUpdateTipoCantidadNegocio, TipoProducto_Middleware_1.handleValidationErrors, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const id = parseInt(req.params.id, 10);
     const { nombre, nomenclatura } = req.body;
     const data = { nombre, nomenclatura };
@@ -111,9 +117,10 @@ router.put("/:id", (req, res, next) => __awaiter(void 0, void 0, void 0, functio
  *  @desc Delete An TipoProducto
  *  @access Public
  *  @params id
+ *  @validation validateDeleteTipoCantidadNegocio, handleValidationErrors
  *  @return json con el tipo producto eliminado
  */
-router.delete("/:id", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+router.delete("/:id", TipoProducto_Validator_1.validateDeleteTipoCantidadNegocio, TipoProducto_Middleware_1.handleValidationErrors, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const id = parseInt(req.params.id, 10);
     try {
         const tipoProducto = yield TipoProductoController.deleteTipoCantidadNegocio(id);
