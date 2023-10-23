@@ -42,7 +42,7 @@ function getDetalleVentaById(id) {
 }
 exports.getDetalleVentaById = getDetalleVentaById;
 // Crear un nuevo detalle de venta
-function createDetalleVenta(id_venta, id_producto, cantidad_vendida, precio_producto, subtotal) {
+function createDetalleVenta(id_venta, id_producto, cantidad_vendida, precio_producto, subtotal, venta_granel) {
     return __awaiter(this, void 0, void 0, function* () {
         return yield prisma.detalleVenta.create({
             data: {
@@ -51,6 +51,7 @@ function createDetalleVenta(id_venta, id_producto, cantidad_vendida, precio_prod
                 cantidad_vendida,
                 precio_producto,
                 subtotal,
+                venta_granel
             },
             include: {
                 venta: true,
