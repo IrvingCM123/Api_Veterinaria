@@ -5,7 +5,7 @@ import {
     createVendedor,
     updateVendedor,
     deleteVendedor,
-} from './Vendedores.AccessData';
+} from "./Vendedores.AccessData";
 
 // Obtener todos los vendedores
 export async function obtenerTodosLosVendedores() {
@@ -18,12 +18,21 @@ export async function obtenerVendedorPorId(id: any) {
 }
 
 // Crear un nuevo vendedor
-export async function crearNuevoVendedor(acronimo: any, permisoVenta: any, userId: any) {
+export async function crearNuevoVendedor(
+    acronimo: any,
+    permisoVenta: any,
+    userId: any
+) {
     return await createVendedor(acronimo, permisoVenta, userId);
 }
 
 // Actualizar un vendedor por su ID
-export async function actualizarVendedor(id: any, acronimo: any, permisoVenta: any, userId: any) {
+export async function actualizarVendedor(
+    id: any,
+    acronimo: any,
+    permisoVenta: any,
+    userId: any
+) {
     return await updateVendedor(id, acronimo, permisoVenta, userId);
 }
 
