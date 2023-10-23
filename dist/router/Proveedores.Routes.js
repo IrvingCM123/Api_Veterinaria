@@ -34,6 +34,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const ProveedoresController = __importStar(require("../controllers/CatalogoProveedores/Proveedores.Logic"));
+const Proveedores_Middleware_1 = require("../middleware/Proveedores/Proveedores.Middleware");
+const Proveedores_Validator_1 = require("../Validators/Proveedores/Proveedores.Validator");
 const router = (0, express_1.Router)();
 // Rutas para el controlador de proveedores
 /**
@@ -41,9 +43,10 @@ const router = (0, express_1.Router)();
  *  @desc Get All Proveedores
  *  @access Public
  *  @params null
+ *  @validation validateGetAllProveedoresController, handleValidationErrors
  *  @return json con todos los proveedores
  */
-router.get("/", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+router.get("/", Proveedores_Validator_1.validateGetAllProveedoresController, Proveedores_Middleware_1.handleValidationErrors, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const proveedores = yield ProveedoresController.getAllProveedoresController();
         res.status(200).json(proveedores);
@@ -57,9 +60,10 @@ router.get("/", (req, res, next) => __awaiter(void 0, void 0, void 0, function* 
  *  @desc Get An Proveedor
  *  @access Public
  *  @params id
+ *  @validation validateGetProveedorByIdController, handleValidationErrors
  *  @return json con el proveedor solicitado
  */
-router.get("/:id", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+router.get("/:id", Proveedores_Validator_1.validateGetProveedorByIdController, Proveedores_Middleware_1.handleValidationErrors, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const id = parseInt(req.params.id, 10);
     try {
         const proveedor = yield ProveedoresController.getProveedorByIdController(id);
@@ -74,9 +78,10 @@ router.get("/:id", (req, res, next) => __awaiter(void 0, void 0, void 0, functio
  *  @desc Create An Proveedor
  *  @access Public
  *  @params -nombre: string, -nomenclatura: string, -direccion: string, -ciudad: string, -estado: string, -telefono: string, -email: string
+ *  @validation validateCreateProveedorController, handleValidationErrors
  *  @return json con el proveedor creado
  */
-router.post("/", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+router.post("/", Proveedores_Validator_1.validateCreateProveedorController, Proveedores_Middleware_1.handleValidationErrors, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { nombre, nomenclatura, direccion, ciudad, estado, telefono, email } = req.body;
     try {
         const proveedor = yield ProveedoresController.createProveedorController(nombre, nomenclatura, direccion, ciudad, estado, telefono, email);
@@ -90,14 +95,15 @@ router.post("/", (req, res, next) => __awaiter(void 0, void 0, void 0, function*
  *  @route PUT api/proveedores/:id
  *  @desc Update An Proveedor
  *  @access Public
- *  @params id, -nombre: string, -nomenclatura: string
+ *  @params id, -nombre: string, -nomenclatura: string -direccion: string, -ciudad: string, -estado: string, -telefono: string, -email: string
+ *  @validation validateUpdateProveedorController, handleValidationErrors
  *  @return json con el proveedor actualizado
  */
-router.put("/:id", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+router.put("/:id", Proveedores_Validator_1.validateUpdateProveedorController, Proveedores_Middleware_1.handleValidationErrors, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const id = parseInt(req.params.id, 10);
-    const { nombre, nomenclatura } = req.body;
+    const { nombre, nomenclatura, direccion, ciudad, estado, telefono, email } = req.body;
     try {
-        const proveedor = yield ProveedoresController.updateProveedorController(id, nombre, nomenclatura);
+        const proveedor = yield ProveedoresController.updateProveedorController(id, nombre, nomenclatura, direccion, ciudad, estado, telefono, email);
         res.status(200).json(proveedor);
     }
     catch (error) {
@@ -109,9 +115,10 @@ router.put("/:id", (req, res, next) => __awaiter(void 0, void 0, void 0, functio
  *  @desc Delete An Proveedor
  *  @access Public
  *  @params id
+ *  @validation validateDeleteProveedorController, handleValidationErrors
  *  @return json con el proveedor eliminado
  */
-router.delete("/:id", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+router.delete("/:id", Proveedores_Validator_1.validateDeleteProveedorController, Proveedores_Middleware_1.handleValidationErrors, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const id = parseInt(req.params.id, 10);
     try {
         const proveedor = yield ProveedoresController.deleteProveedorController(id);

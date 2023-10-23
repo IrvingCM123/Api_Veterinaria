@@ -1,0 +1,100 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.validateEliminarProductoNegocio = exports.validateActualizarProductoNegocio = exports.validateCrearProductoNegocio = exports.validateObtenerProductoPorIdNegocio = exports.validateObtenerProductosNegocio = void 0;
+const express_validator_1 = require("express-validator");
+exports.validateObtenerProductosNegocio = [];
+exports.validateObtenerProductoPorIdNegocio = [
+    (0, express_validator_1.check)("id")
+        .isNumeric()
+        .withMessage("El ID del producto debe ser un número válido"),
+];
+exports.validateCrearProductoNegocio = [
+    (0, express_validator_1.check)("nombre")
+        .notEmpty()
+        .withMessage("El nombre del producto es requerido"),
+    (0, express_validator_1.check)("descripcion")
+        .notEmpty()
+        .withMessage("La descripción del producto es requerida"),
+    (0, express_validator_1.check)("precio")
+        .isNumeric()
+        .withMessage("El precio del producto debe ser un número válido"),
+    (0, express_validator_1.check)("idMarca")
+        .isNumeric()
+        .withMessage("El ID de la marca debe ser un número válido"),
+    (0, express_validator_1.check)("idAnimal")
+        .isNumeric()
+        .withMessage("El ID del animal debe ser un número válido"),
+    (0, express_validator_1.check)("idCategoria")
+        .isNumeric()
+        .withMessage("El ID de la categoría debe ser un número válido"),
+    (0, express_validator_1.check)("idProveedor")
+        .isNumeric()
+        .withMessage("El ID del proveedor debe ser un número válido"),
+    (0, express_validator_1.check)("imagen")
+        .notEmpty()
+        .withMessage("La imagen del producto es requerida"),
+    (0, express_validator_1.check)("cantidad")
+        .isNumeric()
+        .withMessage("La cantidad debe ser un número válido"),
+    (0, express_validator_1.check)("id_tipoCantidad")
+        .isNumeric()
+        .withMessage("El ID del tipo de cantidad debe ser un número válido"),
+    (0, express_validator_1.check)("codigoBarra")
+        .notEmpty()
+        .withMessage("El código de barras es requerido"),
+    (0, express_validator_1.check)("venta_granel")
+        .isBoolean()
+        .withMessage("El campo venta_granel debe ser un valor booleano"),
+    (0, express_validator_1.check)("precio_granel")
+        .isNumeric()
+        .withMessage("El precio granel debe ser un número válido"),
+];
+exports.validateActualizarProductoNegocio = [
+    (0, express_validator_1.check)("id")
+        .isNumeric()
+        .withMessage("El ID del producto debe ser un número válido"),
+    (0, express_validator_1.check)("nombre")
+        .notEmpty()
+        .withMessage("El nombre del producto es requerido"),
+    (0, express_validator_1.check)("descripcion")
+        .notEmpty()
+        .withMessage("La descripción del producto es requerida"),
+    (0, express_validator_1.check)("precio")
+        .isNumeric()
+        .withMessage("El precio del producto debe ser un número válido"),
+    (0, express_validator_1.check)("idMarca")
+        .isNumeric()
+        .withMessage("El ID de la marca debe ser un número válido"),
+    (0, express_validator_1.check)("idAnimal")
+        .isNumeric()
+        .withMessage("El ID del animal debe ser un número válido"),
+    (0, express_validator_1.check)("idCategoria")
+        .isNumeric()
+        .withMessage("El ID de la categoría debe ser un número válido"),
+    (0, express_validator_1.check)("idProveedor")
+        .isNumeric()
+        .withMessage("El ID del proveedor debe ser un número válido"),
+    (0, express_validator_1.check)("imagen")
+        .notEmpty()
+        .withMessage("La imagen del producto es requerida"),
+    (0, express_validator_1.check)("cantidad")
+        .isNumeric()
+        .withMessage("La cantidad debe ser un número válido"),
+    (0, express_validator_1.check)("id_tipoCantidad")
+        .isNumeric()
+        .withMessage("El ID del tipo de cantidad debe ser un número válido"),
+    (0, express_validator_1.check)("codigoBarra")
+        .notEmpty()
+        .withMessage("El código de barras es requerido"),
+    (0, express_validator_1.check)("venta_granel")
+        .isBoolean()
+        .withMessage("El campo venta_granel debe ser un valor booleano"),
+    (0, express_validator_1.check)("precio_granel")
+        .isNumeric()
+        .withMessage("El precio granel debe ser un número válido"),
+];
+exports.validateEliminarProductoNegocio = [
+    (0, express_validator_1.check)("id")
+        .isNumeric()
+        .withMessage("El ID del producto debe ser un número válido"),
+];

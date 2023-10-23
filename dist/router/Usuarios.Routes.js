@@ -34,6 +34,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const UsuariosController = __importStar(require("../controllers/Usuario/Usuarios.Logic"));
+const Usuario_Middleware_1 = require("../middleware/Usuario/Usuario.Middleware");
+const Usuario_Validator_1 = require("../Validators/Usuarios/Usuario.Validator");
 const router = (0, express_1.Router)();
 // Rutas para el controlador de usuarios
 /**
@@ -41,9 +43,10 @@ const router = (0, express_1.Router)();
  *  @desc Get All Usuarios
  *  @access Public
  *  @params null
+ *  @validation validateObtenerUsuariosNegocio, handleValidationErrors
  *  @return json con todos los usuarios
  */
-router.get("/", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+router.get("/", Usuario_Validator_1.validateObtenerUsuariosNegocio, Usuario_Middleware_1.handleValidationErrors, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const usuarios = yield UsuariosController.obtenerUsuariosNegocio();
         res.status(200).json(usuarios);
@@ -57,12 +60,31 @@ router.get("/", (req, res, next) => __awaiter(void 0, void 0, void 0, function* 
  *  @desc Get An Usuario
  *  @access Public
  *  @params id
+ *  @validation validateObtenerUsuarioNegocio, handleValidationErrors
  *  @return json con el usuario solicitado
  */
-router.get("/:id", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+router.get("/:id", Usuario_Validator_1.validateObtenerUsuarioNegocio, Usuario_Middleware_1.handleValidationErrors, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const email = req.params.id;
     try {
         const usuario = yield UsuariosController.obtenerUsuarioNegocio(email);
+        res.status(200).json(usuario);
+    }
+    catch (error) {
+        next(error);
+    }
+}));
+/**
+ * @route GET api/usuarios/login
+ * @desc Iniciar Sesion
+ * @access Public
+ * @params -email: string, -password: string
+ * @validation validateIniciarSesionNegocio, handleValidationErrors
+ * @return json con el token
+ */
+router.get("/login", Usuario_Validator_1.validateIniciarSesionNegocio, Usuario_Middleware_1.handleValidationErrors, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const { email, password } = req.body;
+    try {
+        const usuario = yield UsuariosController.iniciarSesionNegocio(email, password);
         res.status(200).json(usuario);
     }
     catch (error) {
@@ -74,9 +96,10 @@ router.get("/:id", (req, res, next) => __awaiter(void 0, void 0, void 0, functio
  *  @desc Create An Usuario
  *  @access Public
  *  @params -email: string, -password: string, -nombre: string, -apellido: string, -telefono: string, -direccion: string, -imagen: string
+ *  @validation validateCrearUsuarioNegocio, handleValidationErrors
  *  @return json con el usuario creado
  */
-router.post("/", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+router.post("/", Usuario_Validator_1.validateCrearUsuarioNegocio, Usuario_Middleware_1.handleValidationErrors, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { email, password, nombre, apellido, telefono, direccion, imagen } = req.body;
     try {
         const usuario = yield UsuariosController.crearUsuarioNegocio(email, password, nombre, apellido, telefono, direccion, imagen);
@@ -91,9 +114,10 @@ router.post("/", (req, res, next) => __awaiter(void 0, void 0, void 0, function*
  *  @desc Update An Usuario
  *  @access Public
  *  @params id, -email: string, -password: string, -nombre: string, -apellido: string, -telefono: string, -direccion: string, -imagen: string
+ *  @validation validateActualizarUsuarioNegocio, handleValidationErrors
  *  @return json con el usuario actualizado
  */
-router.put("/:id", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+router.put("/:id", Usuario_Validator_1.validateActualizarUsuarioNegocio, Usuario_Middleware_1.handleValidationErrors, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const id = parseInt(req.params.id, 10);
     const { email, password, nombre, apellido, telefono, direccion, imagen } = req.body;
     try {
@@ -109,9 +133,10 @@ router.put("/:id", (req, res, next) => __awaiter(void 0, void 0, void 0, functio
  *  @desc Delete An Usuario
  *  @access Public
  *  @params id
+ *  @validation validateEliminarUsuarioNegocio, handleValidationErrors
  *  @return json con el usuario eliminado
  */
-router.delete("/:id", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+router.delete("/:id", Usuario_Validator_1.validateEliminarUsuarioNegocio, Usuario_Middleware_1.handleValidationErrors, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const id = parseInt(req.params.id, 10);
     try {
         const usuario = yield UsuariosController.eliminarUsuarioNegocio(id);

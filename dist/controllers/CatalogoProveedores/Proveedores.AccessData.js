@@ -46,13 +46,18 @@ function createProveedor(nombre, nomenclatura, direccion, ciudad, estado, telefo
 }
 exports.createProveedor = createProveedor;
 // Actualizar un proveedor por su ID
-function updateProveedor(id, nombre, nomenclatura) {
+function updateProveedor(id, nombre, nomenclatura, direccion, ciudad, estado, telefono, email) {
     return __awaiter(this, void 0, void 0, function* () {
         return yield prisma.catalogoProveedor.update({
             where: { id_proveedor: id },
             data: {
                 nombre,
                 nomenclatura,
+                direccion,
+                ciudad,
+                estado,
+                telefono,
+                email,
             },
         });
     });

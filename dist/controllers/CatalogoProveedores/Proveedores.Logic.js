@@ -33,9 +33,9 @@ function createProveedorController(nombre, nomenclatura, direccion, ciudad, esta
 }
 exports.createProveedorController = createProveedorController;
 // Actualizar un proveedor por su ID
-function updateProveedorController(id, nombre, nomenclatura) {
+function updateProveedorController(id, nombre, nomenclatura, direccion, ciudad, estado, telefono, email) {
     return __awaiter(this, void 0, void 0, function* () {
-        return yield (0, Proveedores_AccessData_1.updateProveedor)(id, nombre, nomenclatura);
+        return yield (0, Proveedores_AccessData_1.updateProveedor)(id, nombre, nomenclatura, direccion, ciudad, estado, telefono, email);
     });
 }
 exports.updateProveedorController = updateProveedorController;

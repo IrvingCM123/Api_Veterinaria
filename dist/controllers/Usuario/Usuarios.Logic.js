@@ -21,14 +21,14 @@ function iniciarSesionNegocio(email, password) {
     return __awaiter(this, void 0, void 0, function* () {
         const usuario = yield (0, Usuarios_AcessData_1.iniciarSesion)(email, password);
         if (!usuario) {
-            return ({ error: "Usuario no encontrado" });
+            return { error: "Usuario no encontrado" };
         }
         if (usuario.password !== password) {
-            return ({ error: "Contraseña incorrecta" });
+            return { error: "Contraseña incorrecta" };
         }
         // Si el usuario existe y la contraseña es correcta, crea un token JWT
         const token = jsonwebtoken_1.default.sign({ id: usuario.id_usuario, email: usuario.email }, secretKey);
-        return ({ token });
+        return { token };
     });
 }
 exports.iniciarSesionNegocio = iniciarSesionNegocio;

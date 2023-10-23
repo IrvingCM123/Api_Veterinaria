@@ -34,6 +34,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const InventarioController = __importStar(require("../controllers/Inventario/Inventario.Logic"));
+const Inventario_Middleware_1 = require("../middleware/Inventario/Inventario.Middleware");
+const Inventario_Validator_1 = require("../Validators/Inventario/Inventario.Validator");
 const router = (0, express_1.Router)();
 // Rutas para el controlador de inventario
 /**
@@ -41,9 +43,10 @@ const router = (0, express_1.Router)();
  *  @desc Get All Inventario
  *  @access Public
  *  @params null
+ *  @validation validateObtenerTodosLosInventarios, handleValidationErrors
  *  @return json con todos los inventarios
  */
-router.get("/", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+router.get("/", Inventario_Validator_1.validateObtenerTodosLosInventarios, Inventario_Middleware_1.handleValidationErrors, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const inventario = yield InventarioController.obtenerTodosLosInventarios();
         res.status(200).json(inventario);
@@ -57,9 +60,10 @@ router.get("/", (req, res, next) => __awaiter(void 0, void 0, void 0, function* 
  *  @desc Get An Inventario
  *  @access Public
  *  @params id
+ *  @validation validateObtenerInventarioPorId, handleValidationErrors
  *  @return json con el inventario solicitado
  */
-router.get("/:id", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+router.get("/:id", Inventario_Validator_1.validateObtenerInventarioPorId, Inventario_Middleware_1.handleValidationErrors, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const id = parseInt(req.params.id, 10);
     try {
         const inventario = yield InventarioController.obtenerInventarioPorId(id);
@@ -74,9 +78,10 @@ router.get("/:id", (req, res, next) => __awaiter(void 0, void 0, void 0, functio
  * @desc Get An Inventario
  * @access Public
  * @params producto
+ * @validation validateObtenerInventarioPorProducto, handleValidationErrors
  * @return json con el inventario solicitado
  */
-router.get("/:producto", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+router.get("/:producto", Inventario_Validator_1.validateObtenerInventarioPorProducto, Inventario_Middleware_1.handleValidationErrors, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const producto = req.params.producto;
     try {
         const inventario = yield InventarioController.obtenerInventarioPorProducto(producto);
@@ -91,9 +96,10 @@ router.get("/:producto", (req, res, next) => __awaiter(void 0, void 0, void 0, f
  *  @desc Create An Inventario
  *  @access Public
  *  @params -id_producto: number, -existencias: number, -StockMinimo: number, -StockMaximo: number
+ *  @validation validateCrearNuevoInventario, handleValidationErrors
  *  @return json con el inventario creado
  */
-router.post("/", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+router.post("/", Inventario_Validator_1.validateCrearNuevoInventario, Inventario_Middleware_1.handleValidationErrors, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { id_producto, existencias, StockMinimo, StockMaximo } = req.body;
     try {
         const inventario = yield InventarioController.crearNuevoInventario(id_producto, existencias, StockMinimo, StockMaximo);
@@ -108,9 +114,10 @@ router.post("/", (req, res, next) => __awaiter(void 0, void 0, void 0, function*
  *  @desc Update An Inventario
  *  @access Public
  *  @params id, -existencias: number, -StockMinimo: number, -StockMaximo: number
+ *  @validation validateActualizarInventario, handleValidationErrors
  *  @return json con el inventario actualizado
  */
-router.put("/:id", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+router.put("/:id", Inventario_Validator_1.validateActualizarInventario, Inventario_Middleware_1.handleValidationErrors, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const id = parseInt(req.params.id, 10);
     const { existencias, StockMinimo, StockMaximo } = req.body;
     try {
@@ -126,9 +133,10 @@ router.put("/:id", (req, res, next) => __awaiter(void 0, void 0, void 0, functio
  *  @desc Delete An Inventario
  *  @access Public
  *  @params id
+ *  @validation validateEliminarInventario, handleValidationErrors
  *  @return json con el inventario eliminado
  */
-router.delete("/:id", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+router.delete("/:id", Inventario_Validator_1.validateEliminarInventario, Inventario_Middleware_1.handleValidationErrors, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const id = parseInt(req.params.id, 10);
     try {
         const inventario = yield InventarioController.eliminarInventario(id);

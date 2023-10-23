@@ -34,6 +34,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const SucursalesController = __importStar(require("../controllers/CatalogoSucursales/Sucursales.Logic"));
+const Sucursales_Middleware_1 = require("../middleware/Sucursales/Sucursales.Middleware");
+const Sucursales_Validator_1 = require("../Validators/Sucursales/Sucursales.Validator");
 const router = (0, express_1.Router)();
 // Rutas para el controlador de sucursales
 /**
@@ -41,9 +43,10 @@ const router = (0, express_1.Router)();
  *  @desc Get All Sucursales
  *  @access Public
  *  @params null
+ *  @validation validateGetAllSucursalesController, handleValidationErrors
  *  @return json con todos los sucursales
  */
-router.get("/", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+router.get("/", Sucursales_Validator_1.validateGetAllSucursalesController, Sucursales_Middleware_1.handleValidationErrors, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const sucursales = yield SucursalesController.getAllSucursalesController();
         res.status(200).json(sucursales);
@@ -57,9 +60,10 @@ router.get("/", (req, res, next) => __awaiter(void 0, void 0, void 0, function* 
  *  @desc Get An Sucursal
  *  @access Public
  *  @params id
+ *  @validation validateGetSucursalByIdController, handleValidationErrors
  *  @return json con el sucursal solicitado
  */
-router.get("/:id", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+router.get("/:id", Sucursales_Validator_1.validateGetSucursalByIdController, Sucursales_Middleware_1.handleValidationErrors, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const id = parseInt(req.params.id, 10);
     try {
         const sucursal = yield SucursalesController.getSucursalByIdController(id);
@@ -74,10 +78,11 @@ router.get("/:id", (req, res, next) => __awaiter(void 0, void 0, void 0, functio
  *  @desc Create An Sucursal
  *  @access Public
  *  @params -nombre: string, -direccion: string, -ciudad: string, -estado: string, -codigoPostal: string, -telefono: string, -encargado: string
+ *  @validation validateCreateSucursalController, handleValidationErrors
  *  @return json con el sucursal creado
  */
-router.post("/", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const { nombre, direccion, ciudad, estado, codigoPostal, telefono, encargado } = req.body;
+router.post("/", Sucursales_Validator_1.validateCreateSucursalController, Sucursales_Middleware_1.handleValidationErrors, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const { nombre, direccion, ciudad, estado, codigoPostal, telefono, encargado, } = req.body;
     try {
         const sucursal = yield SucursalesController.createSucursalController(nombre, direccion, ciudad, estado, codigoPostal, telefono, encargado);
         res.status(200).json(sucursal);
@@ -91,11 +96,12 @@ router.post("/", (req, res, next) => __awaiter(void 0, void 0, void 0, function*
  *  @desc Update An Sucursal
  *  @access Public
  *  @params id, -nombre: string, -direccion: string, -ciudad: string, -estado: string, -codigoPostal: string, -telefono: string, -encargado: string
+ *  @validation validateUpdateSucursalController, handleValidationErrors
  *  @return json con el sucursal actualizado
  */
-router.put("/:id", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+router.put("/:id", Sucursales_Validator_1.validateUpdateSucursalController, Sucursales_Middleware_1.handleValidationErrors, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const id = parseInt(req.params.id, 10);
-    const { nombre, direccion, ciudad, estado, codigoPostal, telefono, encargado } = req.body;
+    const { nombre, direccion, ciudad, estado, codigoPostal, telefono, encargado, } = req.body;
     try {
         const sucursal = yield SucursalesController.updateSucursalController(id, nombre, direccion, ciudad, estado, codigoPostal, telefono, encargado);
         res.status(200).json(sucursal);
@@ -109,9 +115,10 @@ router.put("/:id", (req, res, next) => __awaiter(void 0, void 0, void 0, functio
  *  @desc Delete An Sucursal
  *  @access Public
  *  @params id
+ *  @validation validateDeleteSucursalController, handleValidationErrors
  *  @return json con el sucursal eliminado
  */
-router.delete("/:id", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+router.delete("/:id", Sucursales_Validator_1.validateDeleteSucursalController, Sucursales_Middleware_1.handleValidationErrors, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const id = parseInt(req.params.id, 10);
     try {
         const sucursal = yield SucursalesController.deleteSucursalController(id);

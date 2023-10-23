@@ -34,6 +34,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const InventarioGranelController = __importStar(require("../controllers/InventarioGranel/InventarioGranel.Logic"));
+const InventarioGranel_Middleware_1 = require("../middleware/InventarioGranel/InventarioGranel.Middleware");
+const InventarioGranel_Validator_1 = require("../Validators/InventarioGranel/InventarioGranel.Validator");
 const router = (0, express_1.Router)();
 // Rutas para el controlador de inventario granel
 /**
@@ -41,9 +43,10 @@ const router = (0, express_1.Router)();
  *  @desc Get All InventarioGranel
  *  @access Public
  *  @params null
+ *  @validation validateObtenerTodosLosInventariosGranel, handleValidationErrors
  *  @return json con todos los inventarios granel
  */
-router.get("/", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+router.get("/", InventarioGranel_Validator_1.validateObtenerTodosLosInventariosGranel, InventarioGranel_Middleware_1.handleValidationErrors, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const inventariogranel = yield InventarioGranelController.obtenerTodosLosInventariosGranel();
         res.status(200).json(inventariogranel);
@@ -57,9 +60,10 @@ router.get("/", (req, res, next) => __awaiter(void 0, void 0, void 0, function* 
  *  @desc Get An InventarioGranel
  *  @access Public
  *  @params id
+ *  @validation validateObtenerInventarioGranelPorId, handleValidationErrors
  *  @return json con el inventario granel solicitado
  */
-router.get("/:id", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+router.get("/:id", InventarioGranel_Validator_1.validateObtenerInventarioGranelPorId, InventarioGranel_Middleware_1.handleValidationErrors, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const id = parseInt(req.params.id, 10);
     try {
         const inventariogranel = yield InventarioGranelController.obtenerInventarioGranelPorId(id);
@@ -74,11 +78,16 @@ router.get("/:id", (req, res, next) => __awaiter(void 0, void 0, void 0, functio
  *  @desc Create An InventarioGranel
  *  @access Public
  *  @params -id_producto: number, -cantidad_producto: string, -cantidad_restante: string
+ *  @validation validateCrearNuevoInventarioGranel, handleValidationErrors
  *  @return json con el inventario granel creado
  */
-router.post("/", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+router.post("/", InventarioGranel_Validator_1.validateCrearNuevoInventarioGranel, InventarioGranel_Middleware_1.handleValidationErrors, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { id_producto, cantidad_producto, cantidad_restante } = req.body;
-    const ObjetoInventarioGranel = { id_producto, cantidad_producto, cantidad_restante };
+    const ObjetoInventarioGranel = {
+        id_producto,
+        cantidad_producto,
+        cantidad_restante,
+    };
     try {
         const inventariogranel = yield InventarioGranelController.crearNuevoInventarioGranel(ObjetoInventarioGranel);
         res.status(200).json(inventariogranel);
@@ -92,12 +101,17 @@ router.post("/", (req, res, next) => __awaiter(void 0, void 0, void 0, function*
  *  @desc Update An InventarioGranel
  *  @access Public
  *  @params id, -id_producto: number, -cantidad_producto: string, -cantidad_restante: string
+ *  @validation validateActualizarInventarioGranel, handleValidationErrors
  *  @return json con el inventario granel actualizado
  */
-router.put("/:id", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+router.put("/:id", InventarioGranel_Validator_1.validateActualizarInventarioGranel, InventarioGranel_Middleware_1.handleValidationErrors, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const id = parseInt(req.params.id, 10);
     const { id_producto, cantidad_producto, cantidad_restante } = req.body;
-    const ObjetoInventarioGranel = { id_producto, cantidad_producto, cantidad_restante };
+    const ObjetoInventarioGranel = {
+        id_producto,
+        cantidad_producto,
+        cantidad_restante,
+    };
     try {
         const inventariogranel = yield InventarioGranelController.actualizarInventarioGranel(id, ObjetoInventarioGranel);
         res.status(200).json(inventariogranel);
@@ -111,9 +125,10 @@ router.put("/:id", (req, res, next) => __awaiter(void 0, void 0, void 0, functio
  *  @desc Delete An InventarioGranel
  *  @access Public
  *  @params id
+ *  @validation validateEliminarInventarioGranel, handleValidationErrors
  *  @return json con el inventario granel eliminado
  */
-router.delete("/:id", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+router.delete("/:id", InventarioGranel_Validator_1.validateEliminarInventarioGranel, InventarioGranel_Middleware_1.handleValidationErrors, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const id = parseInt(req.params.id, 10);
     try {
         const inventariogranel = yield InventarioGranelController.eliminarInventarioGranel(id);

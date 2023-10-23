@@ -34,6 +34,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const CategoriasController = __importStar(require("../controllers/CatalogoCategoria/Categoria.Logic"));
+const Categoria_Middleware_1 = require("../middleware/Categoria/Categoria.Middleware");
+const Categoria_Validator_1 = require("../Validators/CatalogoCategoria/Categoria.Validator");
 const router = (0, express_1.Router)();
 // Rutas para el controlador de categorias
 /**
@@ -41,9 +43,10 @@ const router = (0, express_1.Router)();
  *  @desc Get All Categorias
  *  @access Public
  *  @params null
+ *  @validation validateGetAllCategorias, handleValidationErrors
  *  @return json con todas las categorias
  */
-router.get("/", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+router.get("/", Categoria_Validator_1.validateGetAllCategorias, Categoria_Middleware_1.handleValidationErrors, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const categorias = yield CategoriasController.getAllCategoriasController();
         res.status(200).json(categorias);
@@ -57,9 +60,10 @@ router.get("/", (req, res, next) => __awaiter(void 0, void 0, void 0, function* 
  *  @desc Get An Categoria
  *  @access Public
  *  @params id
+ *  @validation validateGetCategoriaById, handleValidationErrors
  *  @return json con la categoria solicitada
  */
-router.get("/:id", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+router.get("/:id", Categoria_Validator_1.validateGetCategoriaById, Categoria_Middleware_1.handleValidationErrors, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const id = parseInt(req.params.id, 10);
     try {
         const categoria = yield CategoriasController.getCategoriaByIdController(id);
@@ -74,9 +78,10 @@ router.get("/:id", (req, res, next) => __awaiter(void 0, void 0, void 0, functio
  *  @desc Create An Categoria
  *  @access Public
  *  @params -nombre: string, -nomenclatura: string
+ *  @validation validateCreateCategoria, handleValidationErrors
  *  @return json con la categoria creada
  */
-router.post("/", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+router.post("/", Categoria_Validator_1.validateCreateCategoria, Categoria_Middleware_1.handleValidationErrors, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { nombre, nomenclatura } = req.body;
     try {
         const categoria = yield CategoriasController.createCategoriaController(nombre, nomenclatura);
@@ -91,9 +96,10 @@ router.post("/", (req, res, next) => __awaiter(void 0, void 0, void 0, function*
  *  @desc Update An Categoria
  *  @access Public
  *  @params id, -nombre: string, -nomenclatura: string
+ *  @validation validateUpdateCategoria, handleValidationErrors
  *  @return json con la categoria actualizada
  */
-router.put("/:id", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+router.put("/:id", Categoria_Validator_1.validateUpdateCategoria, Categoria_Middleware_1.handleValidationErrors, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const id = parseInt(req.params.id, 10);
     const { nombre, nomenclatura } = req.body;
     try {
@@ -109,9 +115,10 @@ router.put("/:id", (req, res, next) => __awaiter(void 0, void 0, void 0, functio
  *  @desc Delete An Categoria
  *  @access Public
  *  @params id
+ *  @validation validateDeleteCategoria, handleValidationErrors
  *  @return json con la categoria eliminada
  */
-router.delete("/:id", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+router.delete("/:id", Categoria_Validator_1.validateDeleteCategoria, Categoria_Middleware_1.handleValidationErrors, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const id = parseInt(req.params.id, 10);
     try {
         const categoria = yield CategoriasController.deleteCategoriaController(id);
