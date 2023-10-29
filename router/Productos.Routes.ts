@@ -73,35 +73,36 @@ router.post("/",
     async (req: Request, res: Response, next: NextFunction) => {
         const {
             nombre,
-            descripcion,
             precio,
-            idMarca,
-            idAnimal,
-            idCategoria,
-            idProveedor,
-            imagen,
             cantidad,
+            descripcion,
+            imagen,
+            id_marca,
+            id_categoria,
+            id_proveedor,
+            id_animal,
             id_tipoCantidad,
-            codigoBarra,
-            venta_granel,
+            codigo_barras,
             precio_granel,
+            venta_granel,
         } = req.body;
 
         const productoObjeto = {
             nombre,
-            descripcion,
             precio,
-            idMarca,
-            idAnimal,
-            idCategoria,
-            idProveedor,
-            imagen,
             cantidad,
+            descripcion,
+            imagen,
+            id_marca,
+            id_categoria,
+            id_proveedor,
+            id_animal,
             id_tipoCantidad,
-            codigoBarra,
-            venta_granel,
+            codigo_barras,
             precio_granel,
+            venta_granel,
         };
+
 
         try {
             const producto = await ProductosController.crearProductoNegocio(
@@ -127,39 +128,38 @@ router.put("/:id",
     handleValidationErrors,
     async (req: Request, res: Response, next: NextFunction) => {
         const id = parseInt(req.params.id, 10);
-
         const {
             nombre,
-            descripcion,
             precio,
-            idMarca,
-            idAnimal,
-            idCategoria,
-            idProveedor,
-            imagen,
             cantidad,
+            descripcion,
+            imagen,
+            id_marca,
+            id_categoria,
+            id_proveedor,
+            id_animal,
             id_tipoCantidad,
-            codigoBarra,
-            venta_granel,
+            codigo_barras,
             precio_granel,
+            venta_granel,
         } = req.body;
 
         const productoObjeto = {
             nombre,
-            descripcion,
             precio,
-            idMarca,
-            idAnimal,
-            idCategoria,
-            idProveedor,
-            imagen,
             cantidad,
+            descripcion,
+            imagen,
+            id_marca,
+            id_categoria,
+            id_proveedor,
+            id_animal,
             id_tipoCantidad,
-            codigoBarra,
-            venta_granel,
+            codigo_barras,
             precio_granel,
+            venta_granel,
         };
-
+        console.log(productoObjeto);
         try {
             const producto = await ProductosController.actualizarProductoNegocio(
                 id,

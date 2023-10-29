@@ -25,12 +25,32 @@ function obtenerProductoPorIdNegocio(id) {
 exports.obtenerProductoPorIdNegocio = obtenerProductoPorIdNegocio;
 function crearProductoNegocio(data) {
     return __awaiter(this, void 0, void 0, function* () {
+        const id_marca = yield (0, Productos_AccessData_1.obtenerIdMarcaPorNomenclatura)(data.id_marca);
+        const id_categoria = yield (0, Productos_AccessData_1.obtenerIdCategoriaPorNomenclatura)(data.id_categoria);
+        const id_proveedor = yield (0, Productos_AccessData_1.obtenerIdProveedorPorNomenclatura)(data.id_proveedor);
+        const id_animal = yield (0, Productos_AccessData_1.obtenerIdAnimalPorNomenclatura)(data.id_animal);
+        const id_tipoCantidad = yield (0, Productos_AccessData_1.obtenerIDCantidadPorNomenclatura)(data.id_tipoCantidad);
+        data.id_marca = id_marca;
+        data.id_categoria = id_categoria;
+        data.id_proveedor = id_proveedor;
+        data.id_animal = id_animal;
+        data.id_tipoCantidad = id_tipoCantidad;
         return yield (0, Productos_AccessData_1.crearProducto)(data);
     });
 }
 exports.crearProductoNegocio = crearProductoNegocio;
 function actualizarProductoNegocio(id, data) {
     return __awaiter(this, void 0, void 0, function* () {
+        const id_marca = yield (0, Productos_AccessData_1.obtenerIdMarcaPorNomenclatura)(data.id_marca);
+        const id_categoria = yield (0, Productos_AccessData_1.obtenerIdCategoriaPorNomenclatura)(data.id_categoria);
+        const id_proveedor = yield (0, Productos_AccessData_1.obtenerIdProveedorPorNomenclatura)(data.id_proveedor);
+        const id_animal = yield (0, Productos_AccessData_1.obtenerIdAnimalPorNomenclatura)(data.id_animal);
+        const id_tipoCantidad = yield (0, Productos_AccessData_1.obtenerIDCantidadPorNomenclatura)(data.id_tipoCantidad);
+        data.id_marca = id_marca;
+        data.id_categoria = id_categoria;
+        data.id_proveedor = id_proveedor;
+        data.id_animal = id_animal;
+        data.id_tipoCantidad = id_tipoCantidad;
         return yield (0, Productos_AccessData_1.actualizarProducto)(id, data);
     });
 }

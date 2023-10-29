@@ -6,7 +6,7 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL_NEON")
 }
- 
+
 model Productos {
   id              Int     @id @default(autoincrement())
   nombre          String
@@ -19,7 +19,7 @@ model Productos {
   imagen          String?
   cantidad        String
   id_tipoCantidad Int
-  codigo_barras  String?
+  codigo_barras   String? @unique
 
   venta_granel  Boolean
   precio_granel String?
@@ -30,12 +30,10 @@ model Productos {
   animal       CatalagoAnimal       @relation(fields: [id_animal], references: [id_categoria])
   tipoCantidad CatalogoTipoCantidad @relation(fields: [id_tipoCantidad], references: [id_tipoCantidad])
 
-  inventario       Inventario[]
+  inventario        Inventario[]
   inventario_granel inventario_granel[]
-  detallesVenta    DetalleVenta[]
+  detallesVenta     DetalleVenta[]
 }
-
-
 
 model CatalogoProveedor {
   id_proveedor Int     @id @default(autoincrement())
@@ -91,37 +89,28 @@ model Inventario {
 
   producto Productos @relation(fields: [id_producto], references: [id])
 
-  detallesVenta DetalleVenta[]
-
   detalleVentaPorcion DetalleVentaPorcion[]
 }
 
 model DetalleVenta {
-  id_detalleVenta         Int    @id @default(autoincrement())
-  id_venta                Int    @unique
-  id_producto             Int
-  cantidad_vendida        String
-  precio_producto         String
-  subtotal                String
-  venta_granel            Boolean
+  id_detalleVenta  Int     @id @default(autoincrement())
+  id_venta         Int     
+  id_producto      Productos[]
+  cantidad_vendida String
+  precio_producto  String
+  subtotal         String
+  venta_granel     Boolean
 
-  venta                Venta                 @relation(fields: [id_venta], references: [id_venta])
-  productoInventario   Inventario            @relation(fields: [id_producto], references: [id_producto])
-  detallesVentaPorcion DetalleVentaPorcion[]
-  Productos            Productos?            @relation(fields: [productosId], references: [id])
-  productosId          Int?
 }
 
-
 model DetalleVentaPorcion {
-  id_detalleVentaPorcion Int    @id @default(autoincrement())
-  id_detalleVenta        Int
-  id_producto            Int
-  cantidad_producto Int
+  id_detalleVentaPorcion  Int @id @default(autoincrement())
+  id_detalleVenta         Int
+  id_producto             Int
+  cantidad_producto       Int
   cantidad_granel_vendida Int
-  subtotal Int
+  subtotal                Int
 
-  detalleVenta  DetalleVenta @relation(fields: [id_detalleVenta], references: [id_venta])
   Venta         Venta?       @relation(fields: [ventaId_venta], references: [id_venta])
   ventaId_venta Int?
   Productos     Inventario?  @relation(fields: [id_producto], references: [id_producto])
@@ -137,17 +126,17 @@ model inventario_granel {
 }
 
 model Venta {
-  id_venta      Int     @id @default(autoincrement())
-  id_vendedor   Int
-  id_sucursal   Int
-  fecha_venta   String
-  total_venta   String
-  subtotal      String
-  iva           String
+  id_venta    Int    @id @default(autoincrement())
+  id_vendedor Int
+  id_sucursal Int
+  fecha_venta String
+  total_venta String
+  subtotal    String
+  iva         String
 
   sucursal             Sucursal              @relation(fields: [id_sucursal], references: [id_sucursal])
   vendedor             CatalogoVendedor      @relation(fields: [id_vendedor], references: [id_vendedor])
-  detallesVenta        DetalleVenta[]
+  //detallesVenta        DetalleVenta[]
   detallesVentaPorcion DetalleVentaPorcion[]
 }
 
