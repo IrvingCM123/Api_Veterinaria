@@ -4,20 +4,25 @@ import {
     crearProducto,
     actualizarProducto,
     eliminarProducto,
+    obtenerIDCantidadPorNomenclatura,
+    obtenerIdAnimalPorNomenclatura,
+    obtenerIdCategoriaPorNomenclatura,
+    obtenerIdMarcaPorNomenclatura,
+    obtenerIdProveedorPorNomenclatura,
 } from "./Productos.AccessData";
 
 interface Producto {
     nombre: string;
-    descripcion: string;
     precio: string;
-    idMarca: number;
-    idAnimal: number;
-    idCategoria: number;
-    idProveedor: number;
-    imagen: string;
     cantidad: string;
-    id_tipoCantidad: number;
-    codigoBarra: string;
+    descripcion: string;
+    imagen: string;
+    id_marca: any;
+    id_categoria: any;
+    id_proveedor: any;
+    id_animal: any;
+    id_tipoCantidad: any;
+    codigo_barras: string;
     venta_granel: boolean;
     precio_granel: string;
 }
@@ -31,10 +36,36 @@ export async function obtenerProductoPorIdNegocio(id: number) {
 }
 
 export async function crearProductoNegocio(data: Producto) {
+
+    const id_marca = await obtenerIdMarcaPorNomenclatura(data.id_marca);
+    const id_categoria = await obtenerIdCategoriaPorNomenclatura(data.id_categoria);
+    const id_proveedor = await obtenerIdProveedorPorNomenclatura(data.id_proveedor);
+    const id_animal = await obtenerIdAnimalPorNomenclatura(data.id_animal);
+    const id_tipoCantidad = await obtenerIDCantidadPorNomenclatura(data.id_tipoCantidad);
+
+    data.id_marca = id_marca;
+    data.id_categoria = id_categoria;
+    data.id_proveedor = id_proveedor;
+    data.id_animal = id_animal;
+    data.id_tipoCantidad = id_tipoCantidad;
+
     return await crearProducto(data);
 }
 
-export async function actualizarProductoNegocio(id: number, data: Producto) {
+export async function actualizarProductoNegocio(id: any, data: Producto) {
+
+    const id_marca = await obtenerIdMarcaPorNomenclatura(data.id_marca);
+    const id_categoria = await obtenerIdCategoriaPorNomenclatura(data.id_categoria);
+    const id_proveedor = await obtenerIdProveedorPorNomenclatura(data.id_proveedor);
+    const id_animal = await obtenerIdAnimalPorNomenclatura(data.id_animal);
+    const id_tipoCantidad = await obtenerIDCantidadPorNomenclatura(data.id_tipoCantidad);
+
+    data.id_marca = id_marca;
+    data.id_categoria = id_categoria;
+    data.id_proveedor = id_proveedor;
+    data.id_animal = id_animal;
+    data.id_tipoCantidad = id_tipoCantidad;
+
     return await actualizarProducto(id, data);
 }
 

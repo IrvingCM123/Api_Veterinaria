@@ -10,13 +10,13 @@ export const validateObtenerInventarioPorProducto = [
 ];
 
 export const validateObtenerInventarioPorId = [
-    check("id_producto")
+    check("id")
         .isNumeric()
         .withMessage("El ID del producto debe ser un número válido"),
 ];
 
 export const validateCrearNuevoInventario = [
-    check("id_producto")
+    check("id")
         .isNumeric()
         .withMessage("El ID del producto debe ser un número válido"),
     check("existencias")
@@ -31,7 +31,7 @@ export const validateCrearNuevoInventario = [
 ];
 
 export const validateActualizarInventario = [
-    check("id_producto")
+    check("id")
         .isNumeric()
         .withMessage("El ID del producto debe ser un número válido"),
     check("existencias")
@@ -46,7 +46,7 @@ export const validateActualizarInventario = [
 ];
 
 export const validateEliminarInventario = [
-    check("id_producto")
+    check("id")
         .isNumeric()
         .withMessage("El ID del producto debe ser un número válido"),
 ];
