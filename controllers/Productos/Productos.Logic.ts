@@ -36,6 +36,19 @@ export async function obtenerProductoPorIdNegocio(id: number) {
 }
 
 export async function crearProductoNegocio(data: Producto) {
+
+    const id_marca = await obtenerIdMarcaPorNomenclatura(data.id_marca);
+    const id_categoria = await obtenerIdCategoriaPorNomenclatura(data.id_categoria);
+    const id_proveedor = await obtenerIdProveedorPorNomenclatura(data.id_proveedor);
+    const id_animal = await obtenerIdAnimalPorNomenclatura(data.id_animal);
+    const id_tipoCantidad = await obtenerIDCantidadPorNomenclatura(data.id_tipoCantidad);
+
+    data.id_marca = id_marca;
+    data.id_categoria = id_categoria;
+    data.id_proveedor = id_proveedor;
+    data.id_animal = id_animal;
+    data.id_tipoCantidad = id_tipoCantidad;
+
     return await crearProducto(data);
 }
 
