@@ -82,21 +82,21 @@ router.get("/:id", Productos_Validator_1.validateObtenerProductoPorIdNegocio, Pr
  *  @return json con el producto creado
  */
 router.post("/", Productos_Validator_1.validateCrearProductoNegocio, Productos_Middleware_1.handleValidationErrors, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const { nombre, descripcion, precio, idMarca, idAnimal, idCategoria, idProveedor, imagen, cantidad, id_tipoCantidad, codigoBarra, venta_granel, precio_granel, } = req.body;
+    const { nombre, precio, cantidad, descripcion, imagen, id_marca, id_categoria, id_proveedor, id_animal, id_tipoCantidad, codigo_barras, precio_granel, venta_granel, } = req.body;
     const productoObjeto = {
         nombre,
-        descripcion,
         precio,
-        idMarca,
-        idAnimal,
-        idCategoria,
-        idProveedor,
-        imagen,
         cantidad,
+        descripcion,
+        imagen,
+        id_marca,
+        id_categoria,
+        id_proveedor,
+        id_animal,
         id_tipoCantidad,
-        codigoBarra,
-        venta_granel,
+        codigo_barras,
         precio_granel,
+        venta_granel,
     };
     try {
         const producto = yield ProductosController.crearProductoNegocio(productoObjeto);
@@ -116,22 +116,23 @@ router.post("/", Productos_Validator_1.validateCrearProductoNegocio, Productos_M
  */
 router.put("/:id", Productos_Validator_1.validateActualizarProductoNegocio, Productos_Middleware_1.handleValidationErrors, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const id = parseInt(req.params.id, 10);
-    const { nombre, descripcion, precio, idMarca, idAnimal, idCategoria, idProveedor, imagen, cantidad, id_tipoCantidad, codigoBarra, venta_granel, precio_granel, } = req.body;
+    const { nombre, precio, cantidad, descripcion, imagen, id_marca, id_categoria, id_proveedor, id_animal, id_tipoCantidad, codigo_barras, precio_granel, venta_granel, } = req.body;
     const productoObjeto = {
         nombre,
-        descripcion,
         precio,
-        idMarca,
-        idAnimal,
-        idCategoria,
-        idProveedor,
-        imagen,
         cantidad,
+        descripcion,
+        imagen,
+        id_marca,
+        id_categoria,
+        id_proveedor,
+        id_animal,
         id_tipoCantidad,
-        codigoBarra,
-        venta_granel,
+        codigo_barras,
         precio_granel,
+        venta_granel,
     };
+    console.log(productoObjeto);
     try {
         const producto = yield ProductosController.actualizarProductoNegocio(id, productoObjeto);
         res.status(200).json(producto);
