@@ -2,13 +2,6 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-type DetalleVentaInput = {
-    id_producto: number;
-    cantidad_vendida: string;
-    precio_producto: string;
-    subtotal: string;
-    venta_porcion: boolean;
-};
 
 // Obtener todas las ventas
 export async function getAllVentas() {
@@ -16,7 +9,6 @@ export async function getAllVentas() {
         include: {
             sucursal: true,
             vendedor: true,
-            detallesVenta: true,
         },
     });
 }
@@ -28,7 +20,6 @@ export async function getVentaById(id: number) {
         include: {
             sucursal: true,
             vendedor: true,
-            detallesVenta: true,
         },
     });
 }
@@ -44,27 +35,6 @@ async function obtenerIdVendedorPorAcronimo(acronimo: string) {
     }
 
     return vendedor.id_vendedor;
-}
-
-// Función para crear un registro en la tabla DetalleVenta
-async function crearDetalleVenta(
-    id_venta: number,
-    id_producto: number,
-    cantidad_vendida: string,
-    precio_producto: string,
-    subtotal: string,
-    venta_granel: boolean
-) {
-    return await prisma.detalleVenta.create({
-        data: {
-            id_venta,
-            id_producto,
-            cantidad_vendida,
-            precio_producto,
-            subtotal,
-            venta_granel,
-        },
-    });
 }
 
 async function crearDetalleVentaPorcion(
@@ -155,11 +125,11 @@ async function realizarventaPorcion(
         }
     });
 
-    if (parseFloat(producto_abierto.cantidad_restante) == 0) {
+    if (parseFloat(producto_abierto.cantidad_restante) == 0 && producto_abierto) {
         await prisma.inventario_granel.delete({
             where: { id_producto }
         });
-        descontarInventario(id_producto, 1);
+        //descontarInventario(id_producto, 1);
     } else {
         if (producto_abierto) {
             const cantidadProducto = parseFloat(producto_abierto.cantidad_restante);
@@ -176,6 +146,7 @@ async function realizarventaPorcion(
                 });
             }
         } else {
+
             await prisma.inventario_granel.create({
                 data: {
                     id_producto,
@@ -189,54 +160,11 @@ async function realizarventaPorcion(
             await prisma.inventario_granel.delete({
                 where: { id_producto }
             });
-            descontarInventario(id_producto, 1);
+            //descontarInventario(id_producto, 1);
         }
     }
 }
 
-async function descontarInventario(
-    id_producto: number,
-    cantidadVendida: number
-) {
-    // Obtener el inventario del producto
-    const inventario = await prisma.inventario.findUnique({
-        where: { id_producto },
-    });
-
-    if (!inventario) {
-        throw new Error(`Inventario no encontrado para el producto con ID ${id_producto}`);
-    }
-
-    // Obtener la cantidad disponible en el producto
-    const producto = await prisma.productos.findUnique({
-        where: { id: id_producto },
-        select: { cantidad: true }, // Seleccionar solo el campo "cantidad"
-    });
-
-    if (!producto) {
-        throw new Error(`Producto no encontrado con ID ${id_producto}`);
-    }
-
-    // Realizar el descuento en el inventario y la cantidad del producto
-    const cantidadActual = parseFloat(inventario.existencias);
-    const cantidadVenta: number = cantidadVendida;
-
-    if (cantidadActual < cantidadVenta) {
-        throw new Error(`No hay suficiente inventario para el producto con ID ${id_producto}`);
-    }
-
-    const nuevaExistencia = (cantidadActual - cantidadVenta).toString();
-
-    // Actualizar el inventario con la nueva existencia
-    await prisma.inventario.update({
-        where: { id_producto },
-        data: {
-            existencias: nuevaExistencia,
-        },
-    });
-}
-
-// Función para realizar una venta en una transacción
 export async function crearVenta(
     id_vendedor: string,
     id_sucursal: number,
@@ -244,61 +172,101 @@ export async function crearVenta(
     total_venta: string,
     subtotal: string,
     iva: string,
-    detallesVenta: DetalleVentaInput[]
+    detallesVenta: any[]
 ) {
-    const transaction = await prisma.$transaction(async (prisma) => {
-        // Obtener el ID del vendedor a partir de su acrónimo
-        const idVendedor = await obtenerIdVendedorPorAcronimo(id_vendedor);
+    let result;
 
-        // Crear la venta principal
-        const nuevaVenta = await prisma.venta.create({
-            data: {
-                id_vendedor: idVendedor,
-                id_sucursal,
-                fecha_venta,
-                total_venta,
-                subtotal,
-                iva,
-            },
-        });
+    try {
+        const transaction = await prisma.$transaction(async (prisma) => {
+            // Obtener el ID del vendedor a partir de su acrónimo
+            const idVendedor = await obtenerIdVendedorPorAcronimo(id_vendedor);
 
-        const idVentaGenerado = nuevaVenta.id_venta; // Obtener el id_venta generado
-
-        // Crear los detalles de venta y descontar el inventario
-        for (const detalle of detallesVenta) {
-            const producto = await prisma.productos.findUnique({
-                where: {
-                    id: detalle.id_producto,
+            // Crear la venta principal
+            const nuevaVenta = await prisma.venta.create({
+                data: {
+                    id_vendedor: idVendedor,
+                    id_sucursal,
+                    fecha_venta,
+                    total_venta,
+                    subtotal,
+                    iva,
                 },
             });
 
-            if (!producto) {
-                throw new Error(`Producto no encontrado con ID ${detalle.id_producto}`);
+            console.log(nuevaVenta, 'nuevaVenta');
+
+            const idVentaGenerado = nuevaVenta.id_venta;
+
+            // Crear los detalles de venta y descontar el inventario
+            for (const detalle of detallesVenta) {
+
+                const producto = await prisma.productos.findUnique({
+                    where: {
+                        id: detalle.id_producto,
+                    },
+                });
+
+                if (!producto) {
+                    throw new Error(`Producto no encontrado con ID ${detalle.id_producto}`);
+                }
+                // Verificar si se trata de una venta a granel
+                if (detalle.venta_porcion) {
+                    realizarventaPorcion(detalle.id_producto, detalle.cantidad_vendida);
+                } else {
+
+                    // Obtener el inventario del producto
+                    const inventario = await prisma.inventario.findUnique({
+                        where: { id_producto: detalle.id_producto },
+                    });
+
+                    if (!inventario) {
+                        throw new Error(`Inventario no encontrado para el producto con ID ${detalle.id_producto}`);
+                    }
+
+                    // Realizar el descuento en el inventario y la cantidad del producto
+                    const cantidadActual = parseFloat(inventario.existencias);
+                    const cantidadVenta: number = +detalle.cantidad_vendida;
+
+                    if (cantidadActual < cantidadVenta) {
+                        throw new Error(`No hay suficiente inventario para el producto con ID ${detalle.id_producto}`);
+                    } else {
+                        const nuevaExistencia = (cantidadActual - cantidadVenta).toString();
+
+                        // Actualizar el inventario con la nueva existencia
+                        await prisma.inventario.update({
+                            where: { id_producto: detalle.id_producto },
+                            data: {
+                                existencias: nuevaExistencia,
+                            },
+                        });
+
+                        let id_productos: any = detalle.id_producto;
+                        let cantidad_vendida = (detalle.cantidad_vendida).toString();
+                        let precio_producto = (detalle.precio_producto).toString();
+                        let subtotal = (detalle.subtotal).toString();
+                        let venta_granel = detalle.venta_porcion;
+
+                        console.log(id_productos, 'id_productos');
+                        await prisma.detalleVenta.create({
+                            data: {
+                                id_venta: idVentaGenerado,
+                                id_producto: { connect: { id: id_productos } },
+                                cantidad_vendida,
+                                precio_producto,
+                                subtotal,
+                                venta_granel,
+                            }
+                        });
+                    }
+                }
             }
+            result = nuevaVenta; // Guarda la nueva venta creada
+        });
 
-            // Verificar si se trata de una venta a granel
-            if (detalle.venta_porcion) {
-                realizarventaPorcion(detalle.id_producto, +detalle.cantidad_vendida);
-            } else {
-                // Si no es una venta a granel, simplemente crear el detalle de venta
-                await crearDetalleVenta(
-                    idVentaGenerado,
-                    detalle.id_producto,
-                    detalle.cantidad_vendida,
-                    detalle.precio_producto,
-                    detalle.subtotal,
-                    detalle.venta_porcion
-                );
-
-                // Descontar el inventario
-                await descontarInventario(detalle.id_producto, +detalle.cantidad_vendida);
-            }
-        }
-
-        return nuevaVenta; // Devolver la nueva venta creada
-    });
-
-    return transaction;
+        return result; // Devuelve la nueva venta creada (si la transacción tuvo éxito)
+    } catch (error) {
+        throw error; // Lanza el error para que la transacción realice el rollback
+    }
 }
 
 // Actualizar una venta por su ID en una transacción
@@ -328,7 +296,6 @@ export async function updateVenta(
             include: {
                 sucursal: true,
                 vendedor: true,
-                detallesVenta: true,
             },
         });
 
