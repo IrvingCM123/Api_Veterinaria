@@ -159,7 +159,7 @@ router.put("/:id",
             precio_granel,
             venta_granel,
         };
-
+        console.log(productoObjeto);
         try {
             const producto = await ProductosController.actualizarProductoNegocio(
                 id,

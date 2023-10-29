@@ -9,12 +9,12 @@ exports.validateObtenerInventarioPorProducto = [
         .withMessage("El nombre del producto es requerido"),
 ];
 exports.validateObtenerInventarioPorId = [
-    (0, express_validator_1.check)("id_producto")
+    (0, express_validator_1.check)("id")
         .isNumeric()
         .withMessage("El ID del producto debe ser un número válido"),
 ];
 exports.validateCrearNuevoInventario = [
-    (0, express_validator_1.check)("id_producto")
+    (0, express_validator_1.check)("id")
         .isNumeric()
         .withMessage("El ID del producto debe ser un número válido"),
     (0, express_validator_1.check)("existencias")
@@ -28,7 +28,7 @@ exports.validateCrearNuevoInventario = [
         .withMessage("El stock máximo debe ser un número válido"),
 ];
 exports.validateActualizarInventario = [
-    (0, express_validator_1.check)("id_producto")
+    (0, express_validator_1.check)("id")
         .isNumeric()
         .withMessage("El ID del producto debe ser un número válido"),
     (0, express_validator_1.check)("existencias")
@@ -42,7 +42,7 @@ exports.validateActualizarInventario = [
         .withMessage("El stock máximo debe ser un número válido"),
 ];
 exports.validateEliminarInventario = [
-    (0, express_validator_1.check)("id_producto")
+    (0, express_validator_1.check)("id")
         .isNumeric()
         .withMessage("El ID del producto debe ser un número válido"),
 ];

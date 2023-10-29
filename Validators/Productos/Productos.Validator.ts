@@ -64,13 +64,13 @@ export const validateActualizarProductoNegocio = [
     check("precio")
         .isString()
         .withMessage("El precio del producto debe ser un número válido"),
-    check("idMarca")
-        .isString()
+    check("id_marca")
+        .notEmpty()
         .withMessage("El ID de la marca debe ser un número válido"),
-    check("idCategoria")
+    check("id_categoria")
         .isString()
         .withMessage("El ID de la categoría debe ser un número válido"),
-    check("idProveedor")
+    check("id_proveedor")
         .isString()
         .withMessage("El ID del proveedor debe ser un número válido"),
     check("imagen")

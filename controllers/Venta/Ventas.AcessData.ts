@@ -90,7 +90,6 @@ export async function crearVenta(
 
                 // Verificar si se trata de una venta a granel
                 if (detalle.venta_porcion) {
-
                     const cantidad_Producto: any = await prisma.productos.findUnique({
                         where: {
                             id: detalle.id_producto
@@ -99,90 +98,97 @@ export async function crearVenta(
                             cantidad: true
                         }
                     });
-
-                    console.log(cantidad_Producto, 'cantidad_Producto');
-
+                
                     const existenciasProducto = parseFloat(inventario.existencias);
-
+                
                     const producto_abierto: any = await prisma.inventario_granel.findFirst({
                         where: {
                             id_producto: detalle.id_producto
                         }
                     });
-
+                
                     // Verificar si el producto tiene existencias
                     if (existenciasProducto < 1) {
                         throw new Error(`No hay suficiente inventario para el producto con ID ${detalle.id_producto}`);
                     }
-
-                        if (producto_abierto) {
-
-                            if (producto_abierto.cantidad_restante == 0) {
+                
+                    if (producto_abierto) {
+                        if (producto_abierto.cantidad_restante == 0) {
+                            await prisma.inventario_granel.delete({
+                                where: { id_producto: detalle.id_producto }
+                            });
+                
+                            await prisma.inventario.update({
+                                where: { id_producto: detalle.id_producto },
+                                data: {
+                                    existencias: (parseFloat(inventario.existencias) - 1).toString()
+                                }
+                            });
+                
+                            return "El producto ya no tiene existencias.";
+                        }
+                
+                        const cantidadProducto = parseFloat(producto_abierto.cantidad_restante);
+                
+                        if (detalle.cantidad_vendida > cantidadProducto) {
+                            throw new Error(`La cantidad vendida es mayor que la cantidad del producto.`);
+                        } else {
+                            // Realizar el descuento en el inventario y la cantidad del producto
+                            const nuevaExistencia = (cantidadProducto - detalle.cantidad_vendida).toString();
+                            // Actualizar el inventario con la nueva existencia
+                            await prisma.inventario_granel.update({
+                                where: { id_producto: detalle.id_producto },
+                                data: {
+                                    cantidad_restante: nuevaExistencia,
+                                },
+                            });
+                
+                            // Verificar si la cantidad restante es igual a 0 después de la venta y eliminar el producto si es así
+                            if (nuevaExistencia == "0") {
                                 await prisma.inventario_granel.delete({
                                     where: { id_producto: detalle.id_producto }
                                 });
-        
-                                await prisma.inventario.update ({
+                
+                                await prisma.inventario.update({
                                     where: { id_producto: detalle.id_producto },
                                     data: {
                                         existencias: (parseFloat(inventario.existencias) - 1).toString()
                                     }
-                                });
-
-                                return "El producto ya no tiene existencias.";
+                            });
                             }
-
-                            const cantidadProducto = parseFloat(producto_abierto.cantidad_restante);
-
-                            if (detalle.cantidad_vendida > cantidadProducto) {
-                                return "La cantidad vendida es mayor que la cantidad del producto.";
-
-                            } else {
-                                // Realizar el descuento en el inventario y la cantidad del producto
-                                const nuevaExistencia = (cantidadProducto - detalle.cantidad_vendida).toString();
-                                // Actualizar el inventario con la nueva existencia
-                                await prisma.inventario_granel.update({
-                                    where: { id_producto: detalle.id_producto },
-                                    data: {
-                                        cantidad_restante: nuevaExistencia,
-                                    },
-                                });
-                            }
-
-                            await prisma.detalleVenta.create({
-                                data: {
-                                    id_venta: idVentaGenerado,
-                                    id_producto: { connect: { id: detalle.id_producto } },
-                                    cantidad_vendida: (detalle.cantidad_vendida).toString() ,
-                                    precio_producto: (detalle.precio_producto).toString(), 
-                                    subtotal: (detalle.subtotal).toString(),
-                                    venta_granel: detalle.venta_porcion,
-                                },
-                            });
-
-                        } else {
-
-                            await prisma.inventario_granel.create({
-                                data: {
-                                    id_producto: detalle.id_producto,
-                                    cantidad_producto: (cantidad_Producto.cantidad).toString() ,
-                                    cantidad_restante: (parseFloat(cantidad_Producto.cantidad) - detalle.cantidad_vendida).toString()
-                                }
-                            });
-
-                            await prisma.detalleVenta.create({
-                                data: {
-                                    id_venta: idVentaGenerado,
-                                    id_producto: { connect: { id: detalle.id_producto } },
-                                    cantidad_vendida: (detalle.cantidad_vendida).toString() ,
-                                    precio_producto: (detalle.precio_producto).toString(), 
-                                    subtotal: (detalle.subtotal).toString(),
-                                    venta_granel: detalle.venta_porcion,
-                                },
-                            });
-
                         }
-
+                
+                        await prisma.detalleVenta.create({
+                            data: {
+                                id_venta: idVentaGenerado,
+                                id_producto: { connect: { id: detalle.id_producto } },
+                                cantidad_vendida: (detalle.cantidad_vendida).toString(),
+                                precio_producto: (detalle.precio_producto).toString(),
+                                subtotal: (detalle.subtotal).toString(),
+                                venta_granel: detalle.venta_porcion,
+                            },
+                        });
+                    } else {
+                        await prisma.inventario_granel.create({
+                            data: {
+                                id_producto: detalle.id_producto,
+                                cantidad_producto: (cantidad_Producto.cantidad).toString(),
+                                cantidad_restante: (parseFloat(cantidad_Producto.cantidad) - detalle.cantidad_vendida).toString()
+                            }
+                        });
+                
+                        await prisma.detalleVenta.create({
+                            data: {
+                                id_venta: idVentaGenerado,
+                                id_producto: { connect: { id: detalle.id_producto } },
+                                cantidad_vendida: (detalle.cantidad_vendida).toString(),
+                                precio_producto: (detalle.precio_producto).toString(),
+                                subtotal: (detalle.subtotal).toString(),
+                                venta_granel: detalle.venta_porcion,
+                            },
+                        });
+                    }
+                
                 } else {
 
                     // Obtener el inventario del producto
