@@ -4,20 +4,25 @@ import {
     crearProducto,
     actualizarProducto,
     eliminarProducto,
+    obtenerIDCantidadPorNomenclatura,
+    obtenerIdAnimalPorNomenclatura,
+    obtenerIdCategoriaPorNomenclatura,
+    obtenerIdMarcaPorNomenclatura,
+    obtenerIdProveedorPorNomenclatura,
 } from "./Productos.AccessData";
 
 interface Producto {
     nombre: string;
-    descripcion: string;
     precio: string;
-    idMarca: number;
-    idAnimal: number;
-    idCategoria: number;
-    idProveedor: number;
-    imagen: string;
     cantidad: string;
+    descripcion: string;
+    imagen: string;
+    id_marca: number;
+    id_categoria: number;
+    id_proveedor: number;
+    id_animal: number;
     id_tipoCantidad: number;
-    codigoBarra: string;
+    codigo_barras: string;
     venta_granel: boolean;
     precio_granel: string;
 }
@@ -34,7 +39,10 @@ export async function crearProductoNegocio(data: Producto) {
     return await crearProducto(data);
 }
 
-export async function actualizarProductoNegocio(id: number, data: Producto) {
+export async function actualizarProductoNegocio(id: any, data: Producto) {
+
+    let id_tipoCantidad = data.id_tipoCantidad;
+
     return await actualizarProducto(id, data);
 }
 

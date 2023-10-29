@@ -19,7 +19,7 @@ model Productos {
   imagen          String?
   cantidad        String
   id_tipoCantidad Int
-  codigo_barras   String?
+  codigo_barras   String? @unique
 
   venta_granel  Boolean
   precio_granel String?
