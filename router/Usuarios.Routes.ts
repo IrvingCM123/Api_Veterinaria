@@ -73,7 +73,7 @@ router.get(
  * @return json con el token
  */
 
-router.get(
+router.post(
     "/login",
     validateIniciarSesionNegocio,
     handleValidationErrors,

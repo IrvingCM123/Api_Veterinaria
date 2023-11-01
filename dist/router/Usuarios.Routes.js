@@ -81,7 +81,7 @@ router.get("/:id", Usuario_Validator_1.validateObtenerUsuarioNegocio, Usuario_Mi
  * @validation validateIniciarSesionNegocio, handleValidationErrors
  * @return json con el token
  */
-router.get("/login", Usuario_Validator_1.validateIniciarSesionNegocio, Usuario_Middleware_1.handleValidationErrors, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+router.post("/login", Usuario_Validator_1.validateIniciarSesionNegocio, Usuario_Middleware_1.handleValidationErrors, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { email, password } = req.body;
     try {
         const usuario = yield UsuariosController.iniciarSesionNegocio(email, password);
