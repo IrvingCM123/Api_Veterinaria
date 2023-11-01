@@ -10,22 +10,22 @@ exports.validateObtenerVentaPorId = [
 ];
 exports.validateCrearNuevaVenta = [
     (0, express_validator_1.check)("id_vendedor")
-        .isNumeric()
+        .isString()
         .withMessage("El ID del vendedor debe ser un número válido"),
     (0, express_validator_1.check)("id_sucursal")
         .isNumeric()
         .withMessage("El ID de la sucursal debe ser un número válido"),
     (0, express_validator_1.check)("fecha_venta")
-        .isISO8601()
+        .isString()
         .withMessage("La fecha de la venta debe tener un formato ISO8601 válido"),
     (0, express_validator_1.check)("total_venta")
-        .isNumeric()
+        .isString()
         .withMessage("El total de la venta debe ser un número válido"),
     (0, express_validator_1.check)("subtotal")
-        .isNumeric()
+        .isString()
         .withMessage("El subtotal de la venta debe ser un número válido"),
     (0, express_validator_1.check)("iva")
-        .isNumeric()
+        .isString()
         .withMessage("El valor del IVA debe ser un número válido"),
     (0, express_validator_1.check)("detallesVenta")
         .isArray()

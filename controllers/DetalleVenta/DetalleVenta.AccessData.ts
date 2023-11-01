@@ -1,15 +1,11 @@
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
-
 // Obtener todos los detalles de venta
 export async function getAllDetallesVenta() {
     return await prisma.detalleVenta.findMany({
         include: {
-            venta: true,
-            productoInventario: true,
-            detallesVentaPorcion: true,
-            Productos: true,
+            id_producto: true, // Incluye la relación con productos
         },
     });
 }
@@ -19,10 +15,8 @@ export async function getDetalleVentaById(id: any) {
     return await prisma.detalleVenta.findUnique({
         where: { id_detalleVenta: id },
         include: {
-            venta: true,
-            productoInventario: true,
-            detallesVentaPorcion: true,
-            Productos: true,
+            id_producto: true, // Incluye la relación con productos
+            
         },
     });
 }
@@ -32,17 +26,14 @@ export async function createDetalleVenta(id_venta: any, id_producto: any, cantid
     return await prisma.detalleVenta.create({
         data: {
             id_venta,
-            id_producto,
+            id_producto: { connect: id_producto }, // Conecta los productos
             cantidad_vendida,
             precio_producto,
             subtotal,
             venta_granel,
         },
         include: {
-            venta: true,
-            productoInventario: true,
-            detallesVentaPorcion: true,
-            Productos: true,
+            id_producto: true, // Incluye la relación con productos
         },
     });
 }
@@ -53,16 +44,14 @@ export async function updateDetalleVenta(id: any, id_venta: any, id_producto: an
         where: { id_detalleVenta: id },
         data: {
             id_venta,
-            id_producto,
+            id_producto: { set: id_producto }, // Establece los productos
             cantidad_vendida,
             precio_producto,
             subtotal,
         },
         include: {
-            venta: true,
-            productoInventario: true,
-            detallesVentaPorcion: true,
-            Productos: true,
+            id_producto: true, // Incluye la relación con productos
+            
         },
     });
 }
