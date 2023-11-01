@@ -17,7 +17,7 @@ function getAllDetallesVenta() {
     return __awaiter(this, void 0, void 0, function* () {
         return yield prisma.detalleVenta.findMany({
             include: {
-                id_producto: true,
+                id_producto: true, // Incluye la relación con productos
             },
         });
     });

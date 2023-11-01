@@ -11,22 +11,22 @@ export const validateObtenerVentaPorId = [
 
 export const validateCrearNuevaVenta = [
     check("id_vendedor")
-        .isNumeric()
+        .isString()
         .withMessage("El ID del vendedor debe ser un número válido"),
     check("id_sucursal")
         .isNumeric()
         .withMessage("El ID de la sucursal debe ser un número válido"),
     check("fecha_venta")
-        .isISO8601()
+        .isString()
         .withMessage("La fecha de la venta debe tener un formato ISO8601 válido"),
     check("total_venta")
-        .isNumeric()
+        .isString()
         .withMessage("El total de la venta debe ser un número válido"),
     check("subtotal")
-        .isNumeric()
+        .isString()
         .withMessage("El subtotal de la venta debe ser un número válido"),
     check("iva")
-        .isNumeric()
+        .isString()
         .withMessage("El valor del IVA debe ser un número válido"),
     check("detallesVenta")
         .isArray()

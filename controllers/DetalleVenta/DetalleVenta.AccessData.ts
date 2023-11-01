@@ -1,12 +1,11 @@
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
-
 // Obtener todos los detalles de venta
 export async function getAllDetallesVenta() {
     return await prisma.detalleVenta.findMany({
         include: {
-            id_producto: true,
+            id_producto: true, // Incluye la relación con productos
         },
     });
 }

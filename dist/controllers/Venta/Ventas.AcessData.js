@@ -19,7 +19,6 @@ function getAllVentas() {
             include: {
                 sucursal: true,
                 vendedor: true,
-                detallesVenta: true,
             },
         });
     });
@@ -33,7 +32,6 @@ function getVentaById(id) {
             include: {
                 sucursal: true,
                 vendedor: true,
-                detallesVenta: true,
             },
         });
     });
@@ -51,209 +49,175 @@ function obtenerIdVendedorPorAcronimo(acronimo) {
         return vendedor.id_vendedor;
     });
 }
-// Función para crear un registro en la tabla DetalleVenta
-function crearDetalleVenta(id_venta, id_producto, cantidad_vendida, precio_producto, subtotal, venta_granel) {
-    return __awaiter(this, void 0, void 0, function* () {
-        return yield prisma.detalleVenta.create({
-            data: {
-                id_venta,
-                id_producto,
-                cantidad_vendida,
-                precio_producto,
-                subtotal,
-                venta_granel,
-            },
-        });
-    });
-}
-function crearDetalleVentaPorcion(id_detalleVenta, id_producto, cantidad_vendida) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const producto = yield prisma.productos.findFirst({
-            where: {
-                id: id_producto
-            }
-        });
-        if (!producto) {
-            throw Error(`Producto no encontrado con ID ${id_producto}`);
-        }
-        const detallePorcionExistente = yield prisma.detalleVentaPorcion.findFirst({
-            where: {
-                id_detalleVenta,
-                id_producto
-            }
-        });
-        if (detallePorcionExistente) {
-            // Si ya existe un detalle de venta porción para este producto, actualiza la cantidad vendida
-            const nuevaCantidadVendida = detallePorcionExistente.cantidad_granel_vendida + cantidad_vendida;
-            const nuevoSubtotal = +(producto.precio * nuevaCantidadVendida).toString();
-            yield prisma.detalleVentaPorcion.update({
-                where: {
-                    id_detalleVentaPorcion: detallePorcionExistente.id_detalleVentaPorcion
-                },
-                data: {
-                    cantidad_granel_vendida: nuevaCantidadVendida,
-                    subtotal: nuevoSubtotal
-                }
-            });
-        }
-        else {
-            // Si no existe un detalle de venta porción para este producto, crea uno nuevo
-            const nuevoSubtotal = +(producto.precio * cantidad_vendida).toString();
-            yield prisma.detalleVentaPorcion.create({
-                data: {
-                    id_detalleVenta,
-                    id_producto,
-                    cantidad_producto: producto.cantidad,
-                    cantidad_granel_vendida: cantidad_vendida,
-                    subtotal: nuevoSubtotal
-                }
-            });
-        }
-    });
-}
-function realizarventaPorcion(id_producto, cantidadVendida) {
-    return __awaiter(this, void 0, void 0, function* () {
-        // Obtener el inventario del producto
-        const inventario = yield prisma.inventario.findUnique({
-            where: { id_producto },
-        });
-        if (!inventario) {
-            throw new Error(`Inventario no encontrado para el producto con ID ${id_producto}`);
-        }
-        // Obtener la cantidad disponible en el producto
-        const producto = yield prisma.productos.findUnique({
-            where: { id: id_producto },
-            select: { cantidad: true }, // Seleccionar solo el campo "cantidad"
-        });
-        if (!producto) {
-            throw new Error(`Producto no encontrado con ID ${id_producto}`);
-        }
-        // Realizar el descuento en el inventario y la cantidad del producto
-        const cantidadActual = parseFloat(inventario.existencias);
-        if (cantidadActual < 1) {
-            throw new Error(`No hay suficiente inventario para el producto con ID ${id_producto}`);
-        }
-        const producto_abierto = yield prisma.inventario_granel.findFirst({
-            where: {
-                id_producto: id_producto
-            }
-        });
-        if (parseFloat(producto_abierto.cantidad_restante) == 0) {
-            yield prisma.inventario_granel.delete({
-                where: { id_producto }
-            });
-            descontarInventario(id_producto, 1);
-        }
-        else {
-            if (producto_abierto) {
-                const cantidadProducto = parseFloat(producto_abierto.cantidad_restante);
-                if (cantidadVendida > cantidadProducto) {
-                    return "La cantidad vendida es mayor que la cantidad del producto.";
-                }
-                else {
-                    const nuevaExistencia = (cantidadProducto - cantidadVendida).toString();
-                    // Actualizar el inventario con la nueva existencia
-                    yield prisma.inventario_granel.update({
-                        where: { id_producto },
-                        data: {
-                            cantidad_restante: nuevaExistencia,
-                        },
-                    });
-                }
-            }
-            else {
-                yield prisma.inventario_granel.create({
-                    data: {
-                        id_producto,
-                        cantidad_producto: producto.cantidad,
-                        cantidad_restante: (parseFloat(producto.cantidad) - cantidadVendida).toString()
-                    }
-                });
-            }
-            if (parseFloat(producto_abierto.cantidad_restante) == 0) {
-                yield prisma.inventario_granel.delete({
-                    where: { id_producto }
-                });
-                descontarInventario(id_producto, 1);
-            }
-        }
-    });
-}
-function descontarInventario(id_producto, cantidadVendida) {
-    return __awaiter(this, void 0, void 0, function* () {
-        // Obtener el inventario del producto
-        const inventario = yield prisma.inventario.findUnique({
-            where: { id_producto },
-        });
-        if (!inventario) {
-            throw new Error(`Inventario no encontrado para el producto con ID ${id_producto}`);
-        }
-        // Obtener la cantidad disponible en el producto
-        const producto = yield prisma.productos.findUnique({
-            where: { id: id_producto },
-            select: { cantidad: true }, // Seleccionar solo el campo "cantidad"
-        });
-        if (!producto) {
-            throw new Error(`Producto no encontrado con ID ${id_producto}`);
-        }
-        // Realizar el descuento en el inventario y la cantidad del producto
-        const cantidadActual = parseFloat(inventario.existencias);
-        const cantidadVenta = cantidadVendida;
-        if (cantidadActual < cantidadVenta) {
-            throw new Error(`No hay suficiente inventario para el producto con ID ${id_producto}`);
-        }
-        const nuevaExistencia = (cantidadActual - cantidadVenta).toString();
-        // Actualizar el inventario con la nueva existencia
-        yield prisma.inventario.update({
-            where: { id_producto },
-            data: {
-                existencias: nuevaExistencia,
-            },
-        });
-    });
-}
-// Función para realizar una venta en una transacción
 function crearVenta(id_vendedor, id_sucursal, fecha_venta, total_venta, subtotal, iva, detallesVenta) {
     return __awaiter(this, void 0, void 0, function* () {
-        const transaction = yield prisma.$transaction((prisma) => __awaiter(this, void 0, void 0, function* () {
-            // Obtener el ID del vendedor a partir de su acrónimo
-            const idVendedor = yield obtenerIdVendedorPorAcronimo(id_vendedor);
-            // Crear la venta principal
-            const nuevaVenta = yield prisma.venta.create({
-                data: {
-                    id_vendedor: idVendedor,
-                    id_sucursal,
-                    fecha_venta,
-                    total_venta,
-                    subtotal,
-                    iva,
-                },
-            });
-            const idVentaGenerado = nuevaVenta.id_venta; // Obtener el id_venta generado
-            // Crear los detalles de venta y descontar el inventario
-            for (const detalle of detallesVenta) {
-                const producto = yield prisma.productos.findUnique({
-                    where: {
-                        id: detalle.id_producto,
+        let result;
+        try {
+            const transaction = yield prisma.$transaction((prisma) => __awaiter(this, void 0, void 0, function* () {
+                // Obtener el ID del vendedor a partir de su acrónimo
+                const idVendedor = yield obtenerIdVendedorPorAcronimo(id_vendedor);
+                // Crear la venta principal
+                const nuevaVenta = yield prisma.venta.create({
+                    data: {
+                        id_vendedor: idVendedor,
+                        id_sucursal,
+                        fecha_venta,
+                        total_venta,
+                        subtotal,
+                        iva,
                     },
                 });
-                if (!producto) {
-                    throw new Error(`Producto no encontrado con ID ${detalle.id_producto}`);
+                const idVentaGenerado = nuevaVenta.id_venta;
+                // Crear los detalles de venta y descontar el inventario
+                for (const detalle of detallesVenta) {
+                    const producto = yield prisma.productos.findUnique({
+                        where: {
+                            id: detalle.id_producto,
+                        },
+                    });
+                    if (!producto) {
+                        throw new Error(`Producto no encontrado con ID ${detalle.id_producto}`);
+                    }
+                    const inventario = yield prisma.inventario.findUnique({
+                        where: { id_producto: detalle.id_producto },
+                    });
+                    if (!inventario) {
+                        throw new Error(`Inventario no encontrado para el producto con ID ${detalle.id_producto}`);
+                    }
+                    // Verificar si se trata de una venta a granel
+                    if (detalle.venta_porcion) {
+                        const cantidad_Producto = yield prisma.productos.findUnique({
+                            where: {
+                                id: detalle.id_producto
+                            },
+                            select: {
+                                cantidad: true
+                            }
+                        });
+                        const existenciasProducto = parseFloat(inventario.existencias);
+                        const producto_abierto = yield prisma.inventario_granel.findFirst({
+                            where: {
+                                id_producto: detalle.id_producto
+                            }
+                        });
+                        // Verificar si el producto tiene existencias
+                        if (existenciasProducto < 1) {
+                            throw new Error(`No hay suficiente inventario para el producto con ID ${detalle.id_producto}`);
+                        }
+                        if (producto_abierto) {
+                            if (producto_abierto.cantidad_restante == 0) {
+                                yield prisma.inventario_granel.delete({
+                                    where: { id_producto: detalle.id_producto }
+                                });
+                                yield prisma.inventario.update({
+                                    where: { id_producto: detalle.id_producto },
+                                    data: {
+                                        existencias: (parseFloat(inventario.existencias) - 1).toString()
+                                    }
+                                });
+                                return "El producto ya no tiene existencias.";
+                            }
+                            const cantidadProducto = parseFloat(producto_abierto.cantidad_restante);
+                            if (detalle.cantidad_vendida > cantidadProducto) {
+                                throw new Error(`La cantidad vendida es mayor que la cantidad del producto.`);
+                            }
+                            else {
+                                // Realizar el descuento en el inventario y la cantidad del producto
+                                const nuevaExistencia = (cantidadProducto - detalle.cantidad_vendida).toString();
+                                // Actualizar el inventario con la nueva existencia
+                                yield prisma.inventario_granel.update({
+                                    where: { id_producto: detalle.id_producto },
+                                    data: {
+                                        cantidad_restante: nuevaExistencia,
+                                    },
+                                });
+                                // Verificar si la cantidad restante es igual a 0 después de la venta y eliminar el producto si es así
+                                if (nuevaExistencia == "0") {
+                                    yield prisma.inventario_granel.delete({
+                                        where: { id_producto: detalle.id_producto }
+                                    });
+                                    yield prisma.inventario.update({
+                                        where: { id_producto: detalle.id_producto },
+                                        data: {
+                                            existencias: (parseFloat(inventario.existencias) - 1).toString()
+                                        }
+                                    });
+                                }
+                            }
+                            yield prisma.detalleVenta.create({
+                                data: {
+                                    id_venta: idVentaGenerado,
+                                    id_producto: { connect: { id: detalle.id_producto } },
+                                    cantidad_vendida: (detalle.cantidad_vendida).toString(),
+                                    precio_producto: (detalle.precio_producto).toString(),
+                                    subtotal: (detalle.subtotal).toString(),
+                                    venta_granel: detalle.venta_porcion,
+                                },
+                            });
+                        }
+                        else {
+                            yield prisma.inventario_granel.create({
+                                data: {
+                                    id_producto: detalle.id_producto,
+                                    cantidad_producto: (cantidad_Producto.cantidad).toString(),
+                                    cantidad_restante: (parseFloat(cantidad_Producto.cantidad) - detalle.cantidad_vendida).toString()
+                                }
+                            });
+                            yield prisma.detalleVenta.create({
+                                data: {
+                                    id_venta: idVentaGenerado,
+                                    id_producto: { connect: { id: detalle.id_producto } },
+                                    cantidad_vendida: (detalle.cantidad_vendida).toString(),
+                                    precio_producto: (detalle.precio_producto).toString(),
+                                    subtotal: (detalle.subtotal).toString(),
+                                    venta_granel: detalle.venta_porcion,
+                                },
+                            });
+                        }
+                    }
+                    else {
+                        // Obtener el inventario del producto
+                        // Realizar el descuento en el inventario y la cantidad del producto
+                        const cantidadActual = parseFloat(inventario.existencias);
+                        const cantidadVenta = +detalle.cantidad_vendida;
+                        if (cantidadActual < cantidadVenta) {
+                            throw new Error(`No hay suficiente inventario para el producto con ID ${detalle.id_producto}`);
+                        }
+                        else {
+                            const nuevaExistencia = (cantidadActual - cantidadVenta).toString();
+                            // Actualizar el inventario con la nueva existencia
+                            yield prisma.inventario.update({
+                                where: { id_producto: detalle.id_producto },
+                                data: {
+                                    existencias: nuevaExistencia,
+                                },
+                            });
+                            let id_productos = detalle.id_producto;
+                            let cantidad_vendida = (detalle.cantidad_vendida).toString();
+                            let precio_producto = (detalle.precio_producto).toString();
+                            let subtotal = (detalle.subtotal).toString();
+                            let venta_granel = detalle.venta_porcion;
+                            console.log(id_productos, 'id_productos');
+                            yield prisma.detalleVenta.create({
+                                data: {
+                                    id_venta: idVentaGenerado,
+                                    id_producto: { connect: { id: id_productos } },
+                                    cantidad_vendida,
+                                    precio_producto,
+                                    subtotal,
+                                    venta_granel,
+                                }
+                            });
+                        }
+                    }
                 }
-                // Verificar si se trata de una venta a granel
-                if (detalle.venta_porcion) {
-                    realizarventaPorcion(detalle.id_producto, +detalle.cantidad_vendida);
-                }
-                else {
-                    // Si no es una venta a granel, simplemente crear el detalle de venta
-                    yield crearDetalleVenta(idVentaGenerado, detalle.id_producto, detalle.cantidad_vendida, detalle.precio_producto, detalle.subtotal, detalle.venta_porcion);
-                    // Descontar el inventario
-                    yield descontarInventario(detalle.id_producto, +detalle.cantidad_vendida);
-                }
-            }
-            return nuevaVenta; // Devolver la nueva venta creada
-        }));
-        return transaction;
+                result = nuevaVenta; // Guarda la nueva venta creada
+            }));
+            return result; // Devuelve la nueva venta creada (si la transacción tuvo éxito)
+        }
+        catch (error) {
+            throw error; // Lanza el error para que la transacción realice el rollback
+        }
     });
 }
 exports.crearVenta = crearVenta;
@@ -276,7 +240,6 @@ function updateVenta(id, id_sucursal, id_vendedor, fecha_venta, total_venta, sub
                 include: {
                     sucursal: true,
                     vendedor: true,
-                    detallesVenta: true,
                 },
             });
             return updatedVenta;
