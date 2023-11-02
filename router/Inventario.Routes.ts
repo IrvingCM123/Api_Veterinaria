@@ -101,10 +101,11 @@ router.get(
 
 router.post(
     "/",
-    validateCrearNuevoInventario,
     handleValidationErrors,
     async (req: Request, res: Response, next: NextFunction) => {
         const { id_producto, existencias, StockMinimo, StockMaximo } = req.body;
+
+        console.log(req.body);
         try {
             const inventario = await InventarioController.crearNuevoInventario(
                 id_producto,

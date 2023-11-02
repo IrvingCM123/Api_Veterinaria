@@ -88,7 +88,24 @@ export async function obtenerIDCantidadPorNomenclatura(nomenclatura: string) {
 }
 
 export async function crearProducto(data: any) {
-    return await prisma.productos.create(data);
+    return await prisma.productos.create({
+        data: {
+            nombre: data.nombre,
+            precio: data.precio,
+            cantidad: data.cantidad,
+            descripcion: data.descripcion,
+            imagen: data.imagen,
+            id_marca: data.id_marca,
+            id_categoria: data.id_categoria,
+            id_proveedor: data.id_proveedor,
+            id_animal: data.id_animal,
+            id_tipoCantidad: data.id_tipoCantidad,
+            codigo_barras: data.codigo_barras,
+            venta_granel: data.venta_granel,
+            precio_granel: data.precio_granel,
+            
+        }
+    });
 }
 
 export async function actualizarProducto(id: any, data: any) {

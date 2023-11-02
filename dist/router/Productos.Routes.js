@@ -83,6 +83,7 @@ router.get("/:id", Productos_Validator_1.validateObtenerProductoPorIdNegocio, Pr
  */
 router.post("/", Productos_Validator_1.validateCrearProductoNegocio, Productos_Middleware_1.handleValidationErrors, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { nombre, precio, cantidad, descripcion, imagen, id_marca, id_categoria, id_proveedor, id_animal, id_tipoCantidad, codigo_barras, precio_granel, venta_granel, } = req.body;
+    console.log(req.body);
     const productoObjeto = {
         nombre,
         precio,
@@ -149,7 +150,7 @@ router.put("/:id", Productos_Validator_1.validateActualizarProductoNegocio, Prod
  *  @validation validateDeleteProductoNegocio, handleValidationErrors
  *  @return json con el producto eliminado
  */
-router.delete("/:id", Productos_Validator_1.validateActualizarProductoNegocio, Productos_Middleware_1.handleValidationErrors, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+router.delete("/:id", Productos_Middleware_1.handleValidationErrors, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const id = parseInt(req.params.id, 10);
     try {
         const producto = yield ProductosController.eliminarProductoNegocio(id);
