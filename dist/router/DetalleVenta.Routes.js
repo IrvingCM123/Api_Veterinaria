@@ -74,6 +74,24 @@ router.get("/:id", DetalleVenta_Validator_1.validateObtenerDetalleVentaPorId, De
     }
 }));
 /**
+ *  @route GET api/detalleventa/venta/:id
+ *  @desc Get An DetalleVenta
+ *  @access Public
+ *  @params id
+ *  @validation validateObtenerDetalleVentaPorIdVenta, handleValidationErrors
+ *  @return json con el detalle de venta solicitado
+ */
+router.get("/venta/:id", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const id = parseInt(req.params.id, 10);
+    try {
+        const detalleventa = yield DetalleVentaController.obtenerDetalleVentaPorIdVenta(id);
+        res.status(200).json(detalleventa);
+    }
+    catch (error) {
+        next(error);
+    }
+}));
+/**
  *  @route POST api/detalleventa
  *  @desc Create An DetalleVenta
  *  @access Public

@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteVenta = exports.updateVenta = exports.crearVenta = exports.getVentaById = exports.getAllVentas = void 0;
+exports.deleteVenta = exports.updateVenta = exports.crearVenta = exports.getVentaByFecha = exports.getFechasVentas = exports.getVentaById = exports.getAllVentas = void 0;
 const client_1 = require("@prisma/client");
 const prisma = new client_1.PrismaClient();
 // Obtener todas las ventas
@@ -37,6 +37,30 @@ function getVentaById(id) {
     });
 }
 exports.getVentaById = getVentaById;
+// Obtener todas las fechas de las ventas
+function getFechasVentas() {
+    return __awaiter(this, void 0, void 0, function* () {
+        return yield prisma.venta.findMany({
+            select: {
+                fecha_venta: true,
+            },
+        });
+    });
+}
+exports.getFechasVentas = getFechasVentas;
+// Obtener las ventas por fecha
+function getVentaByFecha(fecha) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return yield prisma.venta.findMany({
+            where: { fecha_venta: fecha },
+            include: {
+                sucursal: true,
+                vendedor: true,
+            },
+        });
+    });
+}
+exports.getVentaByFecha = getVentaByFecha;
 // Función para obtener el ID del vendedor a partir de su acrónimo
 function obtenerIdVendedorPorAcronimo(acronimo) {
     return __awaiter(this, void 0, void 0, function* () {

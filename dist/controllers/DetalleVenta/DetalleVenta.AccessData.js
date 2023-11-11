@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteDetalleVenta = exports.updateDetalleVenta = exports.createDetalleVenta = exports.getDetalleVentaById = exports.getAllDetallesVenta = void 0;
+exports.deleteDetalleVenta = exports.updateDetalleVenta = exports.createDetalleVenta = exports.getDetalleVentaByIdVenta = exports.getDetalleVentaById = exports.getAllDetallesVenta = void 0;
 const client_1 = require("@prisma/client");
 const prisma = new client_1.PrismaClient();
 // Obtener todos los detalles de venta
@@ -35,6 +35,18 @@ function getDetalleVentaById(id) {
     });
 }
 exports.getDetalleVentaById = getDetalleVentaById;
+// Obtener un detalle de venta por su ID de venta
+function getDetalleVentaByIdVenta(id) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return yield prisma.detalleVenta.findMany({
+            where: { id_venta: id },
+            include: {
+                id_producto: true, // Incluye la relación con productos
+            },
+        });
+    });
+}
+exports.getDetalleVentaByIdVenta = getDetalleVentaByIdVenta;
 // Crear un nuevo detalle de venta
 function createDetalleVenta(id_venta, id_producto, cantidad_vendida, precio_producto, subtotal, venta_granel) {
     return __awaiter(this, void 0, void 0, function* () {

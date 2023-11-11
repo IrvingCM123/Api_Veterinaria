@@ -56,6 +56,22 @@ router.get("/", Venta_Validator_1.validateObtenerTodasLasVentas, Venta_Middlewar
     }
 }));
 /**
+ * @route GET api/venta/
+ * @desc Get fechas venta
+ * @access Public
+ * @params null
+ * @return json con el venta solicitado
+ */
+router.get("/fechas/", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const venta = yield VentaController.obtenerFechasVentas();
+        res.status(200).json(venta);
+    }
+    catch (error) {
+        next(error);
+    }
+}));
+/**
  *  @route GET api/venta/:id
  *  @desc Get An Venta
  *  @access Public
@@ -67,6 +83,23 @@ router.get("/:id", Venta_Validator_1.validateObtenerVentaPorId, Venta_Middleware
     const id = parseInt(req.params.id, 10);
     try {
         const venta = yield VentaController.obtenerVentaPorId(id);
+        res.status(200).json(venta);
+    }
+    catch (error) {
+        next(error);
+    }
+}));
+/**
+ * @route GET api/venta/:fecha
+ * @desc Get fecha venta
+ * @access Public
+ * @params fecha
+ * @return json con el venta solicitado
+ */
+router.get("/fechas/:fecha", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const fecha = req.params.fecha;
+    try {
+        const venta = yield VentaController.obtenerVentaPorFecha(fecha);
         res.status(200).json(venta);
     }
     catch (error) {
