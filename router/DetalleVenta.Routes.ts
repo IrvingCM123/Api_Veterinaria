@@ -66,6 +66,29 @@ router.get(
 );
 
 /**
+ *  @route GET api/detalleventa/venta/:id
+ *  @desc Get An DetalleVenta
+ *  @access Public
+ *  @params id
+ *  @validation validateObtenerDetalleVentaPorIdVenta, handleValidationErrors
+ *  @return json con el detalle de venta solicitado
+ */
+
+router.get(
+    "/venta/:id",
+    async (req: Request, res: Response, next: NextFunction) => {
+        const id = parseInt(req.params.id, 10);
+        try {
+            const detalleventa =
+                await DetalleVentaController.obtenerDetalleVentaPorIdVenta(id);
+            res.status(200).json(detalleventa);
+        } catch (error) {
+            next(error);
+        }
+    }
+);
+
+/**
  *  @route POST api/detalleventa
  *  @desc Create An DetalleVenta
  *  @access Public
