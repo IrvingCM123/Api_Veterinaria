@@ -21,6 +21,17 @@ export async function getDetalleVentaById(id: any) {
     });
 }
 
+// Obtener un detalle de venta por su ID de venta
+export async function getDetalleVentaByIdVenta(id: any) {
+    return await prisma.detalleVenta.findMany({
+        where: { id_venta: id },
+        include: {
+            id_producto: true, // Incluye la relación con productos
+            
+        },
+    });
+}
+
 // Crear un nuevo detalle de venta
 export async function createDetalleVenta(id_venta: any, id_producto: any, cantidad_vendida: any, precio_producto: any, subtotal: any, venta_granel: any) {
     return await prisma.detalleVenta.create({

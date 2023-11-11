@@ -24,6 +24,27 @@ export async function getVentaById(id: number) {
     });
 }
 
+// Obtener todas las fechas de las ventas
+export async function getFechasVentas() {
+    return await prisma.venta.findMany({
+        select: {
+            fecha_venta: true,
+        },
+    });
+}
+
+// Obtener las ventas por fecha
+export async function getVentaByFecha(fecha: string) {
+    return await prisma.venta.findMany({
+        where: { fecha_venta: fecha },
+        include: {
+            sucursal: true,
+            vendedor: true,
+        },
+    });
+}
+
+
 // Función para obtener el ID del vendedor a partir de su acrónimo
 async function obtenerIdVendedorPorAcronimo(acronimo: string) {
     const vendedor = await prisma.catalogoVendedor.findUnique({

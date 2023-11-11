@@ -4,6 +4,8 @@ import {
     getVentaById,
     updateVenta,
     deleteVenta,
+    getFechasVentas,
+    getVentaByFecha,
 } from './Ventas.AcessData';
 
 type DetalleVentaInput = {
@@ -73,3 +75,19 @@ export async function eliminarVenta(id: number) {
     return await deleteVenta(id);
 }
 
+// Obtener las fechas de las ventas y filtrar por fecha para no repetir las fechas
+export async function obtenerFechasVentas() {
+    const ventas: any = await getFechasVentas();
+    console.log(ventas);
+    const fechas = ventas.map((venta: any) => venta.fecha_venta);
+    const fechasFiltradas = fechas.filter((fecha: any, index: any) => {
+        return fechas.indexOf(fecha) === index;
+    });
+    return fechasFiltradas;
+}
+
+// Obtener las ventas por fecha
+export async function obtenerVentaPorFecha(fecha: string) {
+    const ventas: any = getVentaByFecha(fecha);
+    return ventas;
+}
