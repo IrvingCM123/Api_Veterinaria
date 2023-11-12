@@ -9,6 +9,10 @@ import {
     getVentaReporte,
 } from "./Ventas.AcessData";
 
+import {
+    obtenerDetalleVentaPorIdVenta
+} from "../DetalleVenta/DetalleVenta.Logic"
+
 type DetalleVentaInput = {
     id_producto: number;
     cantidad_vendida: string;
@@ -101,7 +105,6 @@ export async function obtenerInformacionReporte(año: number, mes: number) {
 
     let fechaFin: any = new Date(año, mes, 0);
     fechaFin = fechaFin.toString();
-    // Guardar de fecha fin el último día del mes
     fechaFin = fechaFin.slice(4, 15);
 
     fechaInicio =
@@ -167,7 +170,14 @@ export async function obtenerInformacionReporte(año: number, mes: number) {
     fechaFin =
         fechaFin.slice(0, 4) + "-" + mes + "-" + fechaFin.slice(9, 11);
 
-    const ventasPorMes = await getVentaReporte(fechaInicio, fechaFin);
-    
+    const ventasPorMes: any = await getVentaReporte(fechaInicio, fechaFin);
+
+    for (let i = 0; i < ventasPorMes.length; i++) {
+        const detallesVenta: any = await obtenerDetalleVentaPorIdVenta(
+            ventasPorMes[i].id_venta
+        );
+        ventasPorMes[i].detallesVenta = detallesVenta;
+    }
+
     return ventasPorMes;
 }
