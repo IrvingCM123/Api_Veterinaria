@@ -44,6 +44,23 @@ export async function getVentaByFecha(fecha: string) {
     });
 }
 
+// Obtener las ventas por año y mes
+export async function getVentaReporte(fechaInicio: string, fechaFin: string) {
+    
+    return await prisma.venta.findMany({
+        where: {
+            fecha_venta: {
+                gte: fechaInicio,
+                lte: fechaFin,
+            },
+        },
+        include: {
+            sucursal: true,
+            vendedor: true,
+        },
+    });
+}
+
 
 // Función para obtener el ID del vendedor a partir de su acrónimo
 async function obtenerIdVendedorPorAcronimo(acronimo: string) {

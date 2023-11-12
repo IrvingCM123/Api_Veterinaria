@@ -59,7 +59,6 @@ router.get(
     }
 );
 
-
 /**
  *  @route GET api/venta/:id
  *  @desc Get An Venta
@@ -138,6 +137,31 @@ router.post(
                 iva,
                 detallesVenta,
             });
+            res.status(200).json(venta);
+        } catch (error) {
+            next(error);
+        }
+    }
+);
+
+
+/**
+ * @route GET api/venta/reporte
+ * @desc Get reporte venta
+ * @access Public
+ * @params mes: number, año: number
+ * @return json con el venta solicitado
+ * 
+ */
+
+router.post(
+    "/reporte/mensual/",
+    async (req: Request, res: Response, next: NextFunction) => {
+        console.log(req.body);
+        const año = req.body.año;
+        const mes = req.body.mes;
+        try {
+            const venta = await VentaController.obtenerInformacionReporte(año, mes);
             res.status(200).json(venta);
         } catch (error) {
             next(error);
