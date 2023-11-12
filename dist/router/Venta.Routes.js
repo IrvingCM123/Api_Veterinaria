@@ -133,6 +133,25 @@ router.post("/", Venta_Validator_1.validateCrearNuevaVenta, Venta_Middleware_1.h
     }
 }));
 /**
+ * @route GET api/venta/reporte
+ * @desc Get reporte venta
+ * @access Public
+ * @params mes: number, año: number
+ * @return json con el venta solicitado
+ *
+ */
+router.post("/reporte/mensual/", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const año = req.body.año;
+    const mes = req.body.mes;
+    try {
+        const venta = yield VentaController.obtenerInformacionReporte(año, mes);
+        res.status(200).json(venta);
+    }
+    catch (error) {
+        next(error);
+    }
+}));
+/**
  *  @route PUT api/venta/:id
  *  @desc Update An Venta
  *  @access Public
