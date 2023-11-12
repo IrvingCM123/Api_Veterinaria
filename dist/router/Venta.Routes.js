@@ -107,6 +107,23 @@ router.get("/fechas/:fecha", (req, res, next) => __awaiter(void 0, void 0, void 
     }
 }));
 /**
+ * @route GET api/venta/:mes
+ * @desc Get mes venta
+ * @access Public
+ * @params mes
+ * @return json con el venta solicitado
+ */
+router.get("/fechas/mes/:mes", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const mes = +(req.params.mes);
+    try {
+        const venta = yield VentaController.obtenerFechasVentasPorMes(mes);
+        res.status(200).json(venta);
+    }
+    catch (error) {
+        next(error);
+    }
+}));
+/**
  *  @route POST api/venta
  *  @desc Create An Venta
  *  @access Public

@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.obtenerInformacionReporte = exports.obtenerVentaPorFecha = exports.obtenerFechasVentas = exports.eliminarVenta = exports.actualizarVenta = exports.crearNuevaVenta = exports.obtenerVentaPorId = exports.obtenerTodasLasVentas = void 0;
+exports.obtenerInformacionReporte = exports.obtenerVentaPorFecha = exports.obtenerFechasVentasPorMes = exports.obtenerFechasVentas = exports.eliminarVenta = exports.actualizarVenta = exports.crearNuevaVenta = exports.obtenerVentaPorId = exports.obtenerTodasLasVentas = void 0;
 const Ventas_AcessData_1 = require("./Ventas.AcessData");
 const DetalleVenta_Logic_1 = require("../DetalleVenta/DetalleVenta.Logic");
 // Función para validar los datos de una venta
@@ -66,6 +66,23 @@ function obtenerFechasVentas() {
     });
 }
 exports.obtenerFechasVentas = obtenerFechasVentas;
+// Obtener las fechas de las ventas y filtrar por fecha para no repetir las fechas, además de filtrarlas por el mes recibido como parámetro
+function obtenerFechasVentasPorMes(mes) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const ventas = yield (0, Ventas_AcessData_1.getFechasVentas)();
+        const fechas = ventas.map((venta) => venta.fecha_venta);
+        const fechasFiltradas = fechas.filter((fecha, index) => {
+            return fechas.indexOf(fecha) === index;
+        });
+        const fechasFiltradasPorMes = fechasFiltradas.filter((fecha) => {
+            const fechaDate = new Date(fecha);
+            const fechaMes = fechaDate.getMonth() + 1;
+            return fechaMes === mes;
+        });
+        return fechasFiltradasPorMes;
+    });
+}
+exports.obtenerFechasVentasPorMes = obtenerFechasVentasPorMes;
 // Obtener las ventas por fecha
 function obtenerVentaPorFecha(fecha) {
     return __awaiter(this, void 0, void 0, function* () {
