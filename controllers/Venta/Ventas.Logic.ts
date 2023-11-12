@@ -162,14 +162,12 @@ export async function obtenerInformacionReporte(año: number, mes: number) {
     mes = mesNumber;
 
     fechaInicio =
-        fechaInicio.slice(0, 4) + "-" + mes + "-" + fechaInicio.slice(8, 11);
+        fechaInicio.slice(0, 4) + "-" + mes + "-" + fechaInicio.slice(9, 11);
 
     fechaFin =
-        fechaFin.slice(0, 4) + "-" + mes + "-" + fechaFin.slice(8, 11);
-
-    console.log(fechaInicio, "fechaInicio");
-    console.log(fechaFin, "fechaFin");
+        fechaFin.slice(0, 4) + "-" + mes + "-" + fechaFin.slice(9, 11);
 
     const ventasPorMes = await getVentaReporte(fechaInicio, fechaFin);
+    
     return ventasPorMes;
 }

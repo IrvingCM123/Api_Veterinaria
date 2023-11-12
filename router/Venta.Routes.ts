@@ -157,7 +157,6 @@ router.post(
 router.post(
     "/reporte/mensual/",
     async (req: Request, res: Response, next: NextFunction) => {
-        console.log(req.body);
         const año = req.body.año;
         const mes = req.body.mes;
         try {
