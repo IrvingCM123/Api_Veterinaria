@@ -90,6 +90,21 @@ export async function obtenerFechasVentas() {
     return fechasFiltradas;
 }
 
+// Obtener las fechas de las ventas y filtrar por fecha para no repetir las fechas, además de filtrarlas por el mes recibido como parámetro
+export async function obtenerFechasVentasPorMes(mes: number) {
+    const ventas: any = await getFechasVentas();
+    const fechas = ventas.map((venta: any) => venta.fecha_venta);
+    const fechasFiltradas = fechas.filter((fecha: any, index: any) => {
+        return fechas.indexOf(fecha) === index;
+    });
+    const fechasFiltradasPorMes = fechasFiltradas.filter((fecha: any) => {
+        const fechaDate = new Date(fecha);
+        const fechaMes = fechaDate.getMonth() + 1;
+        return fechaMes === mes;
+    });
+    return fechasFiltradasPorMes;
+}
+
 // Obtener las ventas por fecha
 export async function obtenerVentaPorFecha(fecha: string) {
     const ventas: any = getVentaByFecha(fecha);

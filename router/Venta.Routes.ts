@@ -105,6 +105,27 @@ router.get(
 );
 
 /**
+ * @route GET api/venta/:mes
+ * @desc Get mes venta
+ * @access Public
+ * @params mes
+ * @return json con el venta solicitado
+ */
+
+router.get(
+    "/fechas/mes/:mes",
+    async (req: Request, res: Response, next: NextFunction) => {
+        const mes: number = +(req.params.mes);
+        try {
+            const venta = await VentaController.obtenerFechasVentasPorMes(mes);
+            res.status(200).json(venta);
+        } catch (error) {
+            next(error);
+        }
+    }
+);
+
+/**
  *  @route POST api/venta
  *  @desc Create An Venta
  *  @access Public
