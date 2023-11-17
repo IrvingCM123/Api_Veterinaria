@@ -121,6 +121,7 @@ router.post("/", Inventario_Middleware_1.handleValidationErrors, (req, res, next
 router.put("/:id", Inventario_Validator_1.validateActualizarInventario, Inventario_Middleware_1.handleValidationErrors, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const id = parseInt(req.params.id, 10);
     const { existencias, StockMinimo, StockMaximo } = req.body;
+    console.log(req.body);
     try {
         const inventario = yield InventarioController.actualizarInventario(id, existencias, StockMinimo, StockMaximo);
         res.status(200).json(inventario);

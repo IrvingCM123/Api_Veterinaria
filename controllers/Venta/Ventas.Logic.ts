@@ -107,7 +107,15 @@ export async function obtenerFechasVentasPorMes(mes: number) {
 
 // Obtener las ventas por fecha
 export async function obtenerVentaPorFecha(fecha: string) {
-    const ventas: any = getVentaByFecha(fecha);
+    const ventas: any = await getVentaByFecha(fecha);
+
+    for (let i = 0; i < ventas.length; i++) {
+        const detallesVenta: any = await obtenerDetalleVentaPorIdVenta(
+            ventas[i].id_venta
+        );
+        ventas[i].detallesVenta = detallesVenta;
+    }
+
     return ventas;
 }
 

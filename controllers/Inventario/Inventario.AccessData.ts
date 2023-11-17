@@ -43,9 +43,9 @@ export async function updateInventario(id_producto: any, existencias: any, Stock
     return await prisma.inventario.update({
         where: { id_producto },
         data: {
-            existencias,
-            StockMinimo,
-            StockMaximo,
+            existencias: existencias,
+            StockMinimo: StockMinimo,
+            StockMaximo: StockMaximo,
         },
         include: {
             producto: true,

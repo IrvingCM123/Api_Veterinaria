@@ -86,7 +86,11 @@ exports.obtenerFechasVentasPorMes = obtenerFechasVentasPorMes;
 // Obtener las ventas por fecha
 function obtenerVentaPorFecha(fecha) {
     return __awaiter(this, void 0, void 0, function* () {
-        const ventas = (0, Ventas_AcessData_1.getVentaByFecha)(fecha);
+        const ventas = yield (0, Ventas_AcessData_1.getVentaByFecha)(fecha);
+        for (let i = 0; i < ventas.length; i++) {
+            const detallesVenta = yield (0, DetalleVenta_Logic_1.obtenerDetalleVentaPorIdVenta)(ventas[i].id_venta);
+            ventas[i].detallesVenta = detallesVenta;
+        }
         return ventas;
     });
 }

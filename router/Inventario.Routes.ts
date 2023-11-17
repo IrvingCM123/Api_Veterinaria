@@ -136,6 +136,8 @@ router.put(
     async (req: Request, res: Response, next: NextFunction) => {
         const id = parseInt(req.params.id, 10);
         const { existencias, StockMinimo, StockMaximo } = req.body;
+        console.log(req.body);
+
         try {
             const inventario = await InventarioController.actualizarInventario(
                 id,

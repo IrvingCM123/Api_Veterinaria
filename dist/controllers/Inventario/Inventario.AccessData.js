@@ -62,9 +62,9 @@ function updateInventario(id_producto, existencias, StockMinimo, StockMaximo) {
         return yield prisma.inventario.update({
             where: { id_producto },
             data: {
-                existencias,
-                StockMinimo,
-                StockMaximo,
+                existencias: existencias,
+                StockMinimo: StockMinimo,
+                StockMaximo: StockMaximo,
             },
             include: {
                 producto: true,
