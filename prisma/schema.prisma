@@ -136,7 +136,6 @@ model Venta {
 
   sucursal             Sucursal              @relation(fields: [id_sucursal], references: [id_sucursal])
   vendedor             CatalogoVendedor      @relation(fields: [id_vendedor], references: [id_vendedor])
-  //detallesVenta        DetalleVenta[]
   detallesVentaPorcion DetalleVentaPorcion[]
 }
 

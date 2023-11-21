@@ -116,6 +116,11 @@ export async function obtenerVentaPorFecha(fecha: string) {
         ventas[i].detallesVenta = detallesVenta;
     }
 
+    //Recorrer todo el arreglo de ventas y hacer un fixed de 2 decimales a cada uno de los subtotales
+    for (let i = 0; i < ventas.length; i++) {
+        ventas[i].subtotal = ventas[i].subtotal.toFixed(2);
+    }
+
     return ventas;
 }
 
@@ -200,6 +205,11 @@ export async function obtenerInformacionReporte(año: number, mes: number) {
             ventasPorMes[i].id_venta
         );
         ventasPorMes[i].detallesVenta = detallesVenta;
+    }
+
+    //Recorrer todo el arreglo de ventas y hacer un fixed de 2 decimales a cada uno de los subtotales
+    for (let i = 0; i < ventasPorMes.length; i++) {
+        ventasPorMes[i].subtotal = ventasPorMes[i].subtotal.toFixed(2);
     }
 
     return ventasPorMes;
