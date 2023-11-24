@@ -212,5 +212,9 @@ export async function obtenerInformacionReporte(año: number, mes: number) {
         ventasPorMes[i].subtotal = ventasPorMes[i].subtotal.toFixed(2);
     }
 
+    for (let i = 0; i < ventasPorMes.length; i++) {
+        ventasPorMes[i].detallesVenta.subtotal = ventasPorMes[i].subtotal.toFixed(2);
+    }
+
     return ventasPorMes;
 }
