@@ -215,10 +215,11 @@ export async function obtenerInformacionReporte(año: number, mes: number) {
     //Recorrer todo el arreglo de ventas y hacer un fixed de 2 decimales a cada uno de los subtotales
     for (let i = 0; i < ventasPorMes.length; i++) {
         ventasPorMes[i].subtotal = ventasPorMes[i].subtotal.toFixed(2);
-    }
 
-    for (let i = 0; i < ventasPorMes.length; i++) {
-        ventasPorMes[i].detallesVenta.subtotal = ventasPorMes[i].detallesVenta.subtotal.toFixed(2);
+        for (let j = 0; j < ventasPorMes[i].detallesVenta.length; j++) {
+            ventasPorMes[i].detallesVenta[j].subtotal = ventasPorMes[i].detallesVenta[j].subtotal.toFixed(2);
+        }
+
     }
 
     return ventasPorMes;
