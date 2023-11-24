@@ -121,6 +121,11 @@ export async function obtenerVentaPorFecha(fecha: string) {
         ventas[i].subtotal = ventas[i].subtotal.toFixed(2);
     }
 
+    for (let i = 0; i < ventas.length; i++) {
+        ventas[i].detallesVenta.subtotal = ventas[i].detallesVenta.subtotal.toFixed(2);
+    }
+    
+
     return ventas;
 }
 
@@ -213,7 +218,7 @@ export async function obtenerInformacionReporte(año: number, mes: number) {
     }
 
     for (let i = 0; i < ventasPorMes.length; i++) {
-        ventasPorMes[i].detallesVenta.subtotal = ventasPorMes[i].subtotal.toFixed(2);
+        ventasPorMes[i].detallesVenta.subtotal = ventasPorMes[i].detallesVenta.subtotal.toFixed(2);
     }
 
     return ventasPorMes;
