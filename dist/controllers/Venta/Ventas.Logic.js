@@ -93,9 +93,9 @@ function obtenerVentaPorFecha(fecha) {
         }
         //Recorrer todo el arreglo de ventas y hacer un fixed de 2 decimales a cada uno de los subtotales
         for (let i = 0; i < ventas.length; i++) {
-            ventas[i].subtotal = ventas[i].subtotal.toFixed(2);
+            ventas[i].subtotal = parseFloat(ventas[i].subtotal).toFixed(2);
             for (let j = 0; j < ventas[i].detallesVenta.length; j++) {
-                ventas[i].detallesVenta[j].subtotal = ventas[i].detallesVenta[j].subtotal.toFixed(2);
+                ventas[i].detallesVenta[j].subtotal = parseFloat(ventas[i].detallesVenta[j].subtotal).toFixed(2);
             }
         }
         return ventas;
