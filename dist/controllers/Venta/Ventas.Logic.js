@@ -174,10 +174,8 @@ function obtenerInformacionReporte(año, mes) {
             ventasPorMes[i].detallesVenta = detallesVenta;
         }
         for (let i = 0; i < ventasPorMes.length; i++) {
-            console.log(ventasPorMes[i].subtotal);
             ventasPorMes[i].subtotal = parseFloat(ventasPorMes[i].subtotal).toFixed(2);
             for (let j = 0; j < ventasPorMes[i].detallesVenta.length; j++) {
-                console.log(ventasPorMes[i].detallesVenta[j].subtotal);
                 ventasPorMes[i].detallesVenta[j].subtotal = parseFloat(ventasPorMes[i].detallesVenta[j].subtotal).toFixed(2);
             }
         }
