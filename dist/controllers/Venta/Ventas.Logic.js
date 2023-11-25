@@ -91,6 +91,13 @@ function obtenerVentaPorFecha(fecha) {
             const detallesVenta = yield (0, DetalleVenta_Logic_1.obtenerDetalleVentaPorIdVenta)(ventas[i].id_venta);
             ventas[i].detallesVenta = detallesVenta;
         }
+        //Recorrer todo el arreglo de ventas y hacer un fixed de 2 decimales a cada uno de los subtotales
+        for (let i = 0; i < ventas.length; i++) {
+            ventas[i].subtotal = ventas[i].subtotal.toFixed(2);
+            for (let j = 0; j < ventas[i].detallesVenta.length; j++) {
+                ventas[i].detallesVenta[j].subtotal = ventas[i].detallesVenta[j].subtotal.toFixed(2);
+            }
+        }
         return ventas;
     });
 }
@@ -165,6 +172,14 @@ function obtenerInformacionReporte(año, mes) {
         for (let i = 0; i < ventasPorMes.length; i++) {
             const detallesVenta = yield (0, DetalleVenta_Logic_1.obtenerDetalleVentaPorIdVenta)(ventasPorMes[i].id_venta);
             ventasPorMes[i].detallesVenta = detallesVenta;
+        }
+        for (let i = 0; i < ventasPorMes.length; i++) {
+            console.log(ventasPorMes[i].subtotal);
+            ventasPorMes[i].subtotal = parseFloat(ventasPorMes[i].subtotal).toFixed(2);
+            for (let j = 0; j < ventasPorMes[i].detallesVenta.length; j++) {
+                console.log(ventasPorMes[i].detallesVenta[j].subtotal);
+                ventasPorMes[i].detallesVenta[j].subtotal = parseFloat(ventasPorMes[i].detallesVenta[j].subtotal).toFixed(2);
+            }
         }
         return ventasPorMes;
     });
