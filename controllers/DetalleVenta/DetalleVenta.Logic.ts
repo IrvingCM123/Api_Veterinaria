@@ -5,6 +5,7 @@ import {
     createDetalleVenta,
     updateDetalleVenta,
     deleteDetalleVenta,
+    getDetalleVentaByIdVenta
 } from "./DetalleVenta.AccessData";
 
 // Obtener todos los detalles de venta
@@ -34,6 +35,11 @@ export async function crearNuevoDetalleVenta(
         subtotal,
         venta_granel
     );
+}
+
+// Obtener un detalle de venta por su ID de venta
+export async function obtenerDetalleVentaPorIdVenta(id: any) {
+    return await getDetalleVentaByIdVenta(id);
 }
 
 // Actualizar un detalle de venta por su ID

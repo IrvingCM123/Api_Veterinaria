@@ -40,6 +40,26 @@ router.get(
 );
 
 /**
+ * @route GET api/venta/
+ * @desc Get fechas venta
+ * @access Public
+ * @params null
+ * @return json con el venta solicitado
+ */
+
+router.get(
+    "/fechas/",
+    async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const venta = await VentaController.obtenerFechasVentas();
+            res.status(200).json(venta);
+        } catch (error) {
+            next(error);
+        }
+    }
+);
+
+/**
  *  @route GET api/venta/:id
  *  @desc Get An Venta
  *  @access Public
@@ -56,6 +76,48 @@ router.get(
         const id = parseInt(req.params.id, 10);
         try {
             const venta = await VentaController.obtenerVentaPorId(id);
+            res.status(200).json(venta);
+        } catch (error) {
+            next(error);
+        }
+    }
+);
+
+/**
+ * @route GET api/venta/:fecha
+ * @desc Get fecha venta
+ * @access Public
+ * @params fecha
+ * @return json con el venta solicitado
+ */
+
+router.get(
+    "/fechas/:fecha",
+    async (req: Request, res: Response, next: NextFunction) => {
+        const fecha = req.params.fecha;
+        try {
+            const venta = await VentaController.obtenerVentaPorFecha(fecha);
+            res.status(200).json(venta);
+        } catch (error) {
+            next(error);
+        }
+    }
+);
+
+/**
+ * @route GET api/venta/:mes
+ * @desc Get mes venta
+ * @access Public
+ * @params mes
+ * @return json con el venta solicitado
+ */
+
+router.get(
+    "/fechas/mes/:mes",
+    async (req: Request, res: Response, next: NextFunction) => {
+        const mes: number = +(req.params.mes);
+        try {
+            const venta = await VentaController.obtenerFechasVentasPorMes(mes);
             res.status(200).json(venta);
         } catch (error) {
             next(error);
@@ -96,6 +158,30 @@ router.post(
                 iva,
                 detallesVenta,
             });
+            res.status(200).json(venta);
+        } catch (error) {
+            next(error);
+        }
+    }
+);
+
+
+/**
+ * @route GET api/venta/reporte
+ * @desc Get reporte venta
+ * @access Public
+ * @params mes: number, año: number
+ * @return json con el venta solicitado
+ * 
+ */
+
+router.post(
+    "/reporte/mensual/",
+    async (req: Request, res: Response, next: NextFunction) => {
+        const año = req.body.año;
+        const mes = req.body.mes;
+        try {
+            const venta = await VentaController.obtenerInformacionReporte(año, mes);
             res.status(200).json(venta);
         } catch (error) {
             next(error);

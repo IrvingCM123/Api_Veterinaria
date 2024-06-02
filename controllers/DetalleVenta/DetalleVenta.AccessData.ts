@@ -6,7 +6,6 @@ export async function getAllDetallesVenta() {
     return await prisma.detalleVenta.findMany({
         include: {
             id_producto: true, // Incluye la relación con productos
-            
         },
     });
 }
@@ -15,6 +14,17 @@ export async function getAllDetallesVenta() {
 export async function getDetalleVentaById(id: any) {
     return await prisma.detalleVenta.findUnique({
         where: { id_detalleVenta: id },
+        include: {
+            id_producto: true, // Incluye la relación con productos
+            
+        },
+    });
+}
+
+// Obtener un detalle de venta por su ID de venta
+export async function getDetalleVentaByIdVenta(id: any) {
+    return await prisma.detalleVenta.findMany({
+        where: { id_venta: id },
         include: {
             id_producto: true, // Incluye la relación con productos
             

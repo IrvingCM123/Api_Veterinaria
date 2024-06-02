@@ -3,11 +3,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-// Importa los módulos y middleware necesarios
 const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const morgan_1 = __importDefault(require("morgan"));
-// Importa las rutas de la aplicación
 const Animales_Routes_1 = __importDefault(require("./router/Animales.Routes"));
 const Categorias_Routes_1 = __importDefault(require("./router/Categorias.Routes"));
 const DetalleVenta_Routes_1 = __importDefault(require("./router/DetalleVenta.Routes"));
@@ -21,10 +19,8 @@ const TipoProducto_Routes_1 = __importDefault(require("./router/TipoProducto.Rou
 const Usuarios_Routes_1 = __importDefault(require("./router/Usuarios.Routes"));
 const Vendedor_Routes_1 = __importDefault(require("./router/Vendedor.Routes"));
 const Venta_Routes_1 = __importDefault(require("./router/Venta.Routes"));
-// Crea una instancia de la aplicación Express
 const app = (0, express_1.default)();
 const port = process.env.PORT || 3000;
-// Configura middleware para analizar el cuerpo de las solicitudes en formato JSON
 app.use(express_1.default.json());
 app.use((0, morgan_1.default)("dev"));
 app.use(express_1.default.urlencoded({ extended: true }));
@@ -34,9 +30,7 @@ const corsOptions = {
     preflightContinue: false,
     optionsSuccessStatus: 204,
 };
-// Aplica el middleware CORS con las opciones configuradas
 app.use((0, cors_1.default)(corsOptions));
-// Aplica las rutas de tu aplicación definidas en productoRoutes
 app.use("/api/animales", Animales_Routes_1.default);
 app.use("/api/categorias", Categorias_Routes_1.default);
 app.use("/api/detalleVenta", DetalleVenta_Routes_1.default);

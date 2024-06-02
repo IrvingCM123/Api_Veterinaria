@@ -17,38 +17,32 @@ export const validateCrearProductoNegocio = [
         .notEmpty()
         .withMessage("La descripción del producto es requerida"),
     check("precio")
-        .isNumeric()
+        .isString()
         .withMessage("El precio del producto debe ser un número válido"),
-    check("idMarca")
-        .isNumeric()
+    check("id_marca")
+        .notEmpty()
         .withMessage("El ID de la marca debe ser un número válido"),
-    check("idAnimal")
-        .isNumeric()
-        .withMessage("El ID del animal debe ser un número válido"),
-    check("idCategoria")
-        .isNumeric()
+    check("id_categoria")
+        .isString()
         .withMessage("El ID de la categoría debe ser un número válido"),
-    check("idProveedor")
-        .isNumeric()
+    check("id_proveedor")
+        .isString()
         .withMessage("El ID del proveedor debe ser un número válido"),
     check("imagen")
         .notEmpty()
         .withMessage("La imagen del producto es requerida"),
     check("cantidad")
-        .isNumeric()
+        .isString()
         .withMessage("La cantidad debe ser un número válido"),
     check("id_tipoCantidad")
-        .isNumeric()
+        .isString()
         .withMessage("El ID del tipo de cantidad debe ser un número válido"),
-    check("codigoBarra")
+    check("codigo_barras")
         .notEmpty()
         .withMessage("El código de barras es requerido"),
     check("venta_granel")
         .isBoolean()
         .withMessage("El campo venta_granel debe ser un valor booleano"),
-    check("precio_granel")
-        .isNumeric()
-        .withMessage("El precio granel debe ser un número válido"),
 ];
 
 export const validateActualizarProductoNegocio = [
@@ -82,6 +76,9 @@ export const validateActualizarProductoNegocio = [
     check("id_tipoCantidad")
         .isString()
         .withMessage("El ID del tipo de cantidad debe ser un número válido"),
+    check("codigo_barras")
+        .notEmpty()
+        .withMessage("El código de barras es requerido"),
     check("venta_granel")
         .isBoolean()
         .withMessage("El campo venta_granel debe ser un valor booleano"),
