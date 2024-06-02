@@ -22,8 +22,8 @@ export async function getTipoCantidadByIdNegocio(id: number) {
     return await getTipoCantidadById(id);
 } 
 
-export async function createTipoCantidadNegocio(data: ITipoCantidad) {
-    return await createTipoCantidad(data);
+export async function createTipoCantidadNegocio(nombre: string, nomenclatura: string) {
+    return await createTipoCantidad(nombre, nomenclatura);
 }
 
 export async function updateTipoCantidadNegocio(id: number, data: ITipoCantidad) {

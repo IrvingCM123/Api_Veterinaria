@@ -80,10 +80,13 @@ router.post(
     handleValidationErrors,
     async (req: Request, res: Response, next: NextFunction) => {
         const { nombre, nomenclatura } = req.body;
-        const data = { nombre, nomenclatura };
+        console.log(nombre, nomenclatura, "2")
         try {
             const tipoProducto =
-                await TipoProductoController.createTipoCantidadNegocio(data);
+                await TipoProductoController.createTipoCantidadNegocio(
+                    nombre,
+                    nomenclatura
+                );
             res.status(200).json(tipoProducto);
         } catch (error) {
             next(error);

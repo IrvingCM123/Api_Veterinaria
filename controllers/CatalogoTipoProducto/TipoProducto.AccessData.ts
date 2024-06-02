@@ -14,8 +14,13 @@ export async function getTipoCantidadById(id: number) {
     });
 }
 
-export async function createTipoCantidad(data: any) {
-    return await prisma.catalogoTipoCantidad.create(data);
+export async function createTipoCantidad(nombre: string, nomenclatura: string) {
+    return await prisma.catalogoTipoCantidad.create({
+        data: {
+            nombre, 
+            nomenclatura
+        }
+    });
 }
 
 export async function updateTipoCantidad(id: number, data: any) {
