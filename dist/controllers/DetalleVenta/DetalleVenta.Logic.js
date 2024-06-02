@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.eliminarDetalleVenta = exports.actualizarDetalleVenta = exports.crearNuevoDetalleVenta = exports.obtenerDetalleVentaPorId = exports.obtenerTodosLosDetallesVenta = void 0;
+exports.eliminarDetalleVenta = exports.actualizarDetalleVenta = exports.obtenerDetalleVentaPorIdVenta = exports.crearNuevoDetalleVenta = exports.obtenerDetalleVentaPorId = exports.obtenerTodosLosDetallesVenta = void 0;
 // Importa las funciones de acceso a datos de la capa de acceso a datos
 const DetalleVenta_AccessData_1 = require("./DetalleVenta.AccessData");
 // Obtener todos los detalles de venta
@@ -33,6 +33,13 @@ function crearNuevoDetalleVenta(id_venta, id_producto, cantidad_vendida, precio_
     });
 }
 exports.crearNuevoDetalleVenta = crearNuevoDetalleVenta;
+// Obtener un detalle de venta por su ID de venta
+function obtenerDetalleVentaPorIdVenta(id) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return yield (0, DetalleVenta_AccessData_1.getDetalleVentaByIdVenta)(id);
+    });
+}
+exports.obtenerDetalleVentaPorIdVenta = obtenerDetalleVentaPorIdVenta;
 // Actualizar un detalle de venta por su ID
 function actualizarDetalleVenta(id, id_venta, id_producto, cantidad_vendida, precio_producto, subtotal) {
     return __awaiter(this, void 0, void 0, function* () {

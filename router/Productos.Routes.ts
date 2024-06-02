@@ -87,6 +87,9 @@ router.post("/",
             venta_granel,
         } = req.body;
 
+        console.log(req.body);
+
+
         const productoObjeto = {
             nombre,
             precio,
@@ -182,7 +185,6 @@ router.put("/:id",
 
 router.delete(
     "/:id",
-    validateActualizarProductoNegocio,
     handleValidationErrors,
     async (req: Request, res: Response, next: NextFunction) => {
         const id = parseInt(req.params.id, 10);
