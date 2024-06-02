@@ -46,7 +46,7 @@ app.use("/api/tipoProducto", TipoProductoRoutes);
 app.use("/api/usuarios", UsuariosRoutes);
 app.use("/api/vendedor", VendedorRoutes);
 app.use("/api/venta", VentaRoutes);
-
+   
 // Ruta para manejar errores 404 (debe ser al final de todas las rutas)
 app.use((req, res, next) => {
   res.status(404).json({ message: "Ruta no encontrada" });
